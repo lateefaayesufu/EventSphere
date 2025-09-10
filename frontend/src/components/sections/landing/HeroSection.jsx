@@ -18,20 +18,17 @@ const HeroSection = function () {
               className="inline-block ml-2"
               fill="grey"
             />
-          </div>
-
+          </div>{" "}
           <h1 className="text-4xl md:text-7xl font-bold">
-            Delightful Events <br />
-            <span className="bg-gray-400 bg-clip-text text-transparent">
-              start here.
+            Discover, Engage, <br />
+            <span className="bg-gray-500 bg-clip-text text-transparent">
+              Dominate Campus Life.
             </span>
           </h1>
-
           <p className="text-gray-400 w-full md:w-2/3 text-base md:text-lg">
-            Set up an event page, invite friends and sell tickets. Host a
-            memorable event today.
+            The central hub for all things campus. Find events, register, and
+            get your certificates—seamlessly.
           </p>
-
           <Button>Create your first event</Button>
         </div>
         <div className="w-full md:w-1/2 rounded-lg overflow-hidden pt-6 md:pt-10 mt-8 md:mt-0">

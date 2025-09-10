@@ -7,14 +7,14 @@ const Navbar = function () {
 
   return (
     <div>
-      <nav className="flex items-center justify-between px-3 py-5 bg-black/20 text-white md:w-[95%] w-full mx-auto rounded-b-lg backdrop-blur-lg relative">
+      <nav className="glass-nav border-[1px] border-white/10 bg-gradient-to-br from-white/20 to-white/5 backdrop-blur md:left-6 md:right-6 md:top-6 md:rounded-2xl text-white flex items-center justify-between px-4 md:px-8 py-3 md:py-4 fixed w-full md:w-auto z-20">
         <div className="flex items-center">
           <PartyPopper
             size={24}
             strokeWidth={2}
-            color="gray"
+            color="white"
             className="inline-block mx-3"
-            fill="grey"
+            fill="white"
           />
         </div>
         {/* Desktop Menu */}
