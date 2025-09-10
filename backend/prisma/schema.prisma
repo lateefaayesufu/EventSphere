@@ -1,15 +1,93 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "../generated/prisma"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String    @unique
+  password    String
+  role        Role
+  fullName    String
+  mobile      String?
+  department  String?
+  enrollment  String?
+  createdAt   DateTime  @default(now())
+  registrations Registration[]
+  feedbacks    Feedback[]
+  attendances  Attendance[]
+  certificates Certificate[]
+}
+
+enum Role {
+  PARTICIPANT
+  ORGANIZER
+  ADMIN
+}
+
+model Event {
+  id           Int       @id @default(autoincrement())
+  title        String
+  description  String
+  category     String
+  date         DateTime
+  time         String
+  venue        String
+  organizerId  Int
+  organizer    User      @relation(fields: [organizerId], references: [id])
+  registrations Registration[]
+  attendances   Attendance[]
+  feedbacks     Feedback[]
+  certificates  Certificate[]
+}
+
+model Registration {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  studentId Int
+  status    Status   @default(CONFIRMED)
+  registeredAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
+}
+
+enum Status {
+  CONFIRMED
+  CANCELLED
+  WAITLIST
+}
+
+model Attendance {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  studentId Int
+  attended  Boolean
+  markedAt  DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
+}
+
+model Feedback {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  studentId Int
+  rating    Int
+  comments  String?
+  submittedAt DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
+}
+
+model Certificate {
+  id        Int      @id @default(autoincrement())
+  eventId   Int
+  studentId Int
+  url       String
+  issuedAt  DateTime @default(now())
+  event     Event    @relation(fields: [eventId], references: [id])
+  student   User     @relation(fields: [studentId], references: [id])
 }
