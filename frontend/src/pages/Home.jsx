@@ -5,7 +5,7 @@ import FeaturedEvents from "../components/sections/landing/FeaturedEvents";
 const Home = function () {
   return (
     <>
-      <div className="absolute top-0 left-0 w-full h-[130vh] -z-10 bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
+      <div className="absolute top-0 left-0 w-full h-[150vh] -z-10 bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
         <LiquidEther
           colors={["#5227FF", "#FF9FFC", "#B19EEF"]}
           mouseForce={20}
@@ -27,7 +27,9 @@ const Home = function () {
       <div className="">
         <Navbar />
         <HeroSection />
-        <FeaturedEvents />
+        <div className="bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
+          <FeaturedEvents />
+        </div>
       </div>
     </>
   );
