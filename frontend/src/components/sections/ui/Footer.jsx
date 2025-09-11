@@ -9,7 +9,7 @@ import {
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-16 px-4 md:px-20">
+    <footer className="bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] text-white py-16 px-4 md:px-20">
       <div className="relative max-w-7xl mx-auto z-10">
         {/* Background Blur and Border */}
         <div className="absolute inset-0 bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl z-0"></div>

@@ -66,7 +66,7 @@ const reviewsData = [
 
 const CommunityReviews = () => {
   return (
-    <section className="py-20 bg-gray-900 text-white relative overflow-hidden">
+    <section className="py-20 bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] text-white relative overflow-hidden">
       {/* Background gradient blobs for glassmorphism effect */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-72 h-72 bg-purple-600/30 rounded-full blur-3xl"></div>
@@ -78,13 +78,6 @@ const CommunityReviews = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full mb-6">
-            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-            <span className="text-sm font-semibold text-gray-300">
-              50,000+ Active Students
-            </span>
-          </div>
-
           <h3 className="text-5xl md:text-5xl font-black mb-6 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent leading-tight">
             Real Stories from
             <span className="bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-transparent">

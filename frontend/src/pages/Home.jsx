@@ -3,6 +3,7 @@ import HeroSection from "../components/sections/landing/HeroSection";
 import LiquidEther from "../components/sections/ui/LiquidEther";
 import FeaturedEvents from "../components/sections/landing/FeaturedEvents";
 import Footer from "../components/sections/ui/Footer";
+import Events from "../components/sections/events/Events";
 
 import Mission from "../components/sections/landing/Mission";
 import CommunityReviews from "../components/sections/landing/CommunityReviews";

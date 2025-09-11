@@ -4,7 +4,7 @@ import Events from "./pages/Events";
 
 const router = createBrowserRouter([
   { index: true, element: <Home /> },
-  { path: "/events", element: <Events /> },
+  { path: "events", element: <Events /> },
 ]);
 
 const App = function () {
