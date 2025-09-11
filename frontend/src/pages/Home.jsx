@@ -44,3 +44,16 @@ const Home = function () {
 };
 
 export default Home;
+
+  // <section>
+  //     <div>
+  //       <div className="  ">
+  //           <div className="flex   gap-5   grid-cols-4">
+  //           <img className="h-65 mt-7 w-55" src="IMG-20250911-WA0046.jpg" alt="" />
+  //           <img className="h-65 mt-7 w-55" src="IMG-20250911-WA0046.jpg" alt="" />
+  //           <img className="h-85 mt-7 w-55" src="IMG-20250911-WA0045.jpg" alt="" />
+  //           </div>
+            
+  //       </div>
+  //     </div>
+  //   </section>
