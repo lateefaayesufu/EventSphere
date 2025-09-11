@@ -187,7 +187,7 @@ const Mission = () => {
             <Rocket className="h-5 w-5 text-yellow-400 animate-pulse" />
             <span className="text-white/80 font-medium">Our Impact</span>
           </div>
-          <h2 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-6 ">
+          <h2 className="relative text-4xl md:text-4xl lg:text-6xl font-bold mb-6 ">
             <div className="text-white">
               Pioneering the Future Of{" "}
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">

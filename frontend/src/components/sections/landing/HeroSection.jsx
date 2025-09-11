@@ -20,12 +20,12 @@ const HeroSection = function () {
             />
           </div>{" "}
           <h1 className="text-4xl md:text-7xl font-bold">
-            Discover, Engage, <br />
+            Engage in <br />
             <span className="bg-gray-500 bg-clip-text text-transparent">
-              Dominate Campus Life.
+              Campus Life.
             </span>
           </h1>
-          <p className="text-gray-400 w-full md:w-2/3 text-base md:text-lg">
+          <p className="text-white font-medium w-full md:w-2/3 text-base md:text-lg">
             The central hub for all things campus. Find events, register, and
             get your certificates—seamlessly.
           </p>

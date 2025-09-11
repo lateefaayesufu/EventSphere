@@ -46,7 +46,7 @@ const Navbar = function () {
         >
           <Menu size={28} color="white" />
         </button>
-        {/* Mobile Menu */}
+        {/* Mobile Menuu */}
         {open && (
           <ul className="absolute top-full right-0 bg-black/90 text-white rounded-lg shadow-lg flex flex-col gap-2 p-4 w-40 md:hidden z-10">
             <li>
