@@ -16,6 +16,7 @@ model User {
   contactNumber String
   username      String    @unique
   password      String
+  role          Role      @default(PARTICIPANT)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   organizedEvents Event[] @relation("OrganizerEvents")
