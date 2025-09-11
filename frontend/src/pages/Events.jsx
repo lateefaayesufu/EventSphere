@@ -270,8 +270,6 @@ const Events = () => {
     return { upcoming, ongoing, past };
   };
 
-  // --- Start of Fix ---
-  // 1. Apply filtering logic first
   const filteredEvents = eventsData.filter((event) => {
     const matchesCategory =
       selectedCategory === "All" || event.category === selectedCategory;
@@ -281,7 +279,6 @@ const Events = () => {
     return matchesCategory && matchesSearch;
   });
 
-  // 2. Apply sorting logic to the filtered events
   const sortedAndFilteredEvents = [...filteredEvents].sort((a, b) => {
     if (sortBy === "Latest") {
       return new Date(b.date) - new Date(a.date);
@@ -295,9 +292,7 @@ const Events = () => {
     return 0;
   });
 
-  // 3. Now, categorize the sorted and filtered list
   const { upcoming, ongoing, past } = categorizeEvents(sortedAndFilteredEvents);
-  // --- End of Fix ---
 
   const getCategoryColor = (category) => {
     const colors = {

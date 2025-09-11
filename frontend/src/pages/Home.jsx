@@ -6,7 +6,6 @@ import Footer from "../components/sections/ui/Footer";
 import Orb from "../components/sections/ui/Orb";
 import Mission from "../components/sections/landing/Mission";
 import CommunityReviews from "../components/sections/landing/CommunityReviews";
-import DarkVeil from "../components/sections/ui/DarkVeil";
 
 const Home = function () {
   return (
