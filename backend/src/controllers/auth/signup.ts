@@ -13,11 +13,16 @@ declare module "express-session" {
 }
 
 export const signup = asyncCatcher(async (req: Request, res: Response) => {
-	const { email, password, fullName } = signupSchema.parse(req.body);
+	const { email, password, fullName, username, contactNumber } = signupSchema.parse(req.body);
 
-	const existingUser = await prisma.user.findUnique({ where: { email } });
-	if (existingUser) {
+	const existingUserEmail = await prisma.user.findUnique({ where: { email } });
+	if (existingUserEmail) {
 		throw new BadRequestError("Email already in use");
+	}
+
+	const existingUsername = await prisma.user.findUnique({ where: { username } });
+	if (existingUsername) {
+		throw new BadRequestError("Username already in use");
 	}
 
 	const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,6 +32,8 @@ export const signup = asyncCatcher(async (req: Request, res: Response) => {
 			email,
 			password: hashedPassword,
 			fullName,
+			username,
+			contactNumber,
 			role: "PARTICIPANT",
 		},
 	});
