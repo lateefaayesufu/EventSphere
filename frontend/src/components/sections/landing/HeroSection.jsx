@@ -5,7 +5,7 @@ import LiquidEther from "../ui/LiquidEther";
 const HeroSection = function () {
   return (
     <>
-      <section className="text-white bg-transparent flex flex-col md:flex-row px-4 md:px-20 justify-between items-center">
+      <section className="text-white bg-transparent flex flex-col pt-20 md:flex-row px-4 md:px-20 justify-between items-center">
         <div className="flex flex-col gap-5 py-10 md:py-30 w-full md:w-1/2">
           <div className="flex items-center">
             <div className="font-bold text-2xl md:text-3xl text-gray-400">

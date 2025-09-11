@@ -1,4 +1,16 @@
 import React, { useState } from "react";
+import environmentalSummit from "/environment.jpg";
+import afroBeats from "/afro.jpg";
+import fashion from "/fashion.jpg";
+import equity from "/equity.jpg";
+import football from "/football.jpg";
+import art from "/art.jpg";
+import career from "/career.jpg";
+import poetry from "/poetry.jpg";
+import research from "/research.jpg";
+import donation from "/donation.jpg";
+import studentHackathon from "/student-hackathon.jpg"; // New image import
+import photographyExhibit from "/photography-exhibit.jpg"; // New image import
 import {
   Search,
   Filter,
@@ -14,7 +26,6 @@ import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
 
 const Events = () => {
-  <Navbar />;
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("Latest");
@@ -35,17 +46,16 @@ const Events = () => {
       title: "Afrobeat Cultural Night",
       description:
         "Experience the vibrant sounds of Afrobeat with live performances from top campus artists and guest musicians.",
-      image:
-        "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=300&fit=crop",
+      image: afroBeats,
       category: "Cultural",
-      date: "2024-12-20",
+      date: "2025-12-20",
       time: "7:00 PM",
       venue: "Main Auditorium",
       organizer: "Cultural Affairs Department",
       registered: 185,
       capacity: 300,
       status: "Open",
-      deadline: "2024-12-18",
+      deadline: "2025-12-18",
       featured: true,
     },
     {
@@ -53,17 +63,16 @@ const Events = () => {
       title: "Career Fair 2024",
       description:
         "Connect with top employers, explore internship opportunities, and kickstart your professional journey.",
-      image:
-        "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=500&h=300&fit=crop",
+      image: career,
       category: "Academic",
-      date: "2024-12-19",
+      date: "2025-09-11", // Ongoing event
       time: "10:00 AM",
       venue: "Exhibition Hall",
       organizer: "Career Services Center",
       registered: 420,
       capacity: 500,
       status: "Open",
-      deadline: "2024-12-17",
+      deadline: "2025-09-11",
       featured: false,
     },
     {
@@ -71,17 +80,16 @@ const Events = () => {
       title: "Inter-Faculty Football Championship",
       description:
         "Witness the ultimate showdown as faculties compete for the prestigious championship trophy.",
-      image:
-        "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=500&h=300&fit=crop",
+      image: football,
       category: "Sports",
-      date: "2024-12-22",
+      date: "2025-12-22",
       time: "4:00 PM",
       venue: "Sports Complex",
       organizer: "Sports Department",
       registered: 150,
       capacity: 200,
       status: "Open",
-      deadline: "2024-12-20",
+      deadline: "2025-12-20",
       featured: true,
     },
     {
@@ -89,17 +97,16 @@ const Events = () => {
       title: "Contemporary Art Exhibition",
       description:
         "Explore thought-provoking artworks by talented student artists from across different faculties.",
-      image:
-        "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=500&h=300&fit=crop",
+      image: art,
       category: "Cultural",
-      date: "2024-12-21",
+      date: "2025-12-21",
       time: "2:00 PM",
       venue: "Art Gallery",
       organizer: "Fine Arts Department",
       registered: 78,
       capacity: 150,
       status: "Open",
-      deadline: "2024-12-19",
+      deadline: "2025-12-19",
       featured: false,
     },
     {
@@ -107,8 +114,7 @@ const Events = () => {
       title: "Blood Donation Drive",
       description:
         "Join us in saving lives. Every drop counts in our community health initiative.",
-      image:
-        "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=500&h=300&fit=crop",
+      image: donation,
       category: "Social",
       date: "2024-12-16",
       time: "9:00 AM",
@@ -125,8 +131,7 @@ const Events = () => {
       title: "Poetry & Spoken Word Evening",
       description:
         "An intimate evening of powerful words, emotions, and artistic expression by campus poets.",
-      image:
-        "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=500&h=300&fit=crop",
+      image: poetry,
       category: "Cultural",
       date: "2024-12-18",
       time: "6:30 PM",
@@ -143,17 +148,16 @@ const Events = () => {
       title: "Environmental Sustainability Summit",
       description:
         "Learn about climate action, sustainable practices, and join our campus green initiative.",
-      image:
-        "https://images.unsplash.com/photo-1569163139394-de44cb4fef64?w=500&h=300&fit=crop",
+      image: environmentalSummit,
       category: "Academic",
-      date: "2024-12-23",
+      date: "2025-12-23",
       time: "11:00 AM",
       venue: "Conference Center",
       organizer: "Environmental Club",
       registered: 120,
       capacity: 200,
       status: "Open",
-      deadline: "2024-12-21",
+      deadline: "2025-12-21",
       featured: true,
     },
     {
@@ -161,8 +165,7 @@ const Events = () => {
       title: "Research Symposium 2024",
       description:
         "Undergraduate researchers present groundbreaking projects across various academic disciplines.",
-      image:
-        "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=500&h=300&fit=crop",
+      image: research,
       category: "Academic",
       date: "2024-12-17",
       time: "1:00 PM",
@@ -179,17 +182,16 @@ const Events = () => {
       title: "Campus Fashion Show",
       description:
         "Witness creativity and style as student designers showcase their latest fashion collections.",
-      image:
-        "https://images.unsplash.com/photo-1469334031218-e382a71b716b?w=500&h=300&fit=crop",
+      image: fashion,
       category: "Cultural",
-      date: "2024-12-25",
+      date: "2025-12-25",
       time: "8:00 PM",
       venue: "Student Union Hall",
       organizer: "Fashion Design Club",
       registered: 220,
       capacity: 250,
       status: "Open",
-      deadline: "2024-12-23",
+      deadline: "2025-12-23",
       featured: false,
     },
     {
@@ -197,20 +199,105 @@ const Events = () => {
       title: "Interfaith Unity Service",
       description:
         "Come together in peace and harmony as we celebrate our diverse religious traditions.",
-      image:
-        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&h=300&fit=crop",
+      image: equity,
       category: "Religious",
-      date: "2024-12-24",
+      date: "2025-12-24",
       time: "5:00 PM",
       venue: "Multi-faith Chapel",
       organizer: "Campus Ministry",
       registered: 140,
       capacity: 200,
       status: "Open",
-      deadline: "2024-12-22",
+      deadline: "2025-12-22",
+      featured: false,
+    },
+    {
+      id: 11,
+      title: "Student Innovation Hackathon",
+      description:
+        "Code, collaborate, and create groundbreaking solutions to real-world problems over 48 hours.",
+      image: studentHackathon,
+      category: "Academic",
+      date: "2025-09-09", // Ongoing event
+      time: "9:00 AM",
+      venue: "Innovation Hub",
+      organizer: "Computer Science Club",
+      registered: 250,
+      capacity: 300,
+      status: "Open",
+      deadline: "2025-09-12",
+      featured: true,
+    },
+    {
+      id: 12,
+      title: "Photography Club Exhibition",
+      description:
+        "A showcase of stunning photos from our members, capturing campus life and beyond.",
+      image: photographyExhibit,
+      category: "Cultural",
+      date: "2025-09-10", // Ongoing event
+      time: "11:00 AM",
+      venue: "Campus Art Gallery",
+      organizer: "Photography Club",
+      registered: 80,
+      capacity: 100,
+      status: "Open",
+      deadline: "2025-09-12",
       featured: false,
     },
   ];
+
+  // This function categorizes the events based on the current date
+  const categorizeEvents = (events) => {
+    const now = new Date();
+    const upcoming = [];
+    const ongoing = [];
+    const past = [];
+
+    events.forEach((event) => {
+      const eventDate = new Date(event.date);
+      const eventDeadline = new Date(event.deadline);
+
+      if (eventDate > now) {
+        upcoming.push(event);
+      } else if (eventDate <= now && eventDeadline >= now) {
+        ongoing.push(event);
+      } else {
+        past.push(event);
+      }
+    });
+
+    return { upcoming, ongoing, past };
+  };
+
+  // --- Start of Fix ---
+  // 1. Apply filtering logic first
+  const filteredEvents = eventsData.filter((event) => {
+    const matchesCategory =
+      selectedCategory === "All" || event.category === selectedCategory;
+    const matchesSearch =
+      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      event.description.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
+
+  // 2. Apply sorting logic to the filtered events
+  const sortedAndFilteredEvents = [...filteredEvents].sort((a, b) => {
+    if (sortBy === "Latest") {
+      return new Date(b.date) - new Date(a.date);
+    }
+    if (sortBy === "Popular") {
+      return b.registered - a.registered;
+    }
+    if (sortBy === "Deadline") {
+      return new Date(a.deadline) - new Date(b.deadline);
+    }
+    return 0;
+  });
+
+  // 3. Now, categorize the sorted and filtered list
+  const { upcoming, ongoing, past } = categorizeEvents(sortedAndFilteredEvents);
+  // --- End of Fix ---
 
   const getCategoryColor = (category) => {
     const colors = {
@@ -232,30 +319,8 @@ const Events = () => {
     return colors[status] || "text-gray-400";
   };
 
-  const filteredEvents = eventsData.filter((event) => {
-    const matchesCategory =
-      selectedCategory === "All" || event.category === selectedCategory;
-    const matchesSearch =
-      event.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.description.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesCategory && matchesSearch;
-  });
-
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    if (sortBy === "Latest") {
-      return new Date(b.date) - new Date(a.date);
-    }
-    if (sortBy === "Popular") {
-      return b.registered - a.registered;
-    }
-    if (sortBy === "Deadline") {
-      return new Date(a.deadline) - new Date(b.deadline);
-    }
-    return 0;
-  });
-
   return (
-    <div className="min-h-screen  pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
+    <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
       {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -304,7 +369,7 @@ const Events = () => {
           <div className="flex justify-center gap-8 mt-8">
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-1">
-                {filteredEvents.length}
+                {sortedAndFilteredEvents.length}
               </div>
               <div className="text-gray-400 text-sm">Active Events</div>
             </div>
@@ -402,114 +467,324 @@ const Events = () => {
           </div>
         </div>
 
-        {/* Events Grid */}
+        {/* Upcoming Events */}
+        <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
+          Upcoming Events
+        </h2>
         <div className="flex flex-wrap justify-center gap-10">
-          {sortedEvents.map((event) => (
-            <div
-              key={event.id}
-              className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
-                event.featured ? "ring-2 ring-purple-400/50" : ""
-              }`}
-            >
-              {/* Featured Badge */}
-              {event.featured && (
-                <div className="absolute -top-2 -right-2 z-20">
-                  <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
-                    <Star className="w-5 h-5 text-white fill-current" />
+          {upcoming.length > 0 ? (
+            upcoming.map((event) => (
+              <div
+                key={event.id}
+                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
+                  event.featured ? "ring-2 ring-purple-400/50" : ""
+                }`}
+              >
+                {/* Featured Badge */}
+                {event.featured && (
+                  <div className="absolute -top-2 -right-2 z-20">
+                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
+                      <Star className="w-5 h-5 text-white fill-current" />
+                    </div>
                   </div>
+                )}
+
+                {/* Event Image */}
+                <div className="relative overflow-hidden h-56">
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+
+                  {/* Category Badge */}
+                  <div
+                    className={`absolute top-4 left-4 ${getCategoryColor(
+                      event.category
+                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
+                  >
+                    {event.category}
+                  </div>
+
+                  {/* Status Badge */}
+                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
+                    {event.registered}/{event.capacity}
+                  </div>
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                 </div>
-              )}
 
-              {/* Event Image */}
-              <div className="relative overflow-hidden h-56">
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
-                <img
-                  src={event.image}
-                  alt={event.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                {/* Event Details */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
+                    {event.title}
+                  </h3>
 
-                {/* Category Badge */}
-                <div
-                  className={`absolute top-4 left-4 ${getCategoryColor(
-                    event.category
-                  )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
-                >
-                  {event.category}
+                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
+                    {event.description}
+                  </p>
+
+                  {/* Event Info */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">
+                        {new Date(event.date).toLocaleDateString()} at{" "}
+                        {event.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">{event.venue}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <span
+                        className={`font-medium ${getStatusColor(
+                          event.status
+                        )}`}
+                      >
+                        {event.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
+                    Register Now
+                  </button>
                 </div>
-
-                {/* Status Badge */}
-                <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
-                  {event.registered}/{event.capacity}
-                </div>
-
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               </div>
-
-              {/* Event Details */}
-              <div className="p-8">
-                <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
-                  {event.title}
-                </h3>
-
-                <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
-                  {event.description}
-                </p>
-
-                {/* Event Info */}
-                <div className="space-y-3 mb-6">
-                  <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <Calendar className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">
-                      {new Date(event.date).toLocaleDateString()} at{" "}
-                      {event.time}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <MapPin className="w-4 h-4" />
-                    </div>
-                    <span className="font-medium">{event.venue}</span>
-                  </div>
-                  <div className="flex items-center gap-3 text-gray-400 text-sm">
-                    <div className="p-2 bg-white/10 rounded-lg">
-                      <Users className="w-4 h-4" />
-                    </div>
-                    <span
-                      className={`font-medium ${getStatusColor(event.status)}`}
-                    >
-                      {event.status}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Action Button */}
-                <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
-                  Register Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* No Results */}
-        {sortedEvents.length === 0 && (
-          <div className="text-center py-20">
-            <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-12 max-w-lg mx-auto border border-white/20">
-              <h3 className="text-2xl font-bold text-white mb-3">
-                No events found
-              </h3>
+            ))
+          ) : (
+            <div className="text-center py-12">
               <p className="text-gray-400 text-lg">
-                Try adjusting your search or filter criteria to discover amazing
-                events!
+                No upcoming events right now. Check back soon!
               </p>
             </div>
-          </div>
-        )}
+          )}
+        </div>
+
+        {/* Ongoing Events */}
+        <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
+          Ongoing Events
+        </h2>
+        <div className="flex flex-wrap justify-center gap-10">
+          {ongoing.length > 0 ? (
+            ongoing.map((event) => (
+              <div
+                key={event.id}
+                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
+                  event.featured ? "ring-2 ring-purple-400/50" : ""
+                }`}
+              >
+                {/* Featured Badge */}
+                {event.featured && (
+                  <div className="absolute -top-2 -right-2 z-20">
+                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
+                      <Star className="w-5 h-5 text-white fill-current" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Event Image */}
+                <div className="relative overflow-hidden h-56">
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+
+                  {/* Category Badge */}
+                  <div
+                    className={`absolute top-4 left-4 ${getCategoryColor(
+                      event.category
+                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
+                  >
+                    {event.category}
+                  </div>
+
+                  {/* Status Badge */}
+                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
+                    {event.registered}/{event.capacity}
+                  </div>
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+
+                {/* Event Details */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
+                    {event.title}
+                  </h3>
+
+                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
+                    {event.description}
+                  </p>
+
+                  {/* Event Info */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">
+                        {new Date(event.date).toLocaleDateString()} at{" "}
+                        {event.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">{event.venue}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <span
+                        className={`font-medium ${getStatusColor(
+                          event.status
+                        )}`}
+                      >
+                        {event.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
+                    Register Now
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-400 text-lg">
+                No events are ongoing at the moment.
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Past Events */}
+        <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
+          Past Events
+        </h2>
+        <div className="flex flex-wrap justify-center gap-10">
+          {past.length > 0 ? (
+            past.map((event) => (
+              <div
+                key={event.id}
+                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
+                  event.featured ? "ring-2 ring-purple-400/50" : ""
+                }`}
+              >
+                {/* Featured Badge */}
+                {event.featured && (
+                  <div className="absolute -top-2 -right-2 z-20">
+                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
+                      <Star className="w-5 h-5 text-white fill-current" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Event Image */}
+                <div className="relative overflow-hidden h-56">
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
+                  <img
+                    src={event.image}
+                    alt={event.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+
+                  {/* Category Badge */}
+                  <div
+                    className={`absolute top-4 left-4 ${getCategoryColor(
+                      event.category
+                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
+                  >
+                    {event.category}
+                  </div>
+
+                  {/* Status Badge */}
+                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
+                    {event.registered}/{event.capacity}
+                  </div>
+
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                </div>
+
+                {/* Event Details */}
+                <div className="p-8">
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
+                    {event.title}
+                  </h3>
+
+                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
+                    {event.description}
+                  </p>
+
+                  {/* Event Info */}
+                  <div className="space-y-3 mb-6">
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Calendar className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">
+                        {new Date(event.date).toLocaleDateString()} at{" "}
+                        {event.time}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <MapPin className="w-4 h-4" />
+                      </div>
+                      <span className="font-medium">{event.venue}</span>
+                    </div>
+                    <div className="flex items-center gap-3 text-gray-400 text-sm">
+                      <div className="p-2 bg-white/10 rounded-lg">
+                        <Users className="w-4 h-4" />
+                      </div>
+                      <span
+                        className={`font-medium ${getStatusColor(
+                          event.status
+                        )}`}
+                      >
+                        {event.status}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
+                    See Details
+                  </button>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-400 text-lg">No past events to show.</p>
+            </div>
+          )}
+        </div>
       </div>
       <Footer />
     </div>

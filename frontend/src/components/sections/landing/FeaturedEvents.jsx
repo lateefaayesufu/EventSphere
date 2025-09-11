@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import {
   CalendarIcon,
   MapPinIcon,
@@ -119,7 +120,7 @@ const FeaturedEvents = () => {
   };
 
   return (
-    <div className="relative bg-gradient-to-br  min-h-screen overflow-hidden">
+    <div className="relative bg-gradient-to-br  min-h-screen overflow-hidden py-36">
       <header className="relative text-center mb-16">
         {/* Background glow effect */}
         <div className="absolute inset-0 flex justify-center">
@@ -133,7 +134,7 @@ const FeaturedEvents = () => {
         </div>
 
         {/* Main heading */}
-        <h2 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mb-6 ">
+        <h2 className="relative text-5xl md:text-6xl lg:text-7xl font-bold mt-6 ">
           <div className="text-white">
             Events Happening{" "}
             <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
@@ -143,7 +144,7 @@ const FeaturedEvents = () => {
           </div>
         </h2>
 
-        <p className="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed">
+        <p className="text-xl text-white/60 max-w-2xl mx-auto leading-relaxed mt-4">
           Explore a curated list of the most popular and impactful events on
           campus. Secure your spot before it's too late!
           <span className="block mt-1 font-semibold text-white/80">
@@ -370,7 +371,10 @@ const FeaturedEvents = () => {
         {/* View All Events CTA */}
         <div className="text-center mt-16">
           <button className="group bg-white text-black px-12 py-4 rounded-2xl font-bold text-lg flex items-center justify-center space-x-2 hover:from-blue-600 hover:via-purple-600 hover:to-pink-600 transition-all transform hover:scale-105 shadow-2xl mx-auto">
-            <span>See What's Next</span>
+            <Link to="/events">
+              <span>See More</span>
+            </Link>
+
             <ArrowRightIcon className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
           </button>
         </div>
