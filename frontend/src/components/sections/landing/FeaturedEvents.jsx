@@ -120,7 +120,7 @@ const FeaturedEvents = () => {
   };
 
   return (
-    <div className="relative bg-gradient-to-br  min-h-screen overflow-hidden py-36">
+    <div className="relative bg-gradient-to-br pt-20 pb-0 overflow-hidden">
       <header className="relative text-center mb-16">
         {/* Background glow effect */}
         <div className="absolute inset-0 flex justify-center">
@@ -312,8 +312,6 @@ const FeaturedEvents = () => {
             ))}
           </div>
         </div>
-
-        {/* Quick Event Grid */}
 
         {/* Quick Event Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

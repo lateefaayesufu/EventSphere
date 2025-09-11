@@ -126,7 +126,7 @@ const Mission = () => {
   return (
     <section
       ref={sectionElRef}
-      className="relative min-h-screen py-20 px-4 md:px-20 overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]"
+      className="relative pt-0 pb-10 px-4 md:px-20 overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]"
     >
       {/* Background with Neural Network-style Connections */}
       <div className="absolute inset-0 overflow-hidden opacity-20">
@@ -183,11 +183,11 @@ const Mission = () => {
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           }`}
         >
-          <div className="relative inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-6 py-3 mt-6">
+          <div className="relative inline-flex items-center space-x-2 bg-white/5 backdrop-blur-sm rounded-full px-6 py-3 ">
             <Rocket className="h-5 w-5 text-yellow-400 animate-pulse" />
             <span className="text-white/80 font-medium">Our Impact</span>
           </div>
-          <h2 className="relative text-4xl md:text-4xl lg:text-6xl font-bold mb-6 ">
+          <h2 className="relative text-4xl md:text-4xl lg:text-6xl font-bold mb-6 mt-4">
             <div className="text-white">
               Pioneering the Future Of{" "}
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">

@@ -127,7 +127,7 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8">
+          <h1 className="text-5xl md:text-7xl mt-10 font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8">
             Get in Touch
           </h1>
 
@@ -286,7 +286,7 @@ const Contact = () => {
 
               <button
                 type="submit"
-                className="group w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold py-4 px-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+                className="group w-full bg-white text-slate-900 font-bold py-4 px-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
               >
                 <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 Send Message
