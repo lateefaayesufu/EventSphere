@@ -267,7 +267,7 @@ const Login = () => {
                     name="fullName"
                     onChange={handleInputChange}
                     className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
-                    placeholder="Enter your full name"
+                    placeholder="Full Name"
                     required
                   />
                 </div>
@@ -284,7 +284,7 @@ const Login = () => {
                     name="email"
                     onChange={handleInputChange}
                     className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
-                    placeholder="Enter your email"
+                    placeholder="Email"
                     required
                   />
                 </div>
@@ -336,40 +336,6 @@ const Login = () => {
                   />
                 </div>
               </div>
-
-              <div className="flex-1">
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Department
-                </label>
-                <div className="relative">
-                  <Building2 className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                  <input
-                    type="text"
-                    name="department"
-                    onChange={handleInputChange}
-                    className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
-                    placeholder="e.g., Computer Science"
-                    required
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">
-                Enrollment Number
-              </label>
-              <div className="relative">
-                <GraduationCap className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-                <input
-                  type="text"
-                  name="enrollmentNumber"
-                  onChange={handleInputChange}
-                  className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
-                  placeholder="Enter your enrollment number"
-                  required
-                />
-              </div>
             </div>
 
             <button
@@ -401,7 +367,6 @@ const Login = () => {
               ) : (
                 <>
                   <span>Create Account</span>
-                  <Sparkles className="w-5 h-5" />
                 </>
               )}
             </button>
@@ -424,8 +389,8 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
-      <div className="flex-grow flex items-center justify-center pt-24 pb-8 relative z-10">
-        <div className="max-w-md mx-auto px-6">
+      <div className="flex-grow  flex items-center justify-center pt-40 pb-8 relative z-10">
+        <div className="max-w-md mx-auto px-6 ">
           <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
             {renderContent()}
           </div>

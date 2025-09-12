@@ -25,6 +25,8 @@ import UsersAdmin from "./admin/pages/Users";
 import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
 
+import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
+
 const AppLayout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -47,6 +49,15 @@ const AppLayout = () => {
 const AdminLayout = () => {
   return (
     <div className="admin-layout">
+      {/* Add a sidebar or navbar here */}
+      <Outlet /> {/* This is where nested admin pages render */}
+    </div>
+  );
+};
+
+const ParticipationLayout = () => {
+  return (
+    <div className="participation-layout">
       {/* Add a sidebar or navbar here */}
       <Outlet /> {/* This is where nested admin pages render */}
     </div>
@@ -79,6 +90,15 @@ const router = createBrowserRouter([
           { path: "users", element: <UsersAdmin /> },
           { path: "reports", element: <ReportsAdmin /> },
           { path: "settings", element: <SettingsAdmin /> },
+        ],
+      },
+      {
+        path: "participant",
+        element: <ParticipationLayout />,
+        children: [
+          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+
+          { path: "dashboard", element: <ParticipantDashboard /> },
         ],
       },
     ],
