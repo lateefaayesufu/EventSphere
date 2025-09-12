@@ -38,6 +38,7 @@ model Event {
   venue       String
   capacity    Int
   location    Json?
+  mainImage   String?
   status      EventStatus     @default(PENDING)
   createdAt   DateTime        @default(now())
 
@@ -63,4 +64,12 @@ model Registration {
   userId    String
 
   @@unique([eventId, userId]) 
+}
+
+model Session {
+  sid    String   @id           @db.VarChar(255)
+  sess   Json
+  expire DateTime
+
+  @@map("session")              // match exact table name "session"
 }
