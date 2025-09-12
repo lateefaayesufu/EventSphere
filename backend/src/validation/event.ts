@@ -9,3 +9,5 @@ export const createEventSchema = z.object({
   capacity: z.number().int().positive("Capacity must be a positive integer"),
   location: z.array(z.number()).length(2, "Location must be an array of [longitude, latitude]").optional(),
 });
+
+export const editEventSchema = createEventSchema.partial();

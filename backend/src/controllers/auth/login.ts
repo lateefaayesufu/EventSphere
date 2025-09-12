@@ -19,6 +19,7 @@ export const login = asyncCatcher(async (req: Request, res: Response) => {
   }
 
   req.session.userId = user.id;
+  req.session.role = user.role;
 
   const { password: _, ...userWithoutPassword } = user;
 
