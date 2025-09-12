@@ -1,89 +1,90 @@
-// App.jsx
-import React, { useState } from "react";
+import React from "react";
+import { useState } from "react";
 import {
-	createBrowserRouter,
-	RouterProvider,
-	Outlet,
-	Navigate,
+  createBrowserRouter,
+  RouterProvider,
+  Outlet,
+  Navigate,
 } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
 
-// Import all your page components
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Events from "./pages/Events";
 import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
 import Faqs from "./pages/FAQs";
-import Login from "./pages/Login"; // This is your Auth component
-import AdminDashboard from "./admin/Dashboard";
-import AdminHome from "./admin/pages/Home";
+import Login from "./pages/Login";
 
-// Create a component to manage authentication state and provide it to nested routes
+// Admin pages
+
+import AdminDashboard from "./admin/pages/Dashboard";
+import AdminAuth from "./admin/pages/AdminAuth";
+import EventsAdmin from "./admin/pages/Events";
+import UsersAdmin from "./admin/pages/Users";
+import ReportsAdmin from "./admin/pages/Reports";
+import SettingsAdmin from "./admin/pages/Settings";
+
 const AppLayout = () => {
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
-	// You can pass the state and setter functions via props or context
-	// For this example, we'll use a simple prop drilling approach
-	const authProps = {
-		isLoggedIn,
-		setIsLoggedIn,
-		isAdminLoggedIn,
-		setIsAdminLoggedIn,
-	};
+  const authProps = {
+    isLoggedIn,
+    setIsLoggedIn,
+    isAdminLoggedIn,
+    setIsAdminLoggedIn,
+  };
 
-	return (
-		<ReactLenis root>
-			{/* You would place a Navbar component here that uses isLoggedIn/isAdminLoggedIn to show different links */}
-			<Outlet context={authProps} />
-		</ReactLenis>
-	);
+  return (
+    <ReactLenis root>
+      <Outlet context={authProps} />
+    </ReactLenis>
+  );
 };
 
-// Define a protected route component
-const ProtectedRoute = ({ children, isAllowed, redirectTo = "/" }) => {
-	if (!isAllowed) {
-		return <Navigate to={redirectTo} replace />;
-	}
-	return children;
+// Admin layout wrapper (with sidebar/topbar etc.)
+const AdminLayout = () => {
+  return (
+    <div className="admin-layout">
+      {/* Add a sidebar or navbar here */}
+      <Outlet /> {/* This is where nested admin pages render */}
+    </div>
+  );
 };
 
-// Define the routes for your application
+// Define routes
 const router = createBrowserRouter([
-	{
-		element: <AppLayout />,
-		children: [
-			{
-				path: "/",
-				element: <Home />,
-			},
-			{ path: "events", element: <Events /> },
-			{ path: "about", element: <About /> },
-			{ path: "contact", element: <Contact /> },
-			{ path: "gallery", element: <Gallery /> },
-			{ path: "faq", element: <Faqs /> },
+  {
+    element: <AppLayout />,
+    children: [
+      { path: "/", element: <Home /> },
+      { path: "events", element: <Events /> },
+      { path: "about", element: <About /> },
+      { path: "contact", element: <Contact /> },
+      { path: "gallery", element: <Gallery /> },
+      { path: "faq", element: <Faqs /> },
+      { path: "login", element: <Login /> },
 
-			// Public login routes
-			{ path: "login", element: <Login /> },
+      // Admin routes
+      {
+        path: "admin",
+        element: <AdminLayout />,
+        children: [
+          { index: true, element: <Navigate to="dashboard" replace /> }, // default
 
-			{
-				path: "admin",
-				element: <AdminDashboard />,
-				children: [
-					{ path: "", element: <Navigate to="home" />, index: true },
-					{ path: "home", element: <AdminHome /> },
-					{ path: "events" },
-					{ path: "users" },
-					{ path: "settings" },
-				],
-			},
-		],
-	},
+          { path: "dashboard", element: <AdminDashboard /> },
+          { path: "auth", element: <AdminAuth /> },
+          { path: "events", element: <EventsAdmin /> },
+          { path: "users", element: <UsersAdmin /> },
+          { path: "reports", element: <ReportsAdmin /> },
+          { path: "settings", element: <SettingsAdmin /> },
+        ],
+      },
+    ],
+  },
 ]);
 
-const App = function () {
-	return <RouterProvider router={router} />;
-};
+const App = () => <RouterProvider router={router} />;
 
 export default App;
