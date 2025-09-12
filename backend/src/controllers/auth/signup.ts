@@ -4,11 +4,7 @@ import prisma from "@/prisma";
 import { signupSchema } from "@/validation/auth";
 import { asyncCatcher } from "@/utils/asyncCatcher";
 
-declare module "express-session" {
-	interface SessionData {
-		userId: string;
-	}
-}
+
 
 export const signup = asyncCatcher(async (req: Request, res: Response) => {
 	// ✅ 1. Validate input with Zod

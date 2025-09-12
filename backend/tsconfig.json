@@ -7,9 +7,11 @@
 		"paths": {
 			"@/*": ["src/*"]
 		},
+		"typeRoots": ["./types", "./node_modules/@types"],
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,
 		"strict": true,
 		"skipLibCheck": true
-	}
+	},
+	"include": ["src/**/*.ts", "types/**/*.d.ts"]
 }
