@@ -1,7 +1,6 @@
 import React from "react";
 import { PartyPopper } from "lucide-react";
 import Button from "../ui/Button";
-import LiquidEther from "../ui/LiquidEther";
 const HeroSection = function () {
   return (
     <>
