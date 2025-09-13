@@ -108,7 +108,7 @@ const Faqs = () => {
   ];
 
   return (
-    <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
+    <div className="min-h-screen pt-24 sm:pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
       {/* Background elements, same as Contact page */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -128,49 +128,51 @@ const Faqs = () => {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         {/* Hero Section */}
-        <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 mt-10 bg-clip-text text-transparent mb-8">
+        <div className="text-center mb-16 sm:mb-20">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 mt-10 bg-clip-text text-transparent mb-4 sm:mb-8">
             Frequently Asked Questions
           </h1>
-          <p className="text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed px-2">
             Find quick answers to the most common questions about using
             EventSphere.
           </p>
         </div>
 
         {/* FAQs Accordion Grid */}
-        <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
+        <div className="grid md:grid-cols-2 gap-6 sm:gap-8 lg:gap-12">
           {faqData.map((category, catIndex) => (
             <div
               key={catIndex}
-              className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-12 space-y-6"
+              className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 lg:p-12 space-y-4 sm:space-y-6"
             >
               {/* Category Header */}
-              <div className="flex items-center gap-4 text-white mb-6">
-                <div className="bg-white/10 p-3 rounded-lg">
-                  <category.icon className="w-6 h-6 text-purple-400" />
+              <div className="flex items-center gap-3 sm:gap-4 text-white mb-4 sm:mb-6">
+                <div className="bg-white/10 p-2 sm:p-3 rounded-lg">
+                  <category.icon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-400" />
                 </div>
-                <h3 className="text-3xl font-bold">{category.category}</h3>
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold">
+                  {category.category}
+                </h3>
               </div>
 
               {/* Questions List */}
-              <div className="space-y-4">
+              <div className="space-y-2 sm:space-y-4">
                 {category.questions.map((faq, faqIndex) => (
                   <div
                     key={faqIndex}
                     className="border-b border-white/10 last:border-b-0"
                   >
                     <button
-                      className="flex justify-between items-center w-full py-4 text-left transition-colors hover:text-purple-400"
+                      className="flex justify-between items-center w-full py-3 sm:py-4 text-left transition-colors hover:text-purple-400"
                       onClick={() => toggleAccordion(`${catIndex}-${faqIndex}`)}
                     >
-                      <span className="text-lg text-white font-semibold">
+                      <span className="text-sm sm:text-base lg:text-lg text-white font-semibold">
                         {faq.q}
                       </span>
                       <ChevronDown
-                        className={`w-5 h-5 text-white transition-transform duration-300 ${
+                        className={`w-4 h-4 sm:w-5 sm:h-5 text-white transition-transform duration-300 ${
                           openIndex === `${catIndex}-${faqIndex}`
                             ? "transform rotate-180"
                             : ""
@@ -178,13 +180,13 @@ const Faqs = () => {
                       />
                     </button>
                     <div
-                      className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
+                      className={`overflow-hidden transition-all duration-500 ease-in-out ${
                         openIndex === `${catIndex}-${faqIndex}`
-                          ? "max-h-96 py-4"
+                          ? "max-h-96 py-3 sm:py-4"
                           : "max-h-0"
                       }`}
                     >
-                      <p className="text-gray-300 text-base leading-relaxed">
+                      <p className="text-gray-300 text-sm sm:text-base leading-relaxed">
                         {faq.a}
                       </p>
                     </div>

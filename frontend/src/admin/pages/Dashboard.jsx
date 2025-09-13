@@ -13,8 +13,75 @@ const StatCard = ({ title, value, icon, color }) => (
   </div>
 );
 
+// New modal component for viewing event details
+const EventDetailsModal = ({ isOpen, onClose, event }) => {
+  if (!isOpen || !event) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
+      <div className="bg-white/10 border border-white/20 rounded-3xl p-8 max-w-xl w-full shadow-2xl relative">
+        <h3 className="text-3xl font-bold text-white mb-4">Event Details</h3>
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+        <div className="space-y-4 text-gray-300">
+          <p>
+            <span className="font-semibold text-white">Title:</span>{" "}
+            {event.title}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Description:</span>{" "}
+            {event.description}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Date:</span> {event.date}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Venue:</span>{" "}
+            {event.venue}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Participants:</span>{" "}
+            {event.participants}
+          </p>
+          <p>
+            <span className="font-semibold text-white">Status:</span>{" "}
+            <span
+              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                event.status === "Approved"
+                  ? "bg-green-500/20 text-green-300"
+                  : event.status === "Pending Approval"
+                  ? "bg-yellow-500/20 text-yellow-300"
+                  : "bg-red-500/20 text-red-300"
+              }`}
+            >
+              {event.status}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // New component for the Event card
-const EventCard = ({ event, onStatusChange }) => {
+const EventCard = ({ event, onStatusChange, onViewDetails, onEdit }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "Approved":
@@ -46,10 +113,14 @@ const EventCard = ({ event, onStatusChange }) => {
           <select
             value={event.status}
             onChange={(e) => onStatusChange(event.id, e.target.value)}
-            className="appearance-none bg-blue-500/20 text-white rounded-lg text-sm font-medium px-4 py-2 hover:bg-blue-500/30 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="appearance-none bg-white/5 backdrop-blur-sm border border-white/10 text-white rounded-lg text-sm font-medium px-4 py-2 hover:bg-white/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="Approved">Approve</option>
-            <option value="Rejected">Reject</option>
+            <option className="bg-[#1A1B1B]" value="Approved">
+              Approve
+            </option>
+            <option className="bg-[#1A1B1B]" value="Rejected">
+              Reject
+            </option>
           </select>
         </div>
       </div>
@@ -60,10 +131,16 @@ const EventCard = ({ event, onStatusChange }) => {
         <span>{event.participants} Participants</span>
       </div>
       <div className="mt-4 flex space-x-2">
-        <button className="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors">
+        <button
+          onClick={() => onViewDetails(event)}
+          className="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors"
+        >
           View Details
         </button>
-        <button className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm font-medium hover:bg-purple-500/30 transition-colors">
+        <button
+          onClick={() => onEdit(event)}
+          className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm font-medium hover:bg-purple-500/30 transition-colors"
+        >
           Edit
         </button>
       </div>
@@ -96,7 +173,7 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
         email: "",
         role: "User",
         status: "Active",
-        avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=NN",
+        avatar: "",
       });
     }
   }, [user]);
@@ -173,21 +250,33 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
             name="role"
             value={formData.role}
             onChange={handleChange}
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="User">User</option>
-            <option value="Contributor">Contributor</option>
-            <option value="Event Manager">Event Manager</option>
-            <option value="Administrator">Administrator</option>
+            <option className="bg-[#1A1B1B]" value="User">
+              User
+            </option>
+            <option className="bg-[#1A1B1B]" value="Contributor">
+              Contributor
+            </option>
+            <option className="bg-[#1A1B1B]" value="Event Manager">
+              Event Manager
+            </option>
+            <option className="bg-[#1A1B1B]" value="Administrator">
+              Administrator
+            </option>
           </select>
           <select
             name="status"
             value={formData.status}
             onChange={handleChange}
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
+            <option className="bg-[#1A1B1B]" value="Active">
+              Active
+            </option>
+            <option className="bg-[#1A1B1B]" value="Inactive">
+              Inactive
+            </option>
           </select>
           <div className="flex justify-end space-x-4 mt-6">
             <button
@@ -211,7 +300,13 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
 };
 
 // New modal component for creating an event
-const CreateEventModal = ({ isModalOpen, setIsModalOpen, onAddEvent }) => {
+const CreateEventModal = ({
+  isModalOpen,
+  setIsModalOpen,
+  onAddEvent,
+  eventToEdit,
+  onEditEvent,
+}) => {
   const [formData, setFormData] = useState({
     title: "",
     category: "",
@@ -222,6 +317,30 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, onAddEvent }) => {
     maxParticipants: 0,
   });
 
+  useEffect(() => {
+    if (eventToEdit) {
+      setFormData({
+        title: eventToEdit.title || "",
+        category: eventToEdit.category || "",
+        description: eventToEdit.description || "",
+        venue: eventToEdit.venue || "",
+        date: eventToEdit.date || "",
+        time: eventToEdit.time || "",
+        maxParticipants: eventToEdit.maxParticipants || 0,
+      });
+    } else {
+      setFormData({
+        title: "",
+        category: "",
+        description: "",
+        venue: "",
+        date: "",
+        time: "",
+        maxParticipants: 0,
+      });
+    }
+  }, [eventToEdit]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -229,13 +348,20 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, onAddEvent }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const newEvent = {
-      id: Date.now(), // Simple unique ID
-      status: "Pending Approval",
-      participants: 0,
-      ...formData,
-    };
-    onAddEvent(newEvent);
+    if (eventToEdit) {
+      onEditEvent({
+        ...eventToEdit,
+        ...formData,
+      });
+    } else {
+      const newEvent = {
+        id: Date.now(), // Simple unique ID
+        status: "Pending Approval",
+        participants: 0,
+        ...formData,
+      };
+      onAddEvent(newEvent);
+    }
     setIsModalOpen(false);
     // Clear form after submission
     setFormData({
@@ -254,7 +380,9 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, onAddEvent }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div className="bg-white/10 border border-white/20 rounded-3xl p-8 max-w-lg w-full shadow-2xl relative">
-        <h3 className="text-3xl font-bold text-white mb-6">Create New Event</h3>
+        <h3 className="text-3xl font-bold text-white mb-6">
+          {eventToEdit ? "Edit Event" : "Create New Event"}
+        </h3>
         <button
           onClick={() => setIsModalOpen(false)}
           className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
@@ -350,7 +478,7 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, onAddEvent }) => {
               type="submit"
               className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
             >
-              Create Event
+              {eventToEdit ? "Save Changes" : "Create Event"}
             </button>
           </div>
         </form>
@@ -428,92 +556,124 @@ const ActiveIcon = () => (
   </svg>
 );
 
-const AlertCard = ({ title, message }) => (
+const AlertCard = ({ title, message, buttonText, buttonLink, icon }) => (
   <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 flex items-start space-x-4">
     <div className="w-10 h-10 flex-shrink-0 flex items-center justify-center bg-red-500/30 text-red-300 rounded-full">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-6 w-6"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.308 17c-.77 1.333.192 3 1.732 3z"
-        />
-      </svg>
+      {icon}
     </div>
     <div>
       <h4 className="text-xl font-bold text-white mb-1">{title}</h4>
       <p className="text-gray-400">{message}</p>
+      {buttonText && (
+        <a
+          href={buttonLink}
+          className="mt-4 inline-flex items-center text-blue-400 hover:text-blue-500 transition-colors text-sm font-medium"
+        >
+          {buttonText}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="ml-2 h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17 8l4 4m0 0l-4 4m4-4H3"
+            />
+          </svg>
+        </a>
+      )}
     </div>
   </div>
 );
 
-const PieChart = ({ data }) => {
-  const total = data.reduce((sum, item) => sum + item.value, 0);
-  let cumulativePercentage = 0;
+// Generic Line Chart Component (Re-styled for the overview)
+const LineChart = ({ data, color, title, percentage }) => {
+  const chartHeight = 100;
+  const chartWidth = 100;
+  const xOffset = chartWidth / (data.length - 1);
+  const maxVal = Math.max(...data.map((item) => item.value)) || 1; // Avoid division by zero
+
+  const points = data
+    .map((item, index) => {
+      const x = index * xOffset;
+      const y = chartHeight - (item.value / maxVal) * chartHeight;
+      return `${x},${y}`;
+    })
+    .join(" ");
+
+  const areaPoints = `0,${chartHeight} ${points} ${chartWidth},${chartHeight}`;
+
   return (
-    <div className="relative w-48 h-48 mx-auto">
-      {data.map((item, index) => {
-        const start = cumulativePercentage;
-        cumulativePercentage += (item.value / total) * 100;
-        const end = cumulativePercentage;
-        const style = {
-          "--p": (item.value / total) * 100,
-          "--b": "16px",
-          "--c": item.color,
-          "--a": "160deg",
-        };
-        return (
-          <div key={index} className="absolute inset-0 z-10" style={style}>
-            <svg viewBox="0 0 36 36" className="w-full h-full">
-              <path
-                d="M18 2.0845a15.9155 15.9155 0 010 31.831a15.9155 15.9155 0 010-31.831"
-                fill="none"
-                stroke={item.color}
-                strokeWidth="2"
-                strokeDasharray={`${(item.value / total) * 100}, 100`}
-                strokeDashoffset={`${100 - (end - start)}`}
-                className="transform rotate-90 origin-center"
-              />
-            </svg>
-          </div>
-        );
-      })}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <div className="w-32 h-32 bg-[#1A1B1B] rounded-full flex items-center justify-center text-white/50 text-sm font-semibold">
-          Data
-        </div>
+    <div className="w-full flex flex-col justify-end relative h-full">
+      <div className="flex items-baseline mb-2">
+        <h4 className="text-lg font-semibold text-white">{title}</h4>
+        <span className="ml-2 text-green-400 text-sm font-medium">
+          {percentage} this month
+        </span>
       </div>
+      <svg
+        viewBox={`0 0 ${chartWidth} ${chartHeight}`}
+        preserveAspectRatio="none"
+        className="w-full h-full"
+      >
+        <defs>
+          <linearGradient id="lineChartGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.5" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+
+        <polyline fill="url(#lineChartGradient)" points={areaPoints} />
+        <polyline fill="none" stroke={color} strokeWidth="2" points={points} />
+        {data.map((item, index) => (
+          <circle
+            key={index}
+            cx={index * xOffset}
+            cy={chartHeight - (item.value / maxVal) * chartHeight}
+            r="2"
+            fill={color}
+            stroke="#1A1B1B"
+            strokeWidth="1"
+          />
+        ))}
+      </svg>
     </div>
   );
 };
 
-const BarChart = ({ data }) => {
-  const maxVal = Math.max(...data.map((item) => item.value));
+// Bar Chart Component (Re-styled for the overview)
+const BarChart = ({ data, color, title, percentage }) => {
+  const maxVal = Math.max(...data.map((item) => item.value)) || 1;
+
   return (
-    <div className="flex items-end h-64 w-full space-x-2">
-      {data.map((item, index) => (
-        <div
-          key={index}
-          className="flex-1 h-full flex flex-col justify-end items-center"
-        >
+    <div className="w-full flex flex-col justify-end relative h-full">
+      <div className="flex items-baseline mb-2">
+        <h4 className="text-lg font-semibold text-white">{title}</h4>
+        <span className="ml-2 text-green-400 text-sm font-medium">
+          {percentage} this month
+        </span>
+      </div>
+      <div className="flex items-end h-full w-full space-x-2 p-0">
+        {data.map((item, index) => (
           <div
-            className="w-8 rounded-t-lg transition-all duration-300 ease-out hover:scale-x-110"
-            style={{
-              height: `${(item.value / maxVal) * 100}%`,
-              backgroundColor: item.color,
-            }}
-          />
-          <div className="mt-2 text-xs text-gray-400 text-center">
-            {item.label}
+            key={index}
+            className="flex-1 h-full flex flex-col justify-end items-center"
+          >
+            <div
+              className="w-full rounded-t-sm transition-all duration-300 ease-out"
+              style={{
+                height: `${(item.value / maxVal) * 100}%`,
+                backgroundColor: color,
+                opacity: 0.7 + (index * 0.3) / data.length, // subtle gradient
+              }}
+            />
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };
@@ -526,7 +686,13 @@ const SettingSection = ({ title, children }) => (
 );
 
 // Tab Content components
-const Events = ({ events, setIsModalOpen, onStatusChange }) => {
+const Events = ({
+  events,
+  setIsModalOpen,
+  onStatusChange,
+  onEditEvent,
+  onViewDetails,
+}) => {
   const [activeTab, setActiveTab] = useState("Pending Approval");
 
   const filteredEvents = events.filter((event) => event.status === activeTab);
@@ -570,6 +736,8 @@ const Events = ({ events, setIsModalOpen, onStatusChange }) => {
               key={event.id}
               event={event}
               onStatusChange={onStatusChange}
+              onViewDetails={onViewDetails}
+              onEdit={onEditEvent}
             />
           ))
         ) : (
@@ -582,132 +750,155 @@ const Events = ({ events, setIsModalOpen, onStatusChange }) => {
   );
 };
 
-const Users = ({ users, onEditUser, onAddUser }) => (
-  <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-    <div className="flex justify-between items-center mb-6">
-      <h3 className="text-3xl font-bold text-white">User Management</h3>
-      <div className="flex space-x-4">
-        <input
-          type="text"
-          placeholder="Search users..."
-          className="bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
-        />
-        <button
-          onClick={onAddUser}
-          className="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-colors font-medium text-white"
-        >
-          Add New User
-        </button>
+const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredUsers = users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+        <h3 className="text-3xl font-bold text-white">User Management</h3>
+        <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
+          <input
+            type="text"
+            placeholder="Search users..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
+          />
+          <button
+            onClick={onAddUser}
+            className="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-colors font-medium text-white"
+          >
+            Add New User
+          </button>
+        </div>
       </div>
-    </div>
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-white/10 rounded-2xl overflow-hidden">
-        <thead className="bg-white/5">
-          <tr>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-            >
-              Name
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-            >
-              Email
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-            >
-              Role
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-            >
-              Status
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
-            >
-              Joined
-            </th>
-            <th scope="col" className="relative px-6 py-3">
-              <span className="sr-only">Actions</span>
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white/5 divide-y divide-white/5">
-          {users.map((user) => (
-            <tr key={user.id} className="hover:bg-white/5 transition-colors">
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0 h-10 w-10">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.avatar}
-                      alt=""
-                    />
-                  </div>
-                  <div className="ml-4">
-                    <div className="text-sm font-medium text-white">
-                      {user.name}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-white/10 rounded-2xl overflow-hidden">
+          <thead className="bg-white/5">
+            <tr>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+              >
+                Name
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+              >
+                Email
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+              >
+                Role
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+              >
+                Status
+              </th>
+              <th
+                scope="col"
+                className="px-6 py-3 text-left text-xs font-medium text-gray-400 uppercase tracking-wider"
+              >
+                Joined
+              </th>
+              <th scope="col" className="relative px-6 py-3">
+                <span className="sr-only">Actions</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody className="bg-white/5 divide-y divide-white/5">
+            {filteredUsers.map((user) => (
+              <tr key={user.id} className="hover:bg-white/5 transition-colors">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10">
+                      <img
+                        className="h-10 w-10 rounded-full"
+                        src={user.avatar}
+                        alt=""
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <div className="text-sm font-medium text-white">
+                        {user.name}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-400">{user.email}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-300">
-                  {user.role}
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <span
-                  className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    user.status === "Active"
-                      ? "bg-green-500/20 text-green-300"
-                      : "bg-red-500/20 text-red-300"
-                  }`}
-                >
-                  {user.status}
-                </span>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
-                {user.joinDate}
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <button
-                  onClick={() => onEditUser(user)}
-                  className="text-blue-400 hover:text-blue-600"
-                >
-                  Edit
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-400">{user.email}</div>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-500/20 text-blue-300">
+                    {user.role}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span
+                    className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                      user.status === "Active"
+                        ? "bg-green-500/20 text-green-300"
+                        : "bg-red-500/20 text-red-300"
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-400">
+                  {user.joinDate}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                  <button
+                    onClick={() => onEditUser(user)}
+                    className="text-blue-400 hover:text-blue-600"
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => onDeleteUser(user.id)}
+                    className="text-red-400 hover:text-red-600"
+                  >
+                    Delete
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-const Reports = () => {
-  const pieData = [
-    { value: 50, color: "var(--tw-colors-blue-500)" },
-    { value: 30, color: "var(--tw-colors-purple-500)" },
-    { value: 20, color: "var(--tw-colors-pink-500)" },
+const Reports = ({ events, users }) => {
+  const approvedEvents = events.filter((e) => e.status === "Approved").length;
+  const pendingEvents = events.filter(
+    (e) => e.status === "Pending Approval"
+  ).length;
+  const rejectedEvents = events.filter((e) => e.status === "Rejected").length;
+
+  const eventData = [
+    { label: "Approved", value: approvedEvents, color: "#34d399" }, // green-400
+    { label: "Pending", value: pendingEvents, color: "#facc15" }, // yellow-400
+    { label: "Rejected", value: rejectedEvents, color: "#ef4444" }, // red-500
   ];
 
-  const barData = [
-    { label: "Q1", value: 120, color: "var(--tw-colors-cyan-400)" },
-    { label: "Q2", value: 180, color: "var(--tw-colors-green-400)" },
-    { label: "Q3", value: 90, color: "var(--tw-colors-yellow-400)" },
-    { label: "Q4", value: 250, color: "var(--tw-colors-purple-400)" },
+  const userData = [
+    { label: "Q1", value: 120, color: "#22d3ee" }, // cyan-400
+    { label: "Q2", value: 180, color: "#84cc16" }, // lime-500
+    { label: "Q3", value: users.length, color: "#facc15" }, // yellow-400
+    { label: "Q4", value: 250, color: "#a855f7" }, // purple-500
   ];
   return (
     <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
@@ -721,23 +912,23 @@ const Reports = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="p-6 bg-white/5 rounded-2xl border border-white/10">
           <h4 className="text-xl font-semibold text-white mb-4">
-            Event Category Breakdown
+            Event Approval Status
           </h4>
-          <div className="flex items-center justify-center h-64">
-            <PieChart data={pieData} />
-            <div className="ml-8 space-y-2">
-              <div className="flex items-center text-gray-300">
-                <div className="w-4 h-4 rounded-full bg-blue-500 mr-2"></div>
-                Technical (50%)
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>
-                Cultural (30%)
-              </div>
-              <div className="flex items-center text-gray-300">
-                <div className="w-4 h-4 rounded-full bg-pink-500 mr-2"></div>
-                Other (20%)
-              </div>
+          <div className="flex flex-col items-center justify-center h-64">
+            <BarChart data={eventData} />
+            <div className="mt-8 space-y-2">
+              {eventData.map((item) => (
+                <div
+                  key={item.label}
+                  className="flex items-center text-gray-300"
+                >
+                  <div
+                    className="w-4 h-4 rounded-full mr-2"
+                    style={{ backgroundColor: item.color }}
+                  ></div>
+                  {item.label} ({item.value})
+                </div>
+              ))}
             </div>
           </div>
         </div>
@@ -746,7 +937,7 @@ const Reports = () => {
             Quarterly User Sign-ups
           </h4>
           <div className="flex items-center justify-center h-64">
-            <BarChart data={barData} />
+            <BarChart data={userData} />
           </div>
         </div>
       </div>
@@ -755,6 +946,7 @@ const Reports = () => {
 };
 
 const Settings = () => {
+  const [isEditing, setIsEditing] = useState(true);
   const [siteName, setSiteName] = useState("EventSphere");
   const [contactEmail, setContactEmail] = useState("support@eventsphere.edu");
   const [enable2FA, setEnable2FA] = useState(true);
@@ -767,13 +959,25 @@ const Settings = () => {
       // In a real app, this would be an API call
       console.log({ siteName, contactEmail, enable2FA, forcePasswordReset });
       setSaveStatus("Changes saved successfully!");
+      setIsEditing(false); // Switch to view mode after saving
       setTimeout(() => setSaveStatus(null), 3000);
     }, 1000);
   };
 
   return (
     <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-      <h3 className="text-3xl font-bold text-white mb-6">System Settings</h3>
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-3xl font-bold text-white">System Settings</h3>
+        {!isEditing && (
+          <button
+            onClick={() => setIsEditing(true)}
+            className="px-6 py-3 rounded-xl bg-purple-500 hover:bg-purple-600 transition-colors font-medium text-white"
+          >
+            Edit Settings
+          </button>
+        )}
+      </div>
+
       <div className="space-y-6">
         <SettingSection title="General Settings">
           <div className="space-y-4">
@@ -789,7 +993,10 @@ const Settings = () => {
                 id="siteName"
                 value={siteName}
                 onChange={(e) => setSiteName(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={!isEditing}
+                className={`w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  !isEditing && "text-white/50"
+                }`}
               />
             </div>
             <div>
@@ -804,7 +1011,10 @@ const Settings = () => {
                 id="contactEmail"
                 value={contactEmail}
                 onChange={(e) => setContactEmail(e.target.value)}
-                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                disabled={!isEditing}
+                className={`w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+                  !isEditing && "text-white/50"
+                }`}
               />
             </div>
           </div>
@@ -821,6 +1031,7 @@ const Settings = () => {
                   type="checkbox"
                   checked={enable2FA}
                   onChange={(e) => setEnable2FA(e.target.checked)}
+                  disabled={!isEditing}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -835,6 +1046,7 @@ const Settings = () => {
                   type="checkbox"
                   checked={forcePasswordReset}
                   onChange={(e) => setForcePasswordReset(e.target.checked)}
+                  disabled={!isEditing}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
@@ -843,132 +1055,176 @@ const Settings = () => {
           </div>
         </SettingSection>
       </div>
-      <div className="mt-8 flex justify-end items-center space-x-4">
-        {saveStatus && (
-          <span className="text-sm font-medium text-white/70 animate-pulse">
-            {saveStatus}
-          </span>
-        )}
-        <button
-          onClick={handleSave}
-          className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
-        >
-          Save Changes
-        </button>
-      </div>
+      {isEditing && (
+        <div className="mt-8 flex justify-end items-center space-x-4">
+          {saveStatus && (
+            <span className="text-sm font-medium text-white/70 animate-pulse">
+              {saveStatus}
+            </span>
+          )}
+          <button
+            onClick={handleSave}
+            className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
+          >
+            Save Changes
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
-const OverviewContent = ({ events, stats }) => (
-  <div className="space-y-8">
-    {/* Stat Cards */}
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <StatCard
-        title="Total Users"
-        value={stats.totalUsers}
-        icon={<UserIcon />}
-        color="from-purple-500/10 to-blue-500/10"
-      />
-      <StatCard
-        title="Total Events"
-        value={stats.totalEvents}
-        icon={<EventIcon />}
-        color="from-pink-500/10 to-red-500/10"
-      />
-      <StatCard
-        title="Pending Approvals"
-        value={stats.pendingApprovals}
-        icon={<ApprovalIcon />}
-        color="from-green-500/10 to-lime-500/10"
-      />
-      <StatCard
-        title="Active Events"
-        value={stats.activeEvents}
-        icon={<ActiveIcon />}
-        color="from-yellow-500/10 to-orange-500/10"
-      />
-    </div>
+const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
+  // Data for "User Growth Over Time" (Line Chart)
+  const userGrowthData = [
+    { label: "Week 1", value: 10 },
+    { label: "Week 2", value: 15 },
+    { label: "Week 3", value: 25 },
+    { label: "Week 4", value: 20 },
+    { label: "Week 5", value: 30 },
+    { label: "Week 6", value: 40 },
+  ];
 
-    {/* Charts and recent activity */}
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* User Growth Chart */}
-      <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-        <h3 className="text-xl font-bold text-white mb-6">
-          User Sign-ups Over Time
-        </h3>
-        <div className="w-full h-64">
-          <svg
-            viewBox="0 0 100 50"
-            preserveAspectRatio="none"
-            className="w-full h-full text-blue-400 fill-current opacity-70"
-          >
-            <line
-              x1="10"
-              y1="40"
-              x2="90"
-              y2="40"
-              stroke="#FFFFFF"
-              strokeOpacity="0.1"
-              strokeWidth="0.5"
-            />
-            <line
-              x1="10"
-              y1="30"
-              x2="90"
-              y2="30"
-              stroke="#FFFFFF"
-              strokeOpacity="0.1"
-              strokeWidth="0.5"
-            />
-            <line
-              x1="10"
-              y1="20"
-              x2="90"
-              y2="20"
-              stroke="#FFFFFF"
-              strokeOpacity="0.1"
-              strokeWidth="0.5"
-            />
-            <path
-              d="M10,40 Q25,10 40,30 T70,25 T90,15"
-              stroke="#87CEEB"
-              strokeWidth="2"
+  // Data for "Event Participation Trends" (Bar Chart)
+  const eventParticipationData = [
+    { label: "Jan", value: 12 },
+    { label: "Feb", value: 18 },
+    { label: "Mar", value: 15 },
+    { label: "Apr", value: 22 },
+    { label: "May", value: 28 },
+    { label: "Jun", value: 20 },
+  ];
+
+  return (
+    <div className="space-y-8">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <StatCard
+          title="Total Users"
+          value={stats.totalUsers}
+          icon={<UserIcon />}
+          color="from-purple-500/10 to-blue-500/10"
+        />
+        <StatCard
+          title="Total Events"
+          value={stats.totalEvents}
+          icon={<EventIcon />}
+          color="from-pink-500/10 to-red-500/10"
+        />
+        <StatCard
+          title="Pending Approvals"
+          value={stats.pendingApprovals}
+          icon={<ApprovalIcon />}
+          color="from-green-500/10 to-lime-500/10"
+        />
+        <StatCard
+          title="Active Events"
+          value={stats.activeEvents}
+          icon={<ActiveIcon />}
+          color="from-yellow-500/10 to-orange-500/10"
+        />
+      </div>
+
+      {/* Charts and recent activity */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        {/* User Growth Over Time - Line Chart (matching image) */}
+        <div className="p-6 bg-white/5 rounded-2xl border border-white/10 h-80">
+          {" "}
+          {/* Added fixed height */}
+          <LineChart
+            data={userGrowthData}
+            color="#34D399" // Green color from image
+            title="User Growth Over Time"
+            percentage="+15%"
+          />
+        </div>
+
+        {/* Event Participation Trends - Bar Chart (matching image) */}
+        <div className="p-6 bg-white/5 rounded-2xl border border-white/10 h-80">
+          {" "}
+          {/* Added fixed height */}
+          <BarChart
+            data={eventParticipationData}
+            color="#34D399" // Green color from image
+            title="Event Participation Trends"
+            percentage="+8%"
+          />
+        </div>
+
+        {/* Recent events */}
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl lg:col-span-2">
+          <h3 className="text-xl font-bold text-white mb-6">Recent Events</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {events.slice(0, 3).map((event) => (
+              <EventCard
+                key={event.id}
+                event={event}
+                onViewDetails={onViewDetails}
+                onEdit={onEditEvent}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
+      {/* Alerts Section (added based on image) */}
+      <div className="space-y-6 mt-8">
+        <h3 className="text-2xl font-bold text-white mb-4">Alerts</h3>
+        <AlertCard
+          title="Failed Login Attempts"
+          message="There have been 5 failed login attempts in the last 24 hours. Review the logs for more details."
+          buttonText="View Logs"
+          buttonLink="#"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
               fill="none"
-            />
-            <path
-              d="M10,40 Q25,10 40,30 T70,25 T90,15 L90,50 L10,50 
-              z"
-              fill="url(#gradient)"
-            />
-            <defs>
-              <linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#87CEEB" stopOpacity="0.5" />
-                <stop offset="100%" stopColor="#87CEEB" stopOpacity="0" />
-              </linearGradient>
-            </defs>
-          </svg>
-        </div>
-      </div>
-
-      {/* Recent events */}
-      <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-        <h3 className="text-xl font-bold text-white mb-6">Recent Events</h3>
-        <div className="space-y-4">
-          {events.slice(0, 3).map((event) => (
-            <EventCard key={event.id} event={event} />
-          ))}
-        </div>
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.308 17c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+          }
+        />
+        <AlertCard
+          title="Suspicious Activity Detected"
+          message="Unusual activity detected from IP address 192.168.1.100. Investigate immediately."
+          buttonText="Investigate"
+          buttonLink="#"
+          icon={
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+          }
+        />
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const AdminDashboard = () => {
   const [selectedTab, setSelectedTab] = useState("overview");
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [isCreateEventModalOpen, setIsCreateEventModalOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [eventToEdit, setEventToEdit] = useState(null);
+  const [eventToView, setEventToView] = useState(null);
 
   // Mock data for Events, now with more variety and statuses
   const [events, setEvents] = useState([
@@ -976,97 +1232,117 @@ const AdminDashboard = () => {
       id: 1,
       title: "React Workshop",
       description: "A hands-on workshop to learn the fundamentals of React.",
-      date: "Oct 26, 2025",
+      date: "2025-10-26",
+      time: "10:00",
       venue: "Main Auditorium",
       participants: 120,
       status: "Approved",
+      category: "Technical",
     },
     {
       id: 2,
-      title: "Data Science Meetup",
+      title: "Tech Meetup 2025",
       description: "Networking event for data enthusiasts and professionals.",
-      date: "Nov 15, 2025",
+      date: "2025-11-15",
+      time: "14:00",
       venue: "Tech Hub",
       participants: 85,
       status: "Approved",
+      category: "Technical",
     },
     {
       id: 3,
       title: "Cultural Fest 2025",
       description:
         "Annual cultural festival with music, dance, and food stalls.",
-      date: "Dec 01, 2025",
+      date: "2025-12-01",
+      time: "18:00",
       venue: "University Grounds",
       participants: 500,
       status: "Pending Approval",
+      category: "Cultural",
     },
     {
       id: 4,
       title: "AI & ML Seminar",
       description:
         "An expert-led discussion on the future of AI and machine learning.",
-      date: "Nov 05, 2025",
+      date: "2025-11-05",
+      time: "09:00",
       venue: "Seminar Hall B",
       participants: 75,
       status: "Approved",
+      category: "Technical",
     },
     {
       id: 5,
       title: "Robotics Hackathon",
       description: "A 24-hour hackathon to build and program robots.",
-      date: "Jan 10, 2026",
+      date: "2026-01-10",
+      time: "08:00",
       venue: "Innovation Lab",
       participants: 40,
       status: "Pending Approval",
+      category: "Technical",
     },
     {
       id: 6,
       title: "Design Thinking Workshop",
       description:
         "Learn to solve complex problems with a human-centric approach.",
-      date: "Nov 22, 2025",
+      date: "2025-11-22",
+      time: "13:00",
       venue: "Creative Space",
       participants: 30,
       status: "Rejected",
+      category: "Other",
     },
     {
       id: 7,
       title: "Cybersecurity Conference",
       description:
         "Discussing the latest threats and best practices in cybersecurity.",
-      date: "Dec 15, 2025",
+      date: "2025-12-15",
+      time: "10:00",
       venue: "Conference Center",
       participants: 150,
       status: "Approved",
+      category: "Technical",
     },
     {
       id: 8,
       title: "Startup Pitch Day",
       description: "Budding entrepreneurs present their ideas to investors.",
-      date: "Feb 01, 2026",
+      date: "2026-02-01",
+      time: "11:00",
       venue: "Business School",
       participants: 90,
       status: "Pending Approval",
+      category: "Other",
     },
     {
       id: 9,
       title: "Mobile App Development",
       description:
         "A series of lectures on building scalable mobile applications.",
-      date: "Dec 05, 2025",
+      date: "2025-12-05",
+      time: "15:00",
       venue: "Lecture Hall 101",
       participants: 60,
       status: "Rejected",
+      category: "Technical",
     },
     {
       id: 10,
       title: "Blockchain Fundamentals",
       description:
         "Introduction to blockchain technology and its applications.",
-      date: "Nov 28, 2025",
+      date: "2025-11-28",
+      time: "16:00",
       venue: "Online",
       participants: 200,
       status: "Approved",
+      category: "Technical",
     },
   ]);
 
@@ -1129,17 +1405,39 @@ const AdminDashboard = () => {
   };
 
   const handleSaveUser = (updatedUser) => {
-    if (updatedUser.id) {
+    if (users.find((user) => user.id === updatedUser.id)) {
       setUsers(
         users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
       );
     } else {
-      setUsers([...users, { ...updatedUser, id: users.length + 1 }]);
+      setUsers([...users, { ...updatedUser, id: Date.now() }]);
     }
+  };
+
+  const handleDeleteUser = (userId) => {
+    setUsers(users.filter((user) => user.id !== userId));
   };
 
   const handleAddEvent = (newEvent) => {
     setEvents([...events, newEvent]);
+  };
+
+  const handleEditEvent = (event) => {
+    setEventToEdit(event);
+    setIsCreateEventModalOpen(true);
+  };
+
+  const handleViewEventDetails = (event) => {
+    setEventToView(event);
+  };
+
+  const handleEditEventSave = (updatedEvent) => {
+    setEvents(
+      events.map((event) =>
+        event.id === updatedEvent.id ? updatedEvent : event
+      )
+    );
+    setEventToEdit(null);
   };
 
   const handleEventStatusChange = (eventId, newStatus) => {
@@ -1153,13 +1451,23 @@ const AdminDashboard = () => {
   const renderContent = () => {
     switch (selectedTab) {
       case "overview":
-        return <OverviewContent events={events} stats={stats} />;
+        return (
+          <OverviewContent
+            events={events}
+            stats={stats}
+            onViewDetails={handleViewEventDetails}
+            onEditEvent={handleEditEvent}
+            users={users}
+          />
+        );
       case "events":
         return (
           <Events
             events={events}
             setIsModalOpen={setIsCreateEventModalOpen}
             onStatusChange={handleEventStatusChange}
+            onEditEvent={handleEditEvent}
+            onViewDetails={handleViewEventDetails}
           />
         );
       case "users":
@@ -1168,10 +1476,11 @@ const AdminDashboard = () => {
             users={users}
             onEditUser={handleEditUser}
             onAddUser={handleAddUser}
+            onDeleteUser={handleDeleteUser}
           />
         );
       case "reports":
-        return <Reports />;
+        return <Reports events={events} users={users} />;
       case "settings":
         return <Settings />;
       default:
@@ -1240,6 +1549,13 @@ const AdminDashboard = () => {
           isModalOpen={isCreateEventModalOpen}
           setIsModalOpen={setIsCreateEventModalOpen}
           onAddEvent={handleAddEvent}
+          eventToEdit={eventToEdit}
+          onEditEvent={handleEditEventSave}
+        />
+        <EventDetailsModal
+          isOpen={!!eventToView}
+          onClose={() => setEventToView(null)}
+          event={eventToView}
         />
       </div>
     </div>
@@ -1247,3 +1563,49 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+/* Responsive styles using Tailwind are already present in many places.
+  To further enhance responsiveness, add these global styles for scrollbars and mobile overflow. */
+
+<style>
+  {`
+   /* Custom scrollbar for better UX on desktop and mobile */
+   ::-webkit-scrollbar {
+    width: 8px;
+    background: rgba(30,31,46,0.2);
+   }
+   ::-webkit-scrollbar-thumb {
+    background: rgba(52,211,153,0.3);
+    border-radius: 8px;
+   }
+   /* Responsive overflow for tables and modals */
+   @media (max-width: 768px) {
+    .min-w-full {
+      min-width: 100vw !important;
+    }
+    .max-w-xl, .max-w-lg, .max-w-7xl {
+      max-width: 100vw !important;
+    }
+    .rounded-[3rem], .rounded-3xl, .rounded-2xl {
+      border-radius: 1.5rem !important;
+    }
+    .p-8, .p-6, .p-4 {
+      padding: 1rem !important;
+    }
+   }
+   @media (max-width: 640px) {
+    .grid-cols-2, .grid-cols-3, .lg\\:grid-cols-2, .lg\\:grid-cols-3 {
+      grid-template-columns: 1fr !important;
+    }
+    .flex-row, .md\\:flex-row {
+      flex-direction: column !important;
+    }
+    .space-x-4, .md\\:space-x-4 {
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+    }
+    .overflow-x-auto {
+      overflow-x: scroll !important;
+    }
+   }
+  `}
+</style>;

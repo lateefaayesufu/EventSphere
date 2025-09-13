@@ -38,10 +38,11 @@ const About = () => {
 
   return (
     <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
-      {/* Animated Background Elements */}
       <Navbar />
+
+      {/* Animated Background Elements - Made Responsive */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Floating Particles */}
+        {/* Floating Particles - No change needed */}
         {[...Array(50)].map((_, i) => (
           <div
             key={i}
@@ -55,16 +56,16 @@ const About = () => {
           />
         ))}
 
-        {/* Large Gradient Orbs */}
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
+        {/* Large Gradient Orbs - Adjusted sizes for mobile and desktop */}
+        <div className="absolute -top-20 -right-20 w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-20 -left-20 w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Hero Section */}
-        <div className="text-center mb-20">
+        {/* Hero Section - Made responsive */}
+        <div className="text-center mb-16">
           <div
-            className="text-center mb-16 relative py-20 rounded-3xl overflow-hidden shadow-2xl"
+            className="text-center relative py-12 md:py-20 rounded-3xl overflow-hidden shadow-2xl"
             style={{
               backgroundImage: `url('https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=1200&h=600&fit=crop')`,
               backgroundSize: "cover",
@@ -73,12 +74,14 @@ const About = () => {
           >
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
 
-            <div className="relative flex items-center justify-center mb-6">
-              <h1 className="text-6xl md:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <div className="relative flex items-center justify-center mb-4 md:mb-6">
+              {/* Responsive font size */}
+              <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
                 About EventSphere
               </h1>
             </div>
-            <p className="relative text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
+            {/* Responsive font size */}
+            <p className="relative text-base sm:text-xl md:text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed px-4">
               Your gateway to extraordinary campus experiences. Where every
               event becomes a memory, and every participation shapes your
               journey.
@@ -86,12 +89,12 @@ const About = () => {
           </div>
         </div>
 
-        {/* Mission Section */}
+        {/* Mission Section - Already responsive, but ensured consistency */}
         <div className="mb-20">
-          <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-12 shadow-2xl">
+          <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 md:p-12 shadow-2xl">
             <div className="text-center mb-12">
               <svg
-                className="w-16 h-16 text-gray-400 mx-auto mb-6 animate-bounce"
+                className="w-12 h-12 md:w-16 md:h-16 text-gray-400 mx-auto mb-6 animate-bounce"
                 fill="currentColor"
                 viewBox="0 0 20 20"
               >
@@ -101,10 +104,12 @@ const About = () => {
                   clipRule="evenodd"
                 />
               </svg>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+              {/* Responsive font size */}
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
                 Our Mission
               </h2>
-              <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              {/* Responsive font size */}
+              <p className="text-base sm:text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
                 To revolutionize campus life by creating a seamless bridge
                 between students and opportunities, fostering engagement, and
                 building a vibrant academic community where no one misses out.
@@ -112,8 +117,9 @@ const About = () => {
             </div>
 
             <div className="grid md:grid-cols-3 gap-8">
+              {/* Card 1 */}
               <div className="text-center group">
-                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl p-8 border border-white/10 group-hover:border-purple-400/50 transition-all duration-300">
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-2xl p-6 border border-white/10 group-hover:border-purple-400/50 transition-all duration-300">
                   <svg
                     className="w-12 h-12 text-purple-400 mx-auto mb-4"
                     fill="currentColor"
@@ -122,14 +128,15 @@ const About = () => {
                     <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
                   </svg>
                   <h3 className="text-xl font-bold text-white mb-3">Connect</h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 text-sm">
                     Bringing students together through shared interests and
                     experiences
                   </p>
                 </div>
               </div>
+              {/* Card 2 */}
               <div className="text-center group">
-                <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl p-8 border border-white/10 group-hover:border-blue-400/50 transition-all duration-300">
+                <div className="bg-gradient-to-r from-blue-500/20 to-cyan-500/20 rounded-2xl p-6 border border-white/10 group-hover:border-blue-400/50 transition-all duration-300">
                   <svg
                     className="w-12 h-12 text-blue-400 mx-auto mb-4"
                     fill="currentColor"
@@ -142,14 +149,15 @@ const About = () => {
                     />
                   </svg>
                   <h3 className="text-xl font-bold text-white mb-3">Engage</h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 text-sm">
                     Making participation effortless and rewarding for every
                     student
                   </p>
                 </div>
               </div>
+              {/* Card 3 */}
               <div className="text-center group">
-                <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl p-8 border border-white/10 group-hover:border-green-400/50 transition-all duration-300">
+                <div className="bg-gradient-to-r from-green-500/20 to-emerald-500/20 rounded-2xl p-6 border border-white/10 group-hover:border-green-400/50 transition-all duration-300">
                   <svg
                     className="w-12 h-12 text-green-400 mx-auto mb-4"
                     fill="currentColor"
@@ -162,7 +170,7 @@ const About = () => {
                     />
                   </svg>
                   <h3 className="text-xl font-bold text-white mb-3">Grow</h3>
-                  <p className="text-gray-400">
+                  <p className="text-gray-400 text-sm">
                     Empowering personal and academic development through events
                   </p>
                 </div>
@@ -171,11 +179,12 @@ const About = () => {
           </div>
         </div>
 
-        {/* What is EventSphere Section */}
+        {/* What is EventSphere Section - Made responsive */}
         <div className="mb-20">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-8">
+              {/* Responsive font size */}
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
                 What is EventSphere?
               </h2>
               <div className="space-y-6">
@@ -195,7 +204,7 @@ const About = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       Centralized Hub
                     </h3>
-                    <p className="text-gray-400">
+                    <p className="text-gray-400 text-sm">
                       Your one-stop destination for all college events,
                       eliminating the chaos of scattered information across
                       multiple platforms.
@@ -218,7 +227,7 @@ const About = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       Smart Discovery
                     </h3>
-                    <p className="text-gray-400">
+                    <p className="text-gray-400 text-sm">
                       Advanced filtering and personalized recommendations help
                       you discover events that align with your interests and
                       schedule.
@@ -241,7 +250,7 @@ const About = () => {
                     <h3 className="text-xl font-semibold text-white mb-2">
                       Seamless Experience
                     </h3>
-                    <p className="text-gray-400">
+                    <p className="text-gray-400 text-sm">
                       From registration to certificate collection, every step is
                       designed to be intuitive and hassle-free.
                     </p>
@@ -249,18 +258,18 @@ const About = () => {
                 </div>
               </div>
             </div>
-            <div className="relative">
-              <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-3xl p-8 border border-white/20 backdrop-blur-xl">
+            <div className="relative mt-8 lg:mt-0">
+              <div className="bg-gradient-to-br from-purple-500/20 to-blue-500/20 rounded-3xl p-6 md:p-8 border border-white/20 backdrop-blur-xl">
                 <img
                   src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop"
                   alt="Students collaborating"
-                  className="w-full h-64 object-cover rounded-2xl mb-6"
+                  className="w-full h-48 md:h-64 object-cover rounded-2xl mb-6"
                 />
                 <div className="text-center">
                   <h3 className="text-2xl font-bold text-white mb-3">
                     Join the Revolution
                   </h3>
-                  <p className="text-gray-300">
+                  <p className="text-gray-300 text-sm">
                     Be part of the campus community that never misses an
                     opportunity.
                   </p>
@@ -270,28 +279,28 @@ const About = () => {
           </div>
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid - Already responsive, but ensured padding consistency */}
         <div className="mb-20">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
               Why Choose EventSphere?
             </h2>
-            <p className="text-xl text-gray-400 max-w-3xl mx-auto">
+            <p className="text-base md:text-xl text-gray-400 max-w-3xl mx-auto">
               Discover the features that make EventSphere the ultimate campus
               event platform
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {features.map((feature, index) => {
               return (
                 <div
                   key={index}
-                  className="group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
+                  className="group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
                 >
-                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+                  <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 rounded-2xl w-12 h-12 md:w-16 md:h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
                     <svg
-                      className="w-8 h-8 text-purple-400"
+                      className="w-6 h-6 md:w-8 md:h-8 text-purple-400"
                       fill="currentColor"
                       viewBox="0 0 20 20"
                     >
@@ -302,10 +311,10 @@ const About = () => {
                       />
                     </svg>
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-4 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
+                  <h3 className="text-xl font-bold text-white mb-2 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-300 group-hover:to-cyan-300 group-hover:bg-clip-text transition-all duration-300">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 group-hover:text-gray-300 transition-colors leading-relaxed">
+                  <p className="text-gray-400 text-sm group-hover:text-gray-300 transition-colors leading-relaxed">
                     {feature.description}
                   </p>
                 </div>
@@ -314,30 +323,30 @@ const About = () => {
           </div>
         </div>
 
-        {/* For Students & Organizers Section */}
+        {/* For Students & Organizers Section - Made responsive */}
         <div className="mb-20">
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="grid lg:grid-cols-2 gap-8 md:gap-12">
             {/* For Students */}
-            <div className="bg-gradient-to-b from-purple-500/10 to-blue-500/10 backdrop-blur-xl border border-white/20 rounded-3xl p-10">
-              <div className="text-center mb-8">
+            <div className="bg-gradient-to-b from-purple-500/10 to-blue-500/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-10">
+              <div className="text-center mb-6 md:mb-8">
                 <svg
-                  className="w-16 h-16 text-purple-400 mx-auto mb-4"
+                  className="w-12 h-12 md:w-16 md:h-16 text-purple-400 mx-auto mb-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
                   <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
                 </svg>
-                <h3 className="text-3xl font-bold text-white mb-4">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                   For Students
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-gray-400 text-sm">
                   Your campus adventure starts here
                 </p>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-purple-400"
+                    className="w-5 h-5 text-purple-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -347,13 +356,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Discover events that match your interests
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-purple-400"
+                    className="w-5 h-5 text-purple-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -363,13 +372,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Never miss registration deadlines
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-purple-400"
+                    className="w-5 h-5 text-purple-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -379,13 +388,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Track your participation history
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-purple-400"
+                    className="w-5 h-5 text-purple-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -395,13 +404,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Earn digital certificates
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-purple-400"
+                    className="w-5 h-5 text-purple-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -411,7 +420,7 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Connect with like-minded peers
                   </span>
                 </div>
@@ -419,10 +428,10 @@ const About = () => {
             </div>
 
             {/* For Organizers */}
-            <div className="bg-gradient-to-b from-green-500/10 to-teal-500/10 backdrop-blur-xl border border-white/20 rounded-3xl p-10">
-              <div className="text-center mb-8">
+            <div className="bg-gradient-to-b from-green-500/10 to-teal-500/10 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-10">
+              <div className="text-center mb-6 md:mb-8">
                 <svg
-                  className="w-16 h-16 text-green-400 mx-auto mb-4"
+                  className="w-12 h-12 md:w-16 md:h-16 text-green-400 mx-auto mb-4"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -432,17 +441,17 @@ const About = () => {
                     clipRule="evenodd"
                   />
                 </svg>
-                <h3 className="text-3xl font-bold text-white mb-4">
+                <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">
                   For Organizers
                 </h3>
-                <p className="text-gray-400">
+                <p className="text-gray-400 text-sm">
                   Powerful tools for seamless event management
                 </p>
               </div>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-green-400"
+                    className="w-5 h-5 text-green-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -452,13 +461,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Effortless event creation and management
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-green-400"
+                    className="w-5 h-5 text-green-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -468,13 +477,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Automated registration handling
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-green-400"
+                    className="w-5 h-5 text-green-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -484,13 +493,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Real-time analytics and insights
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-green-400"
+                    className="w-5 h-5 text-green-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -500,13 +509,13 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Streamlined feedback collection
                   </span>
                 </div>
                 <div className="flex items-center gap-4">
                   <svg
-                    className="w-5 h-5 text-green-400"
+                    className="w-5 h-5 text-green-400 flex-shrink-0"
                     fill="currentColor"
                     viewBox="0 0 20 20"
                   >
@@ -516,7 +525,7 @@ const About = () => {
                       clipRule="evenodd"
                     />
                   </svg>
-                  <span className="text-gray-300">
+                  <span className="text-gray-300 text-sm">
                     Automated certificate distribution
                   </span>
                 </div>
@@ -525,22 +534,22 @@ const About = () => {
           </div>
         </div>
 
-        {/* Call to Action */}
+        {/* Call to Action - Made responsive */}
         <div className="text-center">
-          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-xl border border-white/20 rounded-3xl p-12 shadow-2xl">
-            <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
+          <div className="bg-gradient-to-r from-purple-500/20 to-blue-500/20 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-12 shadow-2xl">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">
               Ready to Transform Your Campus Experience?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Join thousands of students who have already discovered their
               passion through EventSphere
             </p>
+            {/* Buttons now stack on mobile and are side-by-side on larger screens */}
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <button className="group bg-white text-slate-900 px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-white/90 transition-all transform hover:scale-105 shadow-2xl">
+              <button className="group bg-white text-slate-900 w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-white/90 transition-all transform hover:scale-105 shadow-2xl">
                 <span>Browse Events</span>
               </button>
-
-              <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all">
+              <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all">
                 Register Now
               </button>
             </div>

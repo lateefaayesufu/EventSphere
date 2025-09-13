@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
 import {
   createBrowserRouter,
@@ -26,6 +26,7 @@ import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
 
 import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
+import OrganizerDashboard from "./organizers/dashboard/Dashboard";
 
 const AppLayout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -45,8 +46,16 @@ const AppLayout = () => {
   );
 };
 
+import { useLenis } from "lenis/react";
 // Admin layout wrapper (with sidebar/topbar etc.)
 const AdminLayout = () => {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (lenis) {
+      lenis.destroy();
+    }
+  }, [lenis]);
   return (
     <div className="admin-layout">
       {/* Add a sidebar or navbar here */}
@@ -56,8 +65,31 @@ const AdminLayout = () => {
 };
 
 const ParticipationLayout = () => {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (lenis) {
+      lenis.destroy();
+    }
+  }, [lenis]);
+
   return (
     <div className="participation-layout">
+      {/* Add a sidebar or navbar here */}
+      <Outlet /> {/* This is where nested admin pages render */}
+    </div>
+  );
+};
+const OrganizerLayout = () => {
+  const lenis = useLenis();
+
+  useEffect(() => {
+    if (lenis) {
+      lenis.destroy();
+    }
+  }, [lenis]);
+  return (
+    <div className="organizer-layout">
       {/* Add a sidebar or navbar here */}
       <Outlet /> {/* This is where nested admin pages render */}
     </div>
@@ -99,6 +131,16 @@ const router = createBrowserRouter([
           { index: true, element: <Navigate to="dashboard" replace /> }, // default
 
           { path: "dashboard", element: <ParticipantDashboard /> },
+        ],
+      },
+
+      {
+        path: "organizer",
+        element: <OrganizerLayout />,
+        children: [
+          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+
+          { path: "dashboard", element: <OrganizerDashboard /> },
         ],
       },
     ],

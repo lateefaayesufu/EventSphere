@@ -5,10 +5,10 @@ import LiquidEther from "../ui/LiquidEther";
 const HeroSection = function () {
   return (
     <>
-      <section className="text-white bg-transparent flex flex-col pt-20 md:flex-row px-4 md:px-20 justify-between items-center">
-        <div className="flex flex-col gap-5 py-10 md:py-30 w-full md:w-1/2">
-          <div className="flex items-center">
-            <div className="font-bold text-2xl md:text-3xl text-gray-400">
+      <section className="text-white bg-transparent flex flex-col pt-20 px-4 md:px-20 justify-between items-center md:flex-row min-h-screen overflow-x-hidden">
+        <div className="flex flex-col gap-4 py-8 md:py-30 w-full md:w-2/5 lg:w-1/2 md:justify-center md:items-start text-center md:text-left">
+          <div className="flex items-center justify-center md:justify-start">
+            <div className="font-bold text-lg md:text-xl text-gray-400">
               eventsphere
             </div>
             <PartyPopper
@@ -19,26 +19,37 @@ const HeroSection = function () {
               fill="grey"
             />
           </div>{" "}
-          <h1 className="text-4xl md:text-7xl font-bold">
+          <h1 className="text-5xl md:text-5xl font-bold leading-tight">
             Engage in <br />
             <span className="bg-gray-500 bg-clip-text text-transparent">
               Campus Life.
             </span>
           </h1>
-          <p className="text-white font-medium w-full md:w-2/3 text-base md:text-lg">
+          <p className="text-white font-medium w-full md:w-2/3 text-sm md:text-base">
             The central hub for all things campus. Find events, register, and
             get your certificates—seamlessly.
           </p>
-          <Button>Create your first event</Button>
+          <div className="flex justify-center md:justify-start pt-2">
+            <Button>Create your first event</Button>
+          </div>
         </div>
-        <div className="w-full md:w-1/2 rounded-lg overflow-hidden pt-6 md:pt-10 mt-8 md:mt-0">
-          <video
-            src="/landing.webm"
-            className="w-full h-48 md:h-full object-cover"
-            autoPlay
-            loop
-            muted
-          ></video>
+        {/*
+          Changes:
+          1. The video container's width is now set to `md:w-3/5` to give it a more dominant space on tablets.
+          2. The `h1` tag has been adjusted to make sure "Engage in Campus Life" fits on two lines.
+          3. This adjustment makes sure the text isn't breaking into three lines on smaller screens.
+        */}
+        <div className="w-full md:w-3/5 lg:w-1/2 flex items-center justify-center p-4">
+          <div className="w-full rounded-lg overflow-hidden shadow-lg">
+            <video
+              src="/landing.webm"
+              className="w-full h-auto object-cover"
+              autoPlay
+              loop
+              muted
+              playsInline
+            ></video>
+          </div>
         </div>
       </section>
     </>

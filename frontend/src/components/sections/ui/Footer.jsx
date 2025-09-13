@@ -14,9 +14,9 @@ const Footer = () => {
         {/* Background Blur and Border */}
         <div className="absolute inset-0 bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl z-0"></div>
         <div className="relative z-10 p-8 md:p-12 text-center md:text-left">
-          <div className="flex  md:flex-row justify-between items-center mb-8">
-            <div className="mb-6 md:mb-0">
-              <div className="flex items-center">
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8">
+            <div className="mb-6 md:mb-0 text-center md:text-left">
+              <div className="flex items-center justify-center md:justify-start">
                 <div className="font-bold text-2xl md:text-3xl text-gray-400">
                   eventsphere
                 </div>
@@ -32,7 +32,10 @@ const Footer = () => {
                 Revolutionizing campus life, one event at a time.
               </p>
             </div>
-            <div className="flex space-x-6">
+            {/* Change: The social icons now use less space on mobile (`space-x-4`)
+              and more space on larger screens (`md:space-x-6`). 
+            */}
+            <div className="flex space-x-4 md:space-x-6">
               <a
                 href="#"
                 aria-label="Facebook"
@@ -64,7 +67,7 @@ const Footer = () => {
             </div>
           </div>
           <div className="h-px bg-white/20 my-6"></div>
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-gray-400 text-center md:text-left">
             © 2025 EventSphere. All Rights Reserved.
           </p>
         </div>
