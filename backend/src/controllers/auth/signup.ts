@@ -22,7 +22,7 @@ export const signup = asyncCatcher(async (req: Request, res: Response) => {
 			fullName,
 			username,
 			contactNumber,
-			role: "ADMIN",
+							role: "PARTICIPANT",
 		},
 	});
 

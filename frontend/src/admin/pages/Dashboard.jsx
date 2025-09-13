@@ -1,4 +1,25 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
+import { useAuthCheck } from "../../hooks/useAuthCheck";
+import LoadingSpinner from "../../components/sections/ui/LoadingSpinner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import {
+  createEvent,
+  getAllEvents,
+  approveEvent,
+  rejectEvent,
+  updateEvent, // Added for edit functionality
+} from "../../api/events";
+import {
+  getAllUsers,
+  createUser, // Added for user management
+  updateUser, // Added for user management
+  deleteUser, // Added for user management
+} from "../../api/users";
+import { toast } from "sonner";
 
 // Helper components for the Overview tab
 const StatCard = ({ title, value, icon, color }) => (
@@ -13,9 +34,131 @@ const StatCard = ({ title, value, icon, color }) => (
   </div>
 );
 
-// Viewing event details
+// Event card (combined from both versions)
+const EventCard = ({ event, onApprove, onReject, userRole, onViewDetails, onEdit }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const isAdmin = userRole === "ADMIN"; // Check if user is admin
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "APPROVED":
+        return "bg-green-500/20 text-green-300";
+      case "PENDING":
+        return "bg-yellow-500/20 text-yellow-300";
+      case "REJECTED":
+        return "bg-red-500/20 text-red-300";
+      default:
+        return "bg-blue-500/20 text-blue-300";
+    }
+  };
+
+  return (
+    <div className="bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] border border-white/10 rounded-2xl p-6 transition-transform hover:scale-[1.02] duration-200">
+      <div className="flex justify-between items-start mb-4">
+        <div>
+          <h4 className="text-xl font-semibold text-white">{event.title}</h4>
+          <span
+            className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusColor(
+              event.status
+            )}`}
+          >
+            {event.status}
+          </span>
+        </div>
+        {/* Action Dropdown */}
+        <div className="relative">
+          <button
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+            className="text-white/70 hover:text-white transition-colors"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+              />
+            </svg>
+          </button>
+          {isDropdownOpen && (
+            <div className="absolute right-0 mt-2 w-48 bg-[#1A1B1B] rounded-lg shadow-lg py-1 z-10 border border-white/10">
+              {event.status === "PENDING" && isAdmin && (
+                <>
+                  <button
+                    onClick={() => {
+                      onApprove(event.id); // Call onApprove
+                      setIsDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-green-300 hover:bg-white/5"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    onClick={() => {
+                      onReject(event.id); // Call onReject
+                      setIsDropdownOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-300 hover:bg-white/5"
+                  >
+                    Reject
+                  </button>
+                </>
+              )}
+              <button
+                onClick={() => {
+                  onViewDetails(event);
+                  setIsDropdownOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-white/70 hover:bg-white/5"
+              >
+                View Details
+              </button>
+              <button
+                onClick={() => {
+                  onEdit(event);
+                  setIsDropdownOpen(false);
+                }}
+                className="block w-full text-left px-4 py-2 text-sm text-white/70 hover:bg-white/5"
+              >
+                Edit
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+      <p className="text-gray-400 text-sm mb-2">{event.description}</p>
+      <div className="flex items-center space-x-4 text-sm text-gray-400">
+        <span>{new Date(event.date).toLocaleDateString()}</span> {/* Format date */}
+        <span>{event.venue}</span>
+        <span>{event.participants} Participants</span>
+      </div>
+    </div>
+  );
+};
+
+// Viewing event details (from >>>>>>> main)
 const EventDetailsModal = ({ isOpen, onClose, event }) => {
   if (!isOpen || !event) return null;
+
+  const getStatusColor = (status) => {
+    switch (status) {
+      case "APPROVED":
+        return "bg-green-500/20 text-green-300";
+      case "PENDING":
+        return "bg-yellow-500/20 text-yellow-300";
+      case "REJECTED":
+        return "bg-red-500/20 text-red-300";
+      default:
+        return "bg-blue-500/20 text-blue-300";
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -50,7 +193,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
             {event.description}
           </p>
           <p>
-            <span className="font-semibold text-white">Date:</span> {event.date}
+            <span className="font-semibold text-white">Date:</span> {new Date(event.date).toLocaleDateString()}
           </p>
           <p>
             <span className="font-semibold text-white">Venue:</span>{" "}
@@ -63,13 +206,9 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
           <p>
             <span className="font-semibold text-white">Status:</span>{" "}
             <span
-              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                event.status === "Approved"
-                  ? "bg-green-500/20 text-green-300"
-                  : event.status === "Pending Approval"
-                  ? "bg-yellow-500/20 text-yellow-300"
-                  : "bg-red-500/20 text-red-300"
-              }`}
+              className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusColor(
+                event.status
+              )}`}
             >
               {event.status}
             </span>
@@ -80,84 +219,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
   );
 };
 
-//  Event card
-const EventCard = ({ event, onStatusChange, onViewDetails, onEdit }) => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Approved":
-        return "bg-green-500/20 text-green-300";
-      case "Pending Approval":
-        return "bg-yellow-500/20 text-yellow-300";
-      case "Rejected":
-        return "bg-red-500/20 text-red-300";
-      default:
-        return "bg-blue-500/20 text-blue-300";
-    }
-  };
-
-  return (
-    <div className="bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] border border-white/10 rounded-2xl p-6 transition-transform hover:scale-[1.02] duration-200">
-      <div className="flex justify-between items-start mb-4">
-        <div>
-          <h4 className="text-xl font-semibold text-white">{event.title}</h4>
-          <span
-            className={`text-xs font-semibold px-3 py-1 rounded-full ${getStatusColor(
-              event.status
-            )}`}
-          >
-            {event.status}
-          </span>
-        </div>
-        {/* Admin Dropdown */}
-        <div className="relative inline-block text-left w-full sm:w-auto">
-          <select
-            value={event.status}
-            onChange={(e) => onStatusChange(event.id, e.target.value)}
-            className="w-full sm:w-48 appearance-none bg-white/5 backdrop-blur-3xl border border-white/20 text-white rounded-xl text-xs sm:text-sm font-medium pl-3 pr-8 py-1.5 hover:bg-white/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            <option className="bg-[#1A1B1B] text-white" value="Approved">
-              Approve
-            </option>
-            <option className="bg-[#1A1B1B] text-white" value="Rejected">
-              Reject
-            </option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white/70">
-            <svg
-              className="h-4 w-4 fill-current"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l-.707.707L15 8.243l-5.707-5.707-.707.707L13.586 8H4v1h9.586L9.293 12.95z" />
-            </svg>
-          </div>
-        </div>
-      </div>
-      <p className="text-gray-400 text-sm mb-2">{event.description}</p>
-      <div className="flex items-center space-x-4 text-sm text-gray-400">
-        <span>{event.date}</span>
-        <span>{event.venue}</span>
-        <span>{event.participants} Participants</span>
-      </div>
-      <div className="mt-4 flex space-x-2">
-        <button
-          onClick={() => onViewDetails(event)}
-          className="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors"
-        >
-          View Details
-        </button>
-        <button
-          onClick={() => onEdit(event)}
-          className="px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm font-medium hover:bg-purple-500/30 transition-colors"
-        >
-          Edit
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// Creating/editing a user
+// Creating/editing a user (combined from both versions)
 const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -182,7 +244,7 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
         email: "",
         role: "User",
         status: "Active",
-        avatar: "",
+        avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=NN", // Default avatar
       });
     }
   }, [user]);
@@ -308,83 +370,97 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
   );
 };
 
-// Creating an event
-const CreateEventModal = ({
-  isModalOpen,
-  setIsModalOpen,
-  onAddEvent,
-  eventToEdit,
-  onEditEvent,
-}) => {
-  const [formData, setFormData] = useState({
-    title: "",
-    category: "",
-    description: "",
-    venue: "",
-    date: "",
-    time: "",
-    maxParticipants: 0,
+const createEventSchema = z.object({
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters long"),
+  category: z.string().min(3, "Category must be at least 3 characters long"),
+  date: z.string(),
+  venue: z.string().min(3, "Venue must be at least 3 characters long"),
+  capacity: z.preprocess(
+    (a) => parseInt(z.string().parse(a), 10),
+    z.number().int().positive("Capacity must be a positive integer")
+  ),
+});
+
+// Creating/editing an event (combined from both versions)
+const CreateEventModal = ({ isModalOpen, setIsModalOpen, eventToEdit }) => {
+  const queryClient = useQueryClient();
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(createEventSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      category: "",
+      date: "",
+      venue: "",
+      capacity: 0,
+    },
   });
 
   useEffect(() => {
     if (eventToEdit) {
-      setFormData({
-        title: eventToEdit.title || "",
-        category: eventToEdit.category || "",
-        description: eventToEdit.description || "",
-        venue: eventToEdit.venue || "",
-        date: eventToEdit.date || "",
-        time: eventToEdit.time || "",
-        maxParticipants: eventToEdit.maxParticipants || 0,
-      });
+      // Pre-fill form for editing
+      setValue("title", eventToEdit.title);
+      setValue("description", eventToEdit.description);
+      setValue("category", eventToEdit.category);
+      // Format date for datetime-local input
+      const eventDate = new Date(eventToEdit.date);
+      const formattedDate = eventDate.toISOString().slice(0, 16); // YYYY-MM-DDTHH:mm
+      setValue("date", formattedDate);
+      setValue("venue", eventToEdit.venue);
+      setValue("capacity", eventToEdit.capacity);
     } else {
-      setFormData({
-        title: "",
-        category: "",
-        description: "",
-        venue: "",
-        date: "",
-        time: "",
-        maxParticipants: 0,
-      });
+      reset(); // Reset form for new event
     }
-  }, [eventToEdit]);
+  }, [eventToEdit, reset, setValue]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const createMutation = useMutation({
+    mutationFn: createEvent,
+    onSuccess: () => {
+      toast.success("Event created successfully!");
+      queryClient.invalidateQueries(["allEvents"]);
+      setIsModalOpen(false);
+      reset();
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || "Failed to create event.");
+    },
+  });
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const updateMutation = useMutation({
+    mutationFn: updateEvent, // Assuming an updateEvent API function exists
+    onSuccess: () => {
+      toast.success("Event updated successfully!");
+      queryClient.invalidateQueries(["allEvents"]);
+      setIsModalOpen(false);
+      reset();
+    },
+    onError: (error) => {
+      toast.error(error.response?.data?.error || "Failed to update event.");
+    },
+  });
+
+  const onSubmit = (data) => {
+    const isoDate = new Date(data.date).toISOString();
     if (eventToEdit) {
-      onEditEvent({
-        ...eventToEdit,
-        ...formData,
-      });
+      updateMutation.mutate({ ...data, id: eventToEdit.id, date: isoDate }); // Pass ID for update
     } else {
-      const newEvent = {
-        id: Date.now(), // Simple unique ID
-        status: "Pending Approval",
-        participants: 0,
-        ...formData,
-      };
-      onAddEvent(newEvent);
+      createMutation.mutate({ ...data, date: isoDate });
     }
-    setIsModalOpen(false);
-    // Clear form after submission
-    setFormData({
-      title: "",
-      category: "",
-      description: "",
-      venue: "",
-      date: "",
-      time: "",
-      maxParticipants: 0,
-    });
   };
 
   if (!isModalOpen) return null;
+
+  const isProcessing = isSubmitting || createMutation.isPending || updateMutation.isPending;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -411,70 +487,98 @@ const CreateEventModal = ({
             />
           </svg>
         </button>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            name="title"
-            placeholder="Event Title"
-            value={formData.title}
-            onChange={handleChange}
-            required
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="text"
-            name="category"
-            placeholder="Category (e.g., Technical, Cultural)"
-            value={formData.category}
-            onChange={handleChange}
-            required
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <textarea
-            name="description"
-            placeholder="Event Description"
-            value={formData.description}
-            onChange={handleChange}
-            required
-            rows="3"
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          ></textarea>
-          <input
-            type="text"
-            name="venue"
-            placeholder="Venue"
-            value={formData.venue}
-            onChange={handleChange}
-            required
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div>
             <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              type="text"
+              name="title"
+              placeholder="Event Title"
+              {...register("title")}
+              disabled={isProcessing}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
             />
-            <input
-              type="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
-              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.title.message}
+              </p>
+            )}
           </div>
-          <input
-            type="number"
-            name="maxParticipants"
-            placeholder="Max Participants"
-            value={formData.maxParticipants}
-            onChange={handleChange}
-            required
-            className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <div>
+            <input
+              type="text"
+              name="category"
+              placeholder="Category (e.g., Technical, Cultural)"
+              {...register("category")}
+              disabled={isProcessing}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            {errors.category && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.category.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <textarea
+              name="description"
+              placeholder="Event Description"
+              {...register("description")}
+              disabled={isProcessing}
+              rows="3"
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            ></textarea>
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              type="text"
+              name="venue"
+              placeholder="Venue"
+              {...register("venue")}
+              disabled={isProcessing}
+              className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            {errors.venue && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.venue.message}
+              </p>
+            )}
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <input
+                type="datetime-local"
+                name="date"
+                {...register("date")}
+                disabled={isProcessing}
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              {errors.date && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.date.message}
+                </p>
+              )}
+            </div>
+            <div>
+              <input
+                type="number"
+                name="capacity"
+                placeholder="Max Participants"
+                {...register("capacity")}
+                disabled={isProcessing}
+                className="w-full bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              {errors.capacity && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.capacity.message}
+                </p>
+              )}
+            </div>
+          </div>
           <div className="flex justify-end space-x-4 mt-6">
             <button
               type="button"
@@ -485,9 +589,10 @@ const CreateEventModal = ({
             </button>
             <button
               type="submit"
-              className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
+              disabled={isProcessing}
+              className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {eventToEdit ? "Save Changes" : "Create Event"}
+              {isProcessing ? "Processing..." : eventToEdit ? "Save Changes" : "Create Event"}
             </button>
           </div>
         </form>
@@ -496,7 +601,7 @@ const CreateEventModal = ({
   );
 };
 
-// Helper components and icons
+// Helper components and icons (mostly from <<<<<<< main, AlertCard from >>>>>>> main)
 const UserIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -599,7 +704,7 @@ const AlertCard = ({ title, message, buttonText, buttonLink, icon }) => (
   </div>
 );
 
-// Generic Line Chart Component
+// Generic Line Chart Component (from >>>>>>> main)
 const LineChart = ({ data, color, title, percentage }) => {
   const chartHeight = 100;
   const chartWidth = 100;
@@ -654,7 +759,7 @@ const LineChart = ({ data, color, title, percentage }) => {
   );
 };
 
-// Bar Chart Component
+// Bar Chart Component (from >>>>>>> main)
 const BarChart = ({ data, color, title, percentage }) => {
   const maxVal = Math.max(...data.map((item) => item.value)) || 1;
 
@@ -662,9 +767,11 @@ const BarChart = ({ data, color, title, percentage }) => {
     <div className="w-full flex flex-col justify-end relative h-full">
       <div className="flex items-baseline mb-2">
         <h4 className="text-lg font-semibold text-white">{title}</h4>
-        <span className="ml-2 text-green-400 text-sm font-medium">
-          {percentage} this month
-        </span>
+        {percentage && (
+          <span className="ml-2 text-green-400 text-sm font-medium">
+            {percentage} this month
+          </span>
+        )}
       </div>
       <div className="flex items-end h-full w-full space-x-2 p-0">
         {data.map((item, index) => (
@@ -676,7 +783,7 @@ const BarChart = ({ data, color, title, percentage }) => {
               className="w-full rounded-t-sm transition-all duration-300 ease-out"
               style={{
                 height: `${(item.value / maxVal) * 100}%`,
-                backgroundColor: color,
+                backgroundColor: item.color || color,
                 opacity: 0.7 + (index * 0.3) / data.length,
               }}
             />
@@ -695,46 +802,118 @@ const SettingSection = ({ title, children }) => (
 );
 
 // Tab Content components
-const Events = ({
-  events,
-  setIsModalOpen,
-  onStatusChange,
-  onEditEvent,
-  onViewDetails,
-}) => {
-  const [activeTab, setActiveTab] = useState("Pending Approval");
+
+// Events component (combined from both versions)
+const Events = ({ setIsModalOpen, userRole, onViewDetails, onEdit }) => {
+  const queryClient = useQueryClient();
+
+  const [activeTab, setActiveTab] = useState("PENDING");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
+
+  const {
+    data: eventsData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["allEvents", currentPage],
+    queryFn: () => getAllEvents(currentPage, itemsPerPage),
+  });
+
+  const events = eventsData?.events || [];
+  const totalEventsCount = eventsData?.totalCount || 0; // Assuming API returns total count
+
+  const approveMutation = useMutation({
+    mutationFn: approveEvent,
+    onSuccess: () => {
+      toast.success("Event approved successfully!");
+      queryClient.invalidateQueries(["allEvents"]);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.error || "Failed to approve event.");
+    },
+  });
+
+  const rejectMutation = useMutation({
+    mutationFn: rejectEvent,
+    onSuccess: () => {
+      toast.success("Event rejected successfully!");
+      queryClient.invalidateQueries(["allEvents"]);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.error || "Failed to reject event.");
+    },
+  });
+
+  const handleApprove = (id) => {
+    approveMutation.mutate(id);
+  };
+
+  const handleReject = (id) => {
+    rejectMutation.mutate(id);
+  };
 
   const filteredEvents = events.filter((event) => event.status === activeTab);
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-xl">
+          <h3 className="text-3xl font-bold text-white mb-6">
+            Events Management
+          </h3>
+          <p className="text-gray-400 text-center text-lg py-8">
+            Loading events...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-xl">
+          <h3 className="text-3xl font-bold text-white mb-6">
+            Events Management
+          </h3>
+          <p className="text-red-400 text-center text-lg py-8">
+            {error.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const totalPages = Math.ceil(totalEventsCount / itemsPerPage);
+
   return (
-    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-4 md:p-8 shadow-2xl">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
-        <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-0">
-          Events Management
-        </h3>
+    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-3xl font-bold text-white">Events Management</h3>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white text-sm sm:text-base"
+          className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
         >
           Create New Event
         </button>
       </div>
 
       {/* Tabs for event status */}
-      <div className="flex flex-wrap space-x-2 sm:space-x-4 mb-8 border-b border-white/10">
-        {["Pending Approval", "Approved", "Rejected"].map((status) => (
+      <div className="flex space-x-4 mb-8 border-b border-white/10">
+        {["PENDING", "APPROVED", "REJECTED"].map((status) => (
           <button
             key={status}
             onClick={() => setActiveTab(status)}
             className={`
-            px-2 sm:px-4 py-2 text-sm sm:text-lg font-medium transition-colors
-            whitespace-nowrap
-            ${
-              activeTab === status
-                ? "text-white border-b-2 border-blue-500"
-                : "text-gray-400 hover:text-white"
-            }
-          `}
+              px-4 py-2 text-lg font-medium transition-colors
+              ${
+                activeTab === status
+                  ? "text-white border-b-2 border-blue-500"
+                  : "text-gray-400 hover:text-white"
+              }
+            `}
           >
             {status} ({events.filter((e) => e.status === status).length})
           </button>
@@ -747,9 +926,11 @@ const Events = ({
             <EventCard
               key={event.id}
               event={event}
-              onStatusChange={onStatusChange}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              userRole={userRole}
               onViewDetails={onViewDetails}
-              onEdit={onEditEvent}
+              onEdit={onEdit}
             />
           ))
         ) : (
@@ -758,10 +939,34 @@ const Events = ({
           </div>
         )}
       </div>
+
+      {/* Pagination Controls */}
+      <div className="flex justify-center items-center space-x-4 mt-8">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-300 font-medium hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Previous
+        </button>
+        <span className="text-white text-lg">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="px-4 py-2 rounded-lg bg-blue-500/20 text-blue-300 font-medium hover:bg-blue-500/30 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };
-// Mobile view
+
+// Mobile view UserCard (from >>>>>>> main)
 const UserCard = ({ user, onEditUser, onDeleteUser }) => (
   <div className="bg-white/5 rounded-2xl p-6 md:hidden">
     <div className="flex items-center space-x-4 mb-4">
@@ -816,14 +1021,87 @@ const UserCard = ({ user, onEditUser, onDeleteUser }) => (
   </div>
 );
 
-// The main Users component
-const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
+// The main Users component (combined from both versions)
+const Users = ({ onEditUser, onAddUser }) => {
+  const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
+
+  const {
+    data: usersData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({ queryKey: ["allUsers"], queryFn: getAllUsers });
+
+  const users = usersData?.users || [];
+
+  const createUpdateUserMutation = useMutation({
+    mutationFn: (userData) => (userData.id ? updateUser(userData) : createUser(userData)),
+    onSuccess: () => {
+      toast.success("User saved successfully!");
+      queryClient.invalidateQueries(["allUsers"]);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.error || "Failed to save user.");
+    },
+  });
+
+  const deleteUserMutation = useMutation({
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      toast.success("User deleted successfully!");
+      queryClient.invalidateQueries(["allUsers"]);
+    },
+    onError: (err) => {
+      toast.error(err.response?.data?.error || "Failed to delete user.");
+    },
+  });
+
+  const handleSaveUser = (userData) => {
+    createUpdateUserMutation.mutate(userData);
+  };
+
+  const handleDeleteUser = (userId) => {
+    if (window.confirm("Are you sure you want to delete this user?")) {
+      deleteUserMutation.mutate(userId);
+    }
+  };
+
   const filteredUsers = users.filter(
     (user) =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-xl">
+          <h3 className="text-3xl font-bold text-white mb-6">
+            User Management
+          </h3>
+          <p className="text-gray-400 text-center text-lg py-8">
+            Loading users...
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="space-y-6">
+        <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-xl">
+          <h3 className="text-3xl font-bold text-white mb-6">
+            User Management
+          </h3>
+          <p className="text-red-400 text-center text-lg py-8">
+            Error loading users: {error.message}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 shadow-2xl">
@@ -838,7 +1116,7 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
             className="bg-white/5 border border-white/10 rounded-xl p-3 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-64"
           />
           <button
-            onClick={onAddUser}
+            onClick={onAddUser} // This will open the UserModal with null user
             className="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-colors font-medium text-white text-center w-full md:w-auto"
           >
             Add New User
@@ -935,7 +1213,7 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
                     Edit
                   </button>
                   <button
-                    onClick={() => onDeleteUser(user.id)}
+                    onClick={() => handleDeleteUser(user.id)}
                     className="text-red-400 hover:text-red-600"
                   >
                     Delete
@@ -954,7 +1232,7 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
             key={user.id}
             user={user}
             onEditUser={onEditUser}
-            onDeleteUser={onDeleteUser}
+            onDeleteUser={handleDeleteUser}
           />
         ))}
       </div>
@@ -962,12 +1240,13 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
   );
 };
 
+// Reports component (from >>>>>>> main, adapted to use BarChart)
 const Reports = ({ events, users }) => {
-  const approvedEvents = events.filter((e) => e.status === "Approved").length;
+  const approvedEvents = events.filter((e) => e.status === "APPROVED").length;
   const pendingEvents = events.filter(
-    (e) => e.status === "Pending Approval"
+    (e) => e.status === "PENDING"
   ).length;
-  const rejectedEvents = events.filter((e) => e.status === "Rejected").length;
+  const rejectedEvents = events.filter((e) => e.status === "REJECTED").length;
 
   const eventData = [
     { label: "Approved", value: approvedEvents, color: "#34d399" },
@@ -975,12 +1254,14 @@ const Reports = ({ events, users }) => {
     { label: "Rejected", value: rejectedEvents, color: "#ef4444" },
   ];
 
+  // Mock data for user sign-ups over quarters, can be replaced with actual data if available
   const userData = [
     { label: "Q1", value: 120, color: "#22d3ee" }, // cyan-400
     { label: "Q2", value: 180, color: "#84cc16" }, // lime-500
-    { label: "Q3", value: users.length, color: "#facc15" }, // yellow-400
+    { label: "Q3", value: users.length, color: "#facc15" }, // yellow-400 (using current user count for Q3)
     { label: "Q4", value: 250, color: "#a855f7" }, // purple-500
   ];
+
   return (
     <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
       <h3 className="text-3xl font-bold text-white mb-6">
@@ -996,7 +1277,7 @@ const Reports = ({ events, users }) => {
             Event Approval Status
           </h4>
           <div className="flex flex-col items-center justify-center h-64">
-            <BarChart data={eventData} />
+            <BarChart data={eventData} title="" /> {/* Title moved to h4 */}
             <div className="mt-8 space-y-2">
               {eventData.map((item) => (
                 <div
@@ -1018,7 +1299,7 @@ const Reports = ({ events, users }) => {
             Quarterly User Sign-ups
           </h4>
           <div className="flex items-center justify-center h-64">
-            <BarChart data={userData} />
+            <BarChart data={userData} title="" /> {/* Title moved to h4 */}
           </div>
         </div>
       </div>
@@ -1026,6 +1307,7 @@ const Reports = ({ events, users }) => {
   );
 };
 
+// Settings component (from >>>>>>> main)
 const Settings = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [siteName, setSiteName] = useState("EventSphere");
@@ -1155,8 +1437,9 @@ const Settings = () => {
   );
 };
 
-const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
-  // Data for "User Growth Over Time" (Line Chart)
+// OverviewContent component (from >>>>>>> main, adapted for backend data)
+const OverviewContent = ({ events, stats, onViewDetails, onEdit }) => {
+  // Data for "User Growth Over Time" (Line Chart) - Mock data, replace with actual if available
   const userGrowthData = [
     { label: "Week 1", value: 10 },
     { label: "Week 2", value: 15 },
@@ -1166,7 +1449,7 @@ const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
     { label: "Week 6", value: 40 },
   ];
 
-  // Data for "Event Participation Trends" (Bar Chart)
+  // Data for "Event Participation Trends" (Bar Chart) - Mock data, replace with actual if available
   const eventParticipationData = [
     { label: "Jan", value: 12 },
     { label: "Feb", value: 18 },
@@ -1208,10 +1491,8 @@ const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
 
       {/* Charts and recent activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {/* User Growth Over Time - Line Chart (matching image) */}
+        {/* User Growth Over Time - Line Chart */}
         <div className="p-6 bg-white/5 rounded-2xl border border-white/10 h-80">
-          {" "}
-          {/* Added fixed height */}
           <LineChart
             data={userGrowthData}
             color="#34D399" // Green color from image
@@ -1220,10 +1501,8 @@ const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
           />
         </div>
 
-        {/* Event Participation Trends - Bar Chart (matching image) */}
+        {/* Event Participation Trends - Bar Chart */}
         <div className="p-6 bg-white/5 rounded-2xl border border-white/10 h-80">
-          {" "}
-          {/* Added fixed height */}
           <BarChart
             data={eventParticipationData}
             color="#34D399" // Green color from image
@@ -1241,13 +1520,14 @@ const OverviewContent = ({ events, stats, onViewDetails, onEditEvent }) => {
                 key={event.id}
                 event={event}
                 onViewDetails={onViewDetails}
-                onEdit={onEditEvent}
+                onEdit={onEdit}
+                // No onApprove/onReject here as it's just a display of recent events
               />
             ))}
           </div>
         </div>
       </div>
-      {/* Alerts Section (added based on image) */}
+      {/* Alerts Section */}
       <div className="space-y-6 mt-8">
         <h3 className="text-2xl font-bold text-white mb-4">Alerts</h3>
         <AlertCard
@@ -1307,172 +1587,43 @@ const AdminDashboard = () => {
   const [eventToEdit, setEventToEdit] = useState(null);
   const [eventToView, setEventToView] = useState(null);
 
-  // Mock data for Events, now with more variety and statuses
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      title: "React Workshop",
-      description: "A hands-on workshop to learn the fundamentals of React.",
-      date: "2025-10-26",
-      time: "10:00",
-      venue: "Main Auditorium",
-      participants: 120,
-      status: "Approved",
-      category: "Technical",
-    },
-    {
-      id: 2,
-      title: "Tech Meetup 2025",
-      description: "Networking event for data enthusiasts and professionals.",
-      date: "2025-11-15",
-      time: "14:00",
-      venue: "Tech Hub",
-      participants: 85,
-      status: "Approved",
-      category: "Technical",
-    },
-    {
-      id: 3,
-      title: "Cultural Fest 2025",
-      description:
-        "Annual cultural festival with music, dance, and food stalls.",
-      date: "2025-12-01",
-      time: "18:00",
-      venue: "University Grounds",
-      participants: 500,
-      status: "Pending Approval",
-      category: "Cultural",
-    },
-    {
-      id: 4,
-      title: "AI & ML Seminar",
-      description:
-        "An expert-led discussion on the future of AI and machine learning.",
-      date: "2025-11-05",
-      time: "09:00",
-      venue: "Seminar Hall B",
-      participants: 75,
-      status: "Approved",
-      category: "Technical",
-    },
-    {
-      id: 5,
-      title: "Robotics Hackathon",
-      description: "A 24-hour hackathon to build and program robots.",
-      date: "2026-01-10",
-      time: "08:00",
-      venue: "Innovation Lab",
-      participants: 40,
-      status: "Pending Approval",
-      category: "Technical",
-    },
-    {
-      id: 6,
-      title: "Design Thinking Workshop",
-      description:
-        "Learn to solve complex problems with a human-centric approach.",
-      date: "2025-11-22",
-      time: "13:00",
-      venue: "Creative Space",
-      participants: 30,
-      status: "Rejected",
-      category: "Other",
-    },
-    {
-      id: 7,
-      title: "Cybersecurity Conference",
-      description:
-        "Discussing the latest threats and best practices in cybersecurity.",
-      date: "2025-12-15",
-      time: "10:00",
-      venue: "Conference Center",
-      participants: 150,
-      status: "Approved",
-      category: "Technical",
-    },
-    {
-      id: 8,
-      title: "Startup Pitch Day",
-      description: "Budding entrepreneurs present their ideas to investors.",
-      date: "2026-02-01",
-      time: "11:00",
-      venue: "Business School",
-      participants: 90,
-      status: "Pending Approval",
-      category: "Other",
-    },
-    {
-      id: 9,
-      title: "Mobile App Development",
-      description:
-        "A series of lectures on building scalable mobile applications.",
-      date: "2025-12-05",
-      time: "15:00",
-      venue: "Lecture Hall 101",
-      participants: 60,
-      status: "Rejected",
-      category: "Technical",
-    },
-    {
-      id: 10,
-      title: "Blockchain Fundamentals",
-      description:
-        "Introduction to blockchain technology and its applications.",
-      date: "2025-11-28",
-      time: "16:00",
-      venue: "Online",
-      participants: 200,
-      status: "Approved",
-      category: "Technical",
-    },
-  ]);
+  const { isLoading: authLoading, isError: authError, data: authData } = useAuthCheck();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  // Mock data for Users
-  const [users, setUsers] = useState([
-    {
-      id: 1,
-      name: "Jane Doe",
-      email: "jane.doe@example.com",
-      role: "Administrator",
-      status: "Active",
-      joinDate: "01/15/2024",
-      avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=JD",
-    },
-    {
-      id: 2,
-      name: "John Smith",
-      email: "john.smith@example.com",
-      role: "Event Manager",
-      status: "Active",
-      joinDate: "02/20/2024",
-      avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=JS",
-    },
-    {
-      id: 3,
-      name: "Emily White",
-      email: "emily.w@example.com",
-      role: "Contributor",
-      status: "Inactive",
-      joinDate: "03/10/2024",
-      avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=EW",
-    },
-    {
-      id: 4,
-      name: "Mike Brown",
-      email: "mike.b@example.com",
-      role: "User",
-      status: "Active",
-      joinDate: "04/05/2024",
-      avatar: "https://placehold.co/40x40/5c5c5c/ffffff?text=MB",
-    },
-  ]);
+  useEffect(() => {
+    if (!authLoading) {
+      if (authError || !authData?.user || authData.user.role !== "ADMIN") {
+        navigate("/login"); // Redirect to login if not authenticated or not admin
+      }
+    }
+  }, [authLoading, authError, authData, navigate]);
+
+  // Fetch events
+  const {
+    data: eventsData,
+    isLoading: eventsIsLoading,
+    isError: eventsIsError,
+    error: eventsError,
+  } = useQuery({ queryKey: ["allEvents"], queryFn: () => getAllEvents(1, 100) }); // Fetch all for dashboard stats
+
+  const events = eventsData?.events || [];
+
+  // Fetch users
+  const {
+    data: usersData,
+    isLoading: usersIsLoading,
+    isError: usersIsError,
+    error: usersError,
+  } = useQuery({ queryKey: ["allUsers"], queryFn: getAllUsers });
+
+  const users = usersData?.users || [];
 
   const stats = {
     totalUsers: users.length,
     totalEvents: events.length,
-    pendingApprovals: events.filter((e) => e.status === "Pending Approval")
-      .length,
-    activeEvents: events.filter((e) => e.status === "Approved").length,
+    pendingApprovals: events.filter((e) => e.status === "PENDING").length,
+    activeEvents: events.filter((e) => e.status === "APPROVED").length,
   };
 
   const handleEditUser = (user) => {
@@ -1485,22 +1636,11 @@ const AdminDashboard = () => {
     setIsUserModalOpen(true);
   };
 
-  const handleSaveUser = (updatedUser) => {
-    if (users.find((user) => user.id === updatedUser.id)) {
-      setUsers(
-        users.map((user) => (user.id === updatedUser.id ? updatedUser : user))
-      );
-    } else {
-      setUsers([...users, { ...updatedUser, id: Date.now() }]);
-    }
-  };
-
-  const handleDeleteUser = (userId) => {
-    setUsers(users.filter((user) => user.id !== userId));
-  };
-
-  const handleAddEvent = (newEvent) => {
-    setEvents([...events, newEvent]);
+  // User save handler (delegated to Users component for mutations)
+  const handleSaveUser = (userData) => {
+    // This function is now handled by the Users component's internal mutations
+    // AdminDashboard only needs to trigger the modal
+    setIsUserModalOpen(false);
   };
 
   const handleEditEvent = (event) => {
@@ -1512,24 +1652,38 @@ const AdminDashboard = () => {
     setEventToView(event);
   };
 
-  const handleEditEventSave = (updatedEvent) => {
-    setEvents(
-      events.map((event) =>
-        event.id === updatedEvent.id ? updatedEvent : event
-      )
-    );
-    setEventToEdit(null);
-  };
-
-  const handleEventStatusChange = (eventId, newStatus) => {
-    setEvents(
-      events.map((event) =>
-        event.id === eventId ? { ...event, status: newStatus } : event
-      )
-    );
+  const handleEventStatusChange = async (eventId, newStatus) => {
+    try {
+      if (newStatus === "APPROVED") {
+        await approveEvent(eventId);
+        toast.success("Event approved successfully!");
+      } else if (newStatus === "REJECTED") {
+        await rejectEvent(eventId);
+        toast.success("Event rejected successfully!");
+      }
+      queryClient.invalidateQueries(["allEvents"]); // Invalidate to refetch events
+    } catch (error) {
+      toast.error(
+        error.response?.data?.error || "Failed to change event status."
+      );
+    }
   };
 
   const renderContent = () => {
+    if (authLoading || eventsIsLoading || usersIsLoading) {
+      return <LoadingSpinner />;
+    }
+
+    if (authError || eventsIsError || usersIsError) {
+      return (
+        <div className="text-red-500 text-center p-8">
+          Error loading data: {authError?.message || eventsError?.message || usersError?.message}
+        </div>
+      );
+    }
+
+    const userRole = authData?.user?.role;
+
     switch (selectedTab) {
       case "overview":
         return (
@@ -1537,27 +1691,24 @@ const AdminDashboard = () => {
             events={events}
             stats={stats}
             onViewDetails={handleViewEventDetails}
-            onEditEvent={handleEditEvent}
-            users={users}
+            onEdit={handleEditEvent}
           />
         );
       case "events":
         return (
           <Events
-            events={events}
             setIsModalOpen={setIsCreateEventModalOpen}
-            onStatusChange={handleEventStatusChange}
-            onEditEvent={handleEditEvent}
+            userRole={userRole}
             onViewDetails={handleViewEventDetails}
+            onEdit={handleEditEvent}
           />
         );
       case "users":
         return (
           <Users
-            users={users}
             onEditUser={handleEditUser}
             onAddUser={handleAddUser}
-            onDeleteUser={handleDeleteUser}
+            // onDeleteUser is handled internally by Users component
           />
         );
       case "reports":
@@ -1568,6 +1719,10 @@ const AdminDashboard = () => {
         return null;
     }
   };
+
+  if (authLoading) {
+    return <LoadingSpinner />;
+  }
 
   return (
     <div className="min-h-screen bg-[#131414] text-white font-sans antialiased flex flex-col items-center p-4 md:p-8">
@@ -1599,13 +1754,13 @@ const AdminDashboard = () => {
                     <button
                       onClick={() => setSelectedTab(tab)}
                       className={`
-                px-4 py-2 text-sm sm:text-base rounded-full font-medium capitalize transition-colors
-                ${
-                  selectedTab === tab
-                    ? "bg-blue-500 text-white shadow-lg"
-                    : "text-gray-400 hover:text-white hover:bg-white/10"
-                }
-              `}
+                        px-4 py-2 text-sm sm:text-base rounded-full font-medium capitalize transition-colors
+                        ${
+                          selectedTab === tab
+                            ? "bg-blue-500 text-white shadow-lg"
+                            : "text-gray-400 hover:text-white hover:bg-white/10"
+                        }
+                      `}
                     >
                       {tab}
                     </button>
@@ -1623,15 +1778,14 @@ const AdminDashboard = () => {
         <UserModal
           isOpen={isUserModalOpen}
           onClose={() => setIsUserModalOpen(false)}
-          onSave={handleSaveUser}
+          onSave={handleSaveUser} // This will trigger the mutation in Users component
           user={currentUser}
         />
         <CreateEventModal
           isModalOpen={isCreateEventModalOpen}
           setIsModalOpen={setIsCreateEventModalOpen}
-          onAddEvent={handleAddEvent}
           eventToEdit={eventToEdit}
-          onEditEvent={handleEditEventSave}
+          // onEditEvent is handled internally by CreateEventModal's mutations
         />
         <EventDetailsModal
           isOpen={!!eventToView}
@@ -1674,13 +1828,13 @@ export default AdminDashboard;
     }
    }
    @media (max-width: 640px) {
-    .grid-cols-2, .grid-cols-3, .lg\\:grid-cols-2, .lg\\:grid-cols-3 {
+    .grid-cols-2, .grid-cols-3, .lg\:grid-cols-2, .lg\:grid-cols-3 {
       grid-template-columns: 1fr !important;
     }
-    .flex-row, .md\\:flex-row {
+    .flex-row, .md\:flex-row {
       flex-direction: column !important;
     }
-    .space-x-4, .md\\:space-x-4 {
+    .space-x-4, .md\:space-x-4 {
       margin-left: 0 !important;
       margin-right: 0 !important;
     }

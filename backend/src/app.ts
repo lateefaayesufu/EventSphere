@@ -11,27 +11,41 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../swagger.json";
 
 const app = express();
+const PgStore = connectPgSimple(session);
 
 app.use(morgan("tiny"));
 
-const PgStore = connectPgSimple(session);
+// ✅ Single CORS config
+app.use(
+	cors({
+		origin: ["http://localhost:5173", "https://yourfrontend.com"],
+		credentials: true,
+		methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+	})
+);
 
+app.use(express.json());
+
+// ✅ Sessions
 app.use(
 	session({
 		store: new PgStore({
 			conString: process.env.DATABASE_URL,
-			createTableIfMissing: false,
+			createTableIfMissing: true, // better for local dev
 		}),
 		secret: process.env.SESSION_SECRET || "a-very-strong-secret",
 		resave: false,
 		saveUninitialized: false,
-		cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 }, // 30 days
+		cookie: {
+			httpOnly: true,
+			secure: process.env.NODE_ENV === "production", // only secure in prod
+			sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // lax in dev
+			maxAge: 1000 * 60 * 60 * 24, // 1 day
+		},
 	})
 );
 
-app.use(cors());
-app.use(express.json());
-
+// ✅ Routes
 app.use("/api/v1/auth", AuthRoutes);
 app.use("/api/v1/events", EventRoutes);
 app.use("/api/v1/users", UserRoutes);
