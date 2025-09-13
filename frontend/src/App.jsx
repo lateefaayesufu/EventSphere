@@ -1,10 +1,13 @@
 import React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "sonner";
 import { useState } from "react";
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  Navigate,
+	createBrowserRouter,
+	RouterProvider,
+	Outlet,
+	Navigate,
 } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
 
@@ -26,65 +29,74 @@ import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
 
 const AppLayout = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
-  const authProps = {
-    isLoggedIn,
-    setIsLoggedIn,
-    isAdminLoggedIn,
-    setIsAdminLoggedIn,
-  };
+	const authProps = {
+		isLoggedIn,
+		setIsLoggedIn,
+		isAdminLoggedIn,
+		setIsAdminLoggedIn,
+	};
 
-  return (
-    <ReactLenis root>
-      <Outlet context={authProps} />
-    </ReactLenis>
-  );
+	return (
+		<ReactLenis root>
+			<Outlet context={authProps} />
+		</ReactLenis>
+	);
 };
 
 // Admin layout wrapper (with sidebar/topbar etc.)
 const AdminLayout = () => {
-  return (
-    <div className="admin-layout">
-      {/* Add a sidebar or navbar here */}
-      <Outlet /> {/* This is where nested admin pages render */}
-    </div>
-  );
+	return (
+		<div className="admin-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
 };
 
 // Define routes
 const router = createBrowserRouter([
-  {
-    element: <AppLayout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "events", element: <Events /> },
-      { path: "about", element: <About /> },
-      { path: "contact", element: <Contact /> },
-      { path: "gallery", element: <Gallery /> },
-      { path: "faq", element: <Faqs /> },
-      { path: "login", element: <Login /> },
+	{
+		element: <AppLayout />,
+		children: [
+			{ path: "/", element: <Home /> },
+			{ path: "events", element: <Events /> },
+			{ path: "about", element: <About /> },
+			{ path: "contact", element: <Contact /> },
+			{ path: "gallery", element: <Gallery /> },
+			{ path: "faq", element: <Faqs /> },
+			{ path: "login", element: <Login /> },
 
-      // Admin routes
-      {
-        path: "admin",
-        element: <AdminLayout />,
-        children: [
-          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+			// Admin routes
+			{
+				path: "admin",
+				element: <AdminLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
 
-          { path: "dashboard", element: <AdminDashboard /> },
-          { path: "auth", element: <AdminAuth /> },
-          { path: "events", element: <EventsAdmin /> },
-          { path: "users", element: <UsersAdmin /> },
-          { path: "reports", element: <ReportsAdmin /> },
-          { path: "settings", element: <SettingsAdmin /> },
-        ],
-      },
-    ],
-  },
+					{ path: "dashboard", element: <AdminDashboard /> },
+					{ path: "auth", element: <AdminAuth /> },
+					{ path: "events", element: <EventsAdmin /> },
+					{ path: "users", element: <UsersAdmin /> },
+					{ path: "reports", element: <ReportsAdmin /> },
+					{ path: "settings", element: <SettingsAdmin /> },
+				],
+			},
+		],
+	},
 ]);
 
-const App = () => <RouterProvider router={router} />;
+const queryClient = new QueryClient();
+
+const App = () => (
+	<AuthProvider>
+		<QueryClientProvider client={queryClient}>
+			<RouterProvider router={router} />
+		</QueryClientProvider>
+		<Toaster />
+	</AuthProvider>
+);
 
 export default App;
