@@ -13,7 +13,7 @@ const StatCard = ({ title, value, icon, color }) => (
   </div>
 );
 
-// New modal component for viewing event details
+// Viewing event details
 const EventDetailsModal = ({ isOpen, onClose, event }) => {
   if (!isOpen || !event) return null;
 
@@ -80,7 +80,7 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
   );
 };
 
-// New component for the Event card
+//  Event card
 const EventCard = ({ event, onStatusChange, onViewDetails, onEdit }) => {
   const getStatusColor = (status) => {
     switch (status) {
@@ -109,19 +109,28 @@ const EventCard = ({ event, onStatusChange, onViewDetails, onEdit }) => {
           </span>
         </div>
         {/* Admin Dropdown */}
-        <div className="relative inline-block text-left">
+        <div className="relative inline-block text-left w-full sm:w-auto">
           <select
             value={event.status}
             onChange={(e) => onStatusChange(event.id, e.target.value)}
-            className="appearance-none bg-white/5 backdrop-blur-sm border border-white/10 text-white rounded-lg text-sm font-medium px-4 py-2 hover:bg-white/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full sm:w-48 appearance-none bg-white/5 backdrop-blur-3xl border border-white/20 text-white rounded-xl text-xs sm:text-sm font-medium pl-3 pr-8 py-1.5 hover:bg-white/10 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
-            <option className="bg-[#1A1B1B]" value="Approved">
+            <option className="bg-[#1A1B1B] text-white" value="Approved">
               Approve
             </option>
-            <option className="bg-[#1A1B1B]" value="Rejected">
+            <option className="bg-[#1A1B1B] text-white" value="Rejected">
               Reject
             </option>
           </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-white/70">
+            <svg
+              className="h-4 w-4 fill-current"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l-.707.707L15 8.243l-5.707-5.707-.707.707L13.586 8H4v1h9.586L9.293 12.95z" />
+            </svg>
+          </div>
         </div>
       </div>
       <p className="text-gray-400 text-sm mb-2">{event.description}</p>
@@ -148,7 +157,7 @@ const EventCard = ({ event, onStatusChange, onViewDetails, onEdit }) => {
   );
 };
 
-// New modal component for creating/editing a user
+// Creating/editing a user
 const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
   const [formData, setFormData] = useState({
     name: "",
@@ -299,7 +308,7 @@ const UserModal = ({ isOpen, onClose, onSave, user = null }) => {
   );
 };
 
-// New modal component for creating an event
+// Creating an event
 const CreateEventModal = ({
   isModalOpen,
   setIsModalOpen,
@@ -590,12 +599,12 @@ const AlertCard = ({ title, message, buttonText, buttonLink, icon }) => (
   </div>
 );
 
-// Generic Line Chart Component (Re-styled for the overview)
+// Generic Line Chart Component
 const LineChart = ({ data, color, title, percentage }) => {
   const chartHeight = 100;
   const chartWidth = 100;
   const xOffset = chartWidth / (data.length - 1);
-  const maxVal = Math.max(...data.map((item) => item.value)) || 1; // Avoid division by zero
+  const maxVal = Math.max(...data.map((item) => item.value)) || 1;
 
   const points = data
     .map((item, index) => {
@@ -645,7 +654,7 @@ const LineChart = ({ data, color, title, percentage }) => {
   );
 };
 
-// Bar Chart Component (Re-styled for the overview)
+// Bar Chart Component
 const BarChart = ({ data, color, title, percentage }) => {
   const maxVal = Math.max(...data.map((item) => item.value)) || 1;
 
@@ -668,7 +677,7 @@ const BarChart = ({ data, color, title, percentage }) => {
               style={{
                 height: `${(item.value / maxVal) * 100}%`,
                 backgroundColor: color,
-                opacity: 0.7 + (index * 0.3) / data.length, // subtle gradient
+                opacity: 0.7 + (index * 0.3) / data.length,
               }}
             />
           </div>
@@ -698,31 +707,34 @@ const Events = ({
   const filteredEvents = events.filter((event) => event.status === activeTab);
 
   return (
-    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-3xl font-bold text-white">Events Management</h3>
+    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-4 md:p-8 shadow-2xl">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4 sm:gap-0">
+        <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-0">
+          Events Management
+        </h3>
         <button
           onClick={() => setIsModalOpen(true)}
-          className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
+          className="w-full sm:w-auto px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white text-sm sm:text-base"
         >
           Create New Event
         </button>
       </div>
 
       {/* Tabs for event status */}
-      <div className="flex space-x-4 mb-8 border-b border-white/10">
+      <div className="flex flex-wrap space-x-2 sm:space-x-4 mb-8 border-b border-white/10">
         {["Pending Approval", "Approved", "Rejected"].map((status) => (
           <button
             key={status}
             onClick={() => setActiveTab(status)}
             className={`
-              px-4 py-2 text-lg font-medium transition-colors
-              ${
-                activeTab === status
-                  ? "text-white border-b-2 border-blue-500"
-                  : "text-gray-400 hover:text-white"
-              }
-            `}
+            px-2 sm:px-4 py-2 text-sm sm:text-lg font-medium transition-colors
+            whitespace-nowrap
+            ${
+              activeTab === status
+                ? "text-white border-b-2 border-blue-500"
+                : "text-gray-400 hover:text-white"
+            }
+          `}
           >
             {status} ({events.filter((e) => e.status === status).length})
           </button>
@@ -749,7 +761,62 @@ const Events = ({
     </div>
   );
 };
+// Mobile view
+const UserCard = ({ user, onEditUser, onDeleteUser }) => (
+  <div className="bg-white/5 rounded-2xl p-6 md:hidden">
+    <div className="flex items-center space-x-4 mb-4">
+      <img
+        className="h-12 w-12 rounded-full ring-2 ring-white/10"
+        src={user.avatar}
+        alt={`${user.name} avatar`}
+      />
+      <div>
+        <h5 className="text-xl font-bold text-white mb-1">{user.name}</h5>
+        <p className="text-gray-400 text-sm">{user.email}</p>
+      </div>
+    </div>
+    <div className="flex flex-col space-y-2 mb-4">
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300 font-medium">Role:</span>
+        <span className="px-3 py-1 text-xs font-semibold rounded-full bg-blue-500/20 text-blue-300">
+          {user.role}
+        </span>
+      </div>
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300 font-medium">Status:</span>
+        <span
+          className={`px-3 py-1 text-xs font-semibold rounded-full ${
+            user.status === "Active"
+              ? "bg-green-500/20 text-green-300"
+              : "bg-red-500/20 text-red-300"
+          }`}
+        >
+          {user.status}
+        </span>
+      </div>
+      <div className="flex justify-between items-center text-sm">
+        <span className="text-gray-300 font-medium">Joined:</span>
+        <span className="text-gray-400">{user.joinDate}</span>
+      </div>
+    </div>
+    <div className="flex justify-end space-x-4 border-t border-white/10 pt-4">
+      <button
+        onClick={() => onEditUser(user)}
+        className="text-blue-400 hover:text-blue-600 font-medium"
+      >
+        Edit
+      </button>
+      <button
+        onClick={() => onDeleteUser(user.id)}
+        className="text-red-400 hover:text-red-600 font-medium"
+      >
+        Delete
+      </button>
+    </div>
+  </div>
+);
 
+// The main Users component
 const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredUsers = users.filter(
@@ -759,8 +826,8 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
   );
 
   return (
-    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
-      <div className="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+    <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 shadow-2xl">
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
         <h3 className="text-3xl font-bold text-white">User Management</h3>
         <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-4 w-full md:w-auto">
           <input
@@ -772,13 +839,15 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
           />
           <button
             onClick={onAddUser}
-            className="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-colors font-medium text-white"
+            className="px-6 py-3 rounded-xl bg-green-500 hover:bg-green-600 transition-colors font-medium text-white text-center w-full md:w-auto"
           >
             Add New User
           </button>
         </div>
       </div>
-      <div className="overflow-x-auto">
+
+      {/* Responsive table for larger screens */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-white/10 rounded-2xl overflow-hidden">
           <thead className="bg-white/5">
             <tr>
@@ -877,6 +946,18 @@ const Users = ({ users, onEditUser, onAddUser, onDeleteUser }) => {
           </tbody>
         </table>
       </div>
+
+      {/* Card-based layout for small screens */}
+      <div className="md:hidden space-y-4">
+        {filteredUsers.map((user) => (
+          <UserCard
+            key={user.id}
+            user={user}
+            onEditUser={onEditUser}
+            onDeleteUser={onDeleteUser}
+          />
+        ))}
+      </div>
     </div>
   );
 };
@@ -889,9 +970,9 @@ const Reports = ({ events, users }) => {
   const rejectedEvents = events.filter((e) => e.status === "Rejected").length;
 
   const eventData = [
-    { label: "Approved", value: approvedEvents, color: "#34d399" }, // green-400
-    { label: "Pending", value: pendingEvents, color: "#facc15" }, // yellow-400
-    { label: "Rejected", value: rejectedEvents, color: "#ef4444" }, // red-500
+    { label: "Approved", value: approvedEvents, color: "#34d399" },
+    { label: "Pending", value: pendingEvents, color: "#facc15" },
+    { label: "Rejected", value: rejectedEvents, color: "#ef4444" },
   ];
 
   const userData = [
@@ -1504,27 +1585,27 @@ const AdminDashboard = () => {
         <div className="absolute inset-0 bg-white/5 opacity-50 blur-3xl rounded-[3rem] pointer-events-none"></div>
 
         {/* Header */}
-        <header className="flex flex-col md:flex-row justify-between items-center mb-12 relative z-10">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
+        <header className="flex flex-col md:flex-row justify-between items-center mb-8 relative z-10">
+          <div className="flex items-center">
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
               Admin Dashboard
             </h1>
           </div>
-          <nav className="mt-6 md:mt-0">
-            <ul className="flex flex-wrap justify-center space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg">
+          <nav className="mt-6 md:mt-0 w-full md:w-auto">
+            <ul className="flex overflow-x-auto justify-start md:justify-center space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg scrollbar-hide">
               {["overview", "events", "users", "reports", "settings"].map(
                 (tab) => (
-                  <li key={tab}>
+                  <li key={tab} className="flex-shrink-0">
                     <button
                       onClick={() => setSelectedTab(tab)}
                       className={`
-                        px-4 py-2 rounded-full font-medium capitalize transition-colors
-                        ${
-                          selectedTab === tab
-                            ? "bg-blue-500 text-white shadow-lg"
-                            : "text-gray-400 hover:text-white hover:bg-white/10"
-                        }
-                      `}
+                px-4 py-2 text-sm sm:text-base rounded-full font-medium capitalize transition-colors
+                ${
+                  selectedTab === tab
+                    ? "bg-blue-500 text-white shadow-lg"
+                    : "text-gray-400 hover:text-white hover:bg-white/10"
+                }
+              `}
                     >
                       {tab}
                     </button>

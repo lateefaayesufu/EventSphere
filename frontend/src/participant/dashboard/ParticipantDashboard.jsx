@@ -3,7 +3,7 @@ import html2canvas from "html2canvas";
 import Certificate from "./Certificate";
 import QRCodeGenerator from "./QRCodeGenerator";
 
-// --- Helper Components (No changes needed here) ---
+// --- Helper Components---
 const StatCard = ({ title, value, icon, color }) => (
   <div
     className={`bg-gradient-to-r ${color} backdrop-blur-xl border border-white/20 rounded-3xl p-6 shadow-2xl transition-transform transform hover:scale-105`}
@@ -149,7 +149,7 @@ const NotificationItem = ({ notification, onMarkAsRead }) => (
   </div>
 );
 
-const SavedMediaCard = ({ media, onRemove }) => (
+const SavedMediaCard = ({ media, onRemove, onViewFull, onEdit }) => (
   <div className="bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] border border-white/10 rounded-2xl overflow-hidden">
     <img
       src={media.thumbnail}
@@ -159,13 +159,22 @@ const SavedMediaCard = ({ media, onRemove }) => (
     <div className="p-4">
       <h4 className="text-white font-semibold mb-2">{media.title}</h4>
       <p className="text-gray-400 text-sm mb-3">From: {media.eventTitle}</p>
-      <div className="flex justify-between">
-        <button className="px-3 py-1 bg-blue-500/20 text-blue-300 rounded text-sm">
+      <div className="flex justify-between items-center space-x-2">
+        <button
+          onClick={() => onViewFull(media)}
+          className="flex-1 px-3 py-1 bg-blue-500/20 text-blue-300 rounded text-sm hover:bg-blue-500/30 transition-colors"
+        >
           View Full
         </button>
         <button
+          onClick={() => onEdit(media)}
+          className="flex-1 px-3 py-1 bg-purple-500/20 text-purple-300 rounded text-sm hover:bg-purple-500/30 transition-colors"
+        >
+          Edit
+        </button>
+        <button
           onClick={() => onRemove(media.id)}
-          className="px-3 py-1 bg-red-500/20 text-red-300 rounded text-sm"
+          className="flex-1 px-3 py-1 bg-red-500/20 text-red-300 rounded text-sm hover:bg-red-500/30 transition-colors"
         >
           Remove
         </button>
@@ -373,7 +382,7 @@ const SearchAndFilter = ({
   </div>
 );
 
-// --- Icons (No changes needed here) ---
+// --- Icons.;---
 const EventIcon = () => (
   <svg
     className="h-8 w-8"
@@ -470,6 +479,199 @@ const CloseIcon = () => (
   </svg>
 );
 
+// --- New Media Modals ---
+const FullScreenMediaModal = ({ media, isOpen, onClose }) => {
+  if (!isOpen || !media) return null;
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+      <div className="relative max-w-4xl max-h-[90vh] overflow-y-auto">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white text-3xl font-bold z-50 hover:text-gray-300 transition-colors"
+        >
+          &times;
+        </button>
+        <img
+          src={media.thumbnail}
+          alt={media.title}
+          className="w-full h-auto object-contain rounded-xl"
+        />
+        <div className="p-4 text-center">
+          <h4 className="text-white text-xl font-semibold">{media.title}</h4>
+          <p className="text-gray-400 text-sm">From: {media.eventTitle}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// --- Updated Edit Media Modal with Form Fields ---
+const EditMediaModal = ({ media, isOpen, onClose, onSave }) => {
+  const [editedMedia, setEditedMedia] = useState(media);
+
+  if (!isOpen || !media) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEditedMedia((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    onSave(editedMedia);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+      <div className="relative bg-white/10 border border-white/20 rounded-3xl p-8 max-w-md w-full text-white">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
+        >
+          <CloseIcon />
+        </button>
+        <h3 className="text-2xl font-bold mb-4">Edit Media</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={editedMedia.title}
+              onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Event Title
+            </label>
+            <input
+              type="text"
+              name="eventTitle"
+              value={editedMedia.eventTitle}
+              onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white"
+            />
+          </div>
+          <div className="flex justify-end pt-4 space-x-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl bg-gray-500/20 text-gray-300 font-medium hover:bg-gray-500/30 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
+            >
+              Save Changes
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AddMediaModal = ({ isOpen, onClose, onAddMedia }) => {
+  const [newMedia, setNewMedia] = useState({
+    title: "",
+    eventTitle: "",
+    thumbnail: "/placeholder.jpg", // A default placeholder image
+  });
+
+  if (!isOpen) return null;
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setNewMedia((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleAdd = () => {
+    if (newMedia.title && newMedia.eventTitle) {
+      onAddMedia({ ...newMedia, id: Date.now() }); // Unique ID
+      setNewMedia({
+        title: "",
+        eventTitle: "",
+        thumbnail: "/placeholder.jpg",
+      }); // Reset form
+      onClose();
+    } else {
+      alert("Please fill in all fields.");
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4">
+      <div className="relative bg-white/10 border border-white/20 rounded-3xl p-8 max-w-md w-full text-white">
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 text-white/50 hover:text-white transition-colors"
+        >
+          <CloseIcon />
+        </button>
+        <h3 className="text-2xl font-bold mb-4">Add New Media</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Title
+            </label>
+            <input
+              type="text"
+              name="title"
+              value={newMedia.title}
+              onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Event Title
+            </label>
+            <input
+              type="text"
+              name="eventTitle"
+              value={newMedia.eventTitle}
+              onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-300 mb-1">
+              Thumbnail URL (Optional)
+            </label>
+            <input
+              type="text"
+              name="thumbnail"
+              value={newMedia.thumbnail}
+              onChange={handleChange}
+              className="w-full bg-white/5 border border-white/10 rounded-lg p-2 text-white"
+              placeholder="e.g., https://example.com/image.jpg"
+            />
+          </div>
+          <div className="flex justify-end pt-4 space-x-2">
+            <button
+              onClick={onClose}
+              className="px-4 py-2 rounded-xl bg-gray-500/20 text-gray-300 font-medium hover:bg-gray-500/30 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAdd}
+              className="px-4 py-2 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
+            >
+              Add Media
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 // --- Main Dashboard Component ---
 const ParticipantDashboard = () => {
   const [selectedTab, setSelectedTab] = useState("overview");
@@ -486,12 +688,19 @@ const ParticipantDashboard = () => {
   const [qrCodeEvent, setQrCodeEvent] = useState(null);
   const [showQRCodeModal, setShowQRCodeModal] = useState(false);
 
+  // New state for saved media
+  const [mediaToView, setMediaToView] = useState(null);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+  const [mediaToEdit, setMediaToEdit] = useState(null);
+  const [isEditMediaModalOpen, setIsEditMediaModalOpen] = useState(false);
+  const [isAddMediaModalOpen, setIsAddMediaModalOpen] = useState(false);
+
   // New state to manage profile form data
   const [profileData, setProfileData] = useState({
     fullName: "John Doe",
     email: "john.doe@university.edu",
     department: "Computer Science",
-    enrollmentNumber: "CS2025001",
+    enrollmentNumber: "+234(0) 901 234 5678",
   });
 
   // Mock Data
@@ -514,6 +723,7 @@ const ParticipantDashboard = () => {
       status: "confirmed",
       organizer: "Tech Society",
       canRegister: false,
+      thumbnail: "/Food3.jpg",
     },
     {
       id: 2,
@@ -566,7 +776,7 @@ const ParticipantDashboard = () => {
     },
   ]);
 
-  // --- UPDATED NOTIFICATIONS MOCK DATA ---
+  // ---NOTIFICATIONS MOCK DATA ---
   const [notifications, setNotifications] = useState([
     {
       id: 1,
@@ -606,20 +816,19 @@ const ParticipantDashboard = () => {
     },
   ]);
 
-  const [savedMedia] = useState([
+  // --- Mock Data for Saved Media ---
+  const [savedMedia, setSavedMedia] = useState([
     {
       id: 1,
       title: "Workshop Highlights",
       eventTitle: "React Workshop",
-      thumbnail:
-        "https://placehold.co/300x200/3B82F6/ffffff?text=React+Workshop",
+      thumbnail: "/Food2.jpg",
     },
     {
       id: 2,
       title: "Performance Video",
       eventTitle: "Cultural Night",
-      thumbnail:
-        "https://placehold.co/300x200/EC4899/ffffff?text=Cultural+Night",
+      thumbnail: "/Food30.jpg",
     },
   ]);
 
@@ -676,9 +885,34 @@ const ParticipantDashboard = () => {
     );
   };
 
+  // --- NEW HANDLERS FOR SAVED MEDIA ---
   const handleRemoveSavedMedia = (id) => {
-    console.log("Removing saved media:", id);
+    setSavedMedia(savedMedia.filter((media) => media.id !== id));
+    console.log("Removed saved media with ID:", id);
   };
+
+  const handleViewFullMedia = (mediaItem) => {
+    setMediaToView(mediaItem);
+    setIsMediaModalOpen(true);
+  };
+
+  const handleEditMedia = (mediaItem) => {
+    setMediaToEdit(mediaItem);
+    setIsEditMediaModalOpen(true);
+  };
+
+  const handleSaveEditedMedia = (editedItem) => {
+    setSavedMedia((prevMedia) =>
+      prevMedia.map((item) => (item.id === editedItem.id ? editedItem : item))
+    );
+    alert("Media item updated successfully!");
+  };
+
+  const handleAddMedia = (newMedia) => {
+    setSavedMedia((prevMedia) => [...prevMedia, newMedia]);
+    alert("New media item added successfully!");
+  };
+  // --- END OF NEW HANDLERS ---
 
   const handleViewCertificate = (certificate) => {
     setSelectedCertificate(certificate);
@@ -696,9 +930,8 @@ const ParticipantDashboard = () => {
 
   // New function to handle saving the profile
   const handleSaveProfile = () => {
-    // In a real app, you would send this data to a backend API
     console.log("Saving profile changes:", profileData);
-    alert("Profile saved successfully! (Simulated)");
+    alert("Profile saved successfully!");
   };
 
   const filteredEvents = registeredEvents.filter((event) => {
@@ -869,15 +1102,31 @@ const ParticipantDashboard = () => {
       case "media":
         return (
           <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
-            <h3 className="text-3xl font-bold text-white mb-6">Saved Media</h3>
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-3xl font-bold text-white">Saved Media</h3>
+              <button
+                onClick={() => setIsAddMediaModalOpen(true)}
+                className="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors"
+              >
+                Add New Media
+              </button>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {savedMedia.map((media) => (
-                <SavedMediaCard
-                  key={media.id}
-                  media={media}
-                  onRemove={handleRemoveSavedMedia}
-                />
-              ))}
+              {savedMedia.length > 0 ? (
+                savedMedia.map((media) => (
+                  <SavedMediaCard
+                    key={media.id}
+                    media={media}
+                    onRemove={handleRemoveSavedMedia}
+                    onViewFull={handleViewFullMedia}
+                    onEdit={handleEditMedia}
+                  />
+                ))
+              ) : (
+                <div className="col-span-full text-center text-gray-400 p-8">
+                  <p>No media found.</p>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -931,7 +1180,7 @@ const ParticipantDashboard = () => {
                 </div>
                 <div>
                   <label className="block text-white text-sm font-medium mb-2">
-                    Enrollment Number
+                    Contact Number
                   </label>
                   <input
                     type="text"
@@ -942,12 +1191,12 @@ const ParticipantDashboard = () => {
                   />
                 </div>
               </div>
-              <div className="flex justify-end">
+              <div className="flex justify-end pt-4">
                 <button
                   onClick={handleSaveProfile}
                   className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
                 >
-                  Save Changes
+                  Save Profile
                 </button>
               </div>
             </div>
@@ -960,104 +1209,82 @@ const ParticipantDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#131414] text-white font-sans antialiased flex flex-col items-center p-4 md:p-8">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body {
-          font-family: 'Inter', sans-serif;
-          background: #0d0d0d;
-        }
-      `}</style>
-
-      <div className="relative w-full max-w-7xl mx-auto rounded-[3rem] p-4 md:p-8 lg:p-12 overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
-        <div className="absolute inset-0 bg-white/5 opacity-50 blur-3xl rounded-[3rem] pointer-events-none"></div>
-
-        <header className="flex flex-col md:flex-row justify-between items-center mb-12 relative z-10">
-          <div className="flex items-center space-x-4">
-            <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200">
-              My Dashboard
-            </h1>
-            <div className="relative">
-              {/* --- UPDATED BELL ICON TO A BUTTON --- */}
-              <button
-                onClick={() => setSelectedTab("notifications")}
-                className="p-3 bg-white/10 rounded-full border border-white/20 hover:bg-white/20 transition-colors"
-              >
-                <BellIcon />
-              </button>
-              {notifications.filter((n) => !n.read).length > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  {notifications.filter((n) => !n.read).length}
-                </span>
-              )}
-            </div>
-          </div>
-
-          <nav className="mt-6 md:mt-0">
-            <ul className="flex flex-wrap justify-center space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg">
-              {[
-                "overview",
-                "events",
-                "certificates",
-                "notifications",
-                "media",
-                "profile",
-              ].map((tab) => (
-                <li key={tab}>
-                  <button
-                    onClick={() => setSelectedTab(tab)}
-                    className={`
-                      px-4 py-2 rounded-full font-medium capitalize transition-colors
-                      ${
-                        selectedTab === tab
-                          ? "bg-blue-500 text-white shadow-lg"
-                          : "text-gray-400 hover:text-white hover:bg-white/10"
-                      }
-                    `}
-                  >
-                    {tab}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
-
-        <div className="mb-8 relative z-10">
-          <div className="bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl p-6 border border-white/10">
-            <h2 className="text-2xl font-bold text-white mb-2">
-              Welcome back, John! 👋
-            </h2>
-            <p className="text-gray-300">
-              You have {notifications.filter((n) => !n.read).length} new
-              notifications waiting for you.
-            </p>
-          </div>
+    <div className="min-h-screen bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] text-white p-8 font-sans">
+      <header className="flex flex-col md:flex-row justify-between items-center mb-12 relative z-10 p-4">
+        <div className="flex flex-col items-center w-full md:flex-row md:space-x-4 md:w-auto">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-cyan-200 text-center">
+            Welcome!
+          </h1>
         </div>
+        <nav className="mt-6 md:mt-0 w-full md:w-auto overflow-x-auto">
+          <ul className="flex flex-nowrap space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg">
+            {[
+              "overview",
+              "events",
+              "certificates",
+              "notifications",
+              "media",
+              "profile",
+            ].map((tab) => (
+              <li key={tab} className="flex-shrink-0">
+                <button
+                  onClick={() => setSelectedTab(tab)}
+                  className={`
+              px-4 py-2 rounded-full font-medium capitalize transition-colors whitespace-nowrap
+              ${
+                selectedTab === tab
+                  ? "bg-blue-500 text-white shadow-lg"
+                  : "text-gray-400 hover:text-white hover:bg-white/10"
+              }
+            `}
+                >
+                  {tab}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
 
-        <main className="relative z-10">{renderContent()}</main>
+      {/* Main content */}
+      <main className="relative z-0">{renderContent()}</main>
 
-        <EventDetailsModal
-          event={selectedEvent}
-          isOpen={showEventModal}
-          onClose={() => setShowEventModal(false)}
-          onRegister={(event) => console.log("Register for:", event.title)}
+      {/* Modals rendered here */}
+      <EventDetailsModal
+        event={selectedEvent}
+        isOpen={showEventModal}
+        onClose={() => setShowEventModal(false)}
+      />
+      <CertificateModal
+        certificate={selectedCertificate}
+        isOpen={showCertificateModal}
+        onClose={() => setShowCertificateModal(false)}
+        onDownload={handleDownloadCertificate}
+      />
+      <QRCodeModal
+        event={qrCodeEvent}
+        isOpen={showQRCodeModal}
+        onClose={() => setShowQRCodeModal(false)}
+      />
+      {/* New modals for saved media */}
+      <FullScreenMediaModal
+        media={mediaToView}
+        isOpen={isMediaModalOpen}
+        onClose={() => setIsMediaModalOpen(false)}
+      />
+      {mediaToEdit && (
+        <EditMediaModal
+          media={mediaToEdit}
+          isOpen={isEditMediaModalOpen}
+          onClose={() => setIsEditMediaModalOpen(false)}
+          onSave={handleSaveEditedMedia}
         />
-
-        <CertificateModal
-          certificate={selectedCertificate}
-          isOpen={showCertificateModal}
-          onClose={() => setShowCertificateModal(false)}
-          onDownload={handleDownloadCertificate}
-        />
-
-        {/* Render the QR Code Modal */}
-        <QRCodeModal
-          event={qrCodeEvent}
-          isOpen={showQRCodeModal}
-          onClose={() => setShowQRCodeModal(false)}
-        />
-      </div>
+      )}
+      <AddMediaModal
+        isOpen={isAddMediaModalOpen}
+        onClose={() => setIsAddMediaModalOpen(false)}
+        onAddMedia={handleAddMedia}
+      />
     </div>
   );
 };
