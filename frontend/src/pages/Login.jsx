@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
-import { loginWithEmail } from "../api/auth";
+import { loginWithEmail, signup } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
@@ -28,6 +28,9 @@ const Login = () => {
 	const [formData, setFormData] = useState({
 		email: "",
 		password: "",
+		fullName: "",
+		username: "",
+		contactNumber: "",
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [view, setView] = useState("login"); // 'login' | 'signup'
@@ -43,6 +46,17 @@ const Login = () => {
 		error,
 	} = useMutation({
 		mutationFn: loginWithEmail,
+	});
+
+	const {
+		mutate: signupMutate,
+		isPending: isSignupLoading,
+		isSuccess: isSignupSuccess,
+		isError: isSignupError,
+		data: signupData,
+		error: signupError,
+	} = useMutation({
+		mutationFn: signup,
 	});
 
 	const navigate = useNavigate();
