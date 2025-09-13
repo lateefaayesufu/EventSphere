@@ -10,9 +10,51 @@ import {
   Headphones,
   CheckCircle,
   ArrowRight,
+  ChevronDown,
 } from "lucide-react";
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
+
+// Custom Dropdown Component
+const CustomDropdown = ({ label, value, onChange, options }) => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleSelect = (option) => {
+    onChange({ target: { name: "userType", value: option } });
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative z-30">
+      <label className="block text-white font-medium mb-2">{label}</label>
+      <div
+        className="relative w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white cursor-pointer focus:outline-none focus:border-purple-500 transition-all flex justify-between items-center shadow-inner"
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        <span>{value || "Select your role"}</span>
+        <ChevronDown
+          className={`w-5 h-5 text-slate-400 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
+      </div>
+
+      {isOpen && (
+        <ul className="absolute top-full mt-2 w-full bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-hidden animate-fade-in-up">
+          {options.map((option) => (
+            <li
+              key={option}
+              className="px-4 py-3 text-white hover:bg-slate-700 transition-colors cursor-pointer"
+              onClick={() => handleSelect(option)}
+            >
+              {option}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -33,7 +75,6 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Simulate form submission
     setIsSubmitted(true);
     setTimeout(() => setIsSubmitted(false), 3000);
     setFormData({
@@ -101,6 +142,13 @@ const Contact = () => {
     },
   ];
 
+  const userTypeOptions = [
+    "Student",
+    "Event Organizer",
+    "Administrator",
+    "Other",
+  ];
+
   return (
     <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
@@ -127,44 +175,36 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-20">
-          <h1 className="text-5xl md:text-7xl mt-10 font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl mt-10 font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8">
             Get in Touch
           </h1>
-
-          <p className="text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
             Have questions? Need help? Our dedicated support team is here to
             ensure your EventSphere experience is seamless and amazing.
           </p>
         </div>
 
         {/* Contact Methods Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
           {contactMethods.map((method, index) => (
             <div
               key={index}
-              className="group bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-white/15 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
+              className="group bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8 hover:bg-white/10 transition-all duration-300 hover:scale-105 hover:shadow-2xl cursor-pointer"
             >
               <div
-                className={`bg-gradient-to-r ${method.gradient} rounded-2xl w-16 h-16 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
+                className={`bg-gradient-to-r ${method.gradient} rounded-2xl w-14 h-14 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
               >
-                <method.icon className="w-8 h-8 text-white" />
+                <method.icon className="w-7 h-7 text-white" />
               </div>
 
-              <h3 className="text-xl font-bold text-white mb-3">
+              <h3 className="text-xl font-bold text-white mb-2">
                 {method.title}
               </h3>
-
-              <p className="text-gray-400 mb-4">{method.description}</p>
-
-              <div className="text-purple-300 font-semibold mb-2">
+              <p className="text-gray-400 text-sm mb-3">{method.description}</p>
+              <div className="text-purple-300 font-semibold mb-1 text-sm">
                 {method.contact}
               </div>
-
-              <div className="text-sm text-gray-500">{method.subtext}</div>
-
-              <div className="mt-4 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowRight className="w-5 h-5 text-purple-400" />
-              </div>
+              <div className="text-xs text-gray-500">{method.subtext}</div>
             </div>
           ))}
         </div>
@@ -172,9 +212,9 @@ const Contact = () => {
         {/* Main Content - Form and Info */}
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
           {/* Contact Form */}
-          <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8 lg:p-12">
-            <div className="mb-8">
-              <h2 className="text-4xl font-bold text-white mb-4">
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 lg:p-12">
+            <div className="mb-6">
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
                 Send Us a Message
               </h2>
               <p className="text-gray-300">
@@ -186,7 +226,7 @@ const Contact = () => {
             {isSubmitted && (
               <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-6 flex items-center gap-3">
                 <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-green-400 font-medium">
+                <span className="text-green-400 font-medium text-sm">
                   Message sent successfully! We'll be in touch soon.
                 </span>
               </div>
@@ -204,11 +244,10 @@ const Contact = () => {
                     value={formData.name}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
                     placeholder="Enter your full name"
                   />
                 </div>
-
                 <div>
                   <label className="block text-white font-medium mb-2">
                     Email Address *
@@ -219,40 +258,19 @@ const Contact = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
                     placeholder="your.email@university.edu"
                   />
                 </div>
               </div>
 
-              <div>
-                <label className="block text-white font-medium mb-2">
-                  I am a *
-                </label>
-                <select
-                  name="userType"
-                  value={formData.userType}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
-                >
-                  <option value="" className="bg-gray-800">
-                    Select your role
-                  </option>
-                  <option value="student" className="bg-gray-800">
-                    Student
-                  </option>
-                  <option value="organizer" className="bg-gray-800">
-                    Event Organizer
-                  </option>
-                  <option value="admin" className="bg-gray-800">
-                    Administrator
-                  </option>
-                  <option value="other" className="bg-gray-800">
-                    Other
-                  </option>
-                </select>
-              </div>
+              {/* Custom Dropdown Component */}
+              <CustomDropdown
+                label="I am a *"
+                value={formData.userType}
+                onChange={handleInputChange}
+                options={userTypeOptions}
+              />
 
               <div>
                 <label className="block text-white font-medium mb-2">
@@ -264,7 +282,7 @@ const Contact = () => {
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
-                  className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
                   placeholder="What's this about?"
                 />
               </div>
@@ -279,7 +297,7 @@ const Contact = () => {
                   onChange={handleInputChange}
                   required
                   rows={6}
-                  className="w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 transition-all resize-none"
+                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all resize-none"
                   placeholder="Tell us how we can help you..."
                 />
               </div>
@@ -297,11 +315,11 @@ const Contact = () => {
           {/* Support Categories & Info */}
           <div className="space-y-8">
             {/* Support Categories */}
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
-              <h3 className="text-3xl font-bold text-white mb-6">
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
                 Support Categories
               </h3>
-              <div className="space-y-6">
+              <div className="space-y-4">
                 {supportCategories.map((category, index) => (
                   <div
                     key={index}
@@ -327,43 +345,46 @@ const Contact = () => {
             </div>
 
             {/* Office Hours */}
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8">
               <div className="flex items-center gap-3 mb-6">
-                <Clock className="w-8 h-8 text-blue-400" />
-                <h3 className="text-3xl font-bold text-white">Support Hours</h3>
+                <Clock className="w-7 h-7 text-blue-400" />
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                  Support Hours
+                </h3>
               </div>
 
               <div className="space-y-4">
-                <div className="flex justify-between items-center py-3 border-b border-white/10">
+                <div className="flex justify-between items-center py-2 border-b border-white/10">
                   <span className="text-gray-300">Monday - Friday</span>
-                  <span className="text-white font-medium">
+                  <span className="text-white font-medium text-sm">
                     9:00 AM - 6:00 PM WAT
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-3 border-b border-white/10">
+                <div className="flex justify-between items-center py-2 border-b border-white/10">
                   <span className="text-gray-300">Saturday</span>
-                  <span className="text-white font-medium">
+                  <span className="text-white font-medium text-sm">
                     10:00 AM - 4:00 PM WAT
                   </span>
                 </div>
-                <div className="flex justify-between items-center py-3">
+                <div className="flex justify-between items-center py-2">
                   <span className="text-gray-300">Sunday</span>
-                  <span className="text-gray-500">Closed</span>
+                  <span className="text-gray-500 text-sm">Closed</span>
                 </div>
               </div>
 
               <div className="mt-6 p-4 bg-yellow-500/20 border border-yellow-500/50 rounded-xl">
                 <p className="text-yellow-300 text-sm">
                   <strong>Note:</strong> During exam periods and major events,
-                  support hours may be extended. Check our status page for
-                  updates.
+                  support hours may be extended.
                 </p>
               </div>
             </div>
 
             {/* Quick Links */}
-            <div className="bg-white/10 backdrop-blur-xl border border-white/20 rounded-3xl p-8">
-              <h3 className="text-3xl font-bold text-white mb-6">Quick Help</h3>
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8">
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
+                Quick Help
+              </h3>
               <div className="space-y-3">
                 {[
                   "Getting Started Guide",

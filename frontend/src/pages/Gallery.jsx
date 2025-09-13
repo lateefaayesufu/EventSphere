@@ -1,9 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react"; // Import useRef
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const Gallery = () => {
   const [selectedYear, setSelectedYear] = useState("All");
+  const [isMobile, setIsMobile] = useState(false);
+  const carouselRef = useRef(null); // Create a ref for the carousel container
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 640);
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   const images = Array.from({ length: 32 }, (_, i) => ({
     id: i + 1,
     src: `/Food${i + 1}.jpg`,
@@ -17,7 +30,6 @@ const Gallery = () => {
     src: `/Video${i + 1}.mp4`,
     type: "video",
     year: [2022, 2023, 2024][Math.floor(Math.random() * 3)],
-
     height: 300,
   }));
 
@@ -28,13 +40,71 @@ const Gallery = () => {
     (item) => selectedYear === "All" || item.year.toString() === selectedYear
   );
 
+  // --- Scroll functions for custom arrows ---
+  const scrollCarousel = (direction) => {
+    if (carouselRef.current) {
+      const scrollAmount = carouselRef.current.clientWidth * 0.8; // Scroll by ~80% of container width
+      carouselRef.current.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
+      });
+    }
+  };
+
+  const renderMediaItem = (item, isCarousel) => (
+    <div
+      key={item.id}
+      className={`relative break-inside-avoid group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 ${
+        isCarousel ? "snap-center w-full flex-shrink-0" : "mb-6"
+      }`}
+    >
+      {item.type === "image" ? (
+        <div className="relative overflow-hidden">
+          <img
+            src={item.src}
+            alt={item.title}
+            className={`w-full object-cover transition-transform duration-700 ${
+              isCarousel ? "h-[300px]" : ""
+            }`}
+            style={isCarousel ? {} : { height: `${item.height}px` }}
+            onError={(e) => {
+              e.target.src = `https://unsplash.com/photos/a-crowd-of-people-standing-around-a-basketball-court-2qEA9np6O4E`;
+            }}
+          />
+          <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-lg rounded-full px-3 py-1 text-xs font-bold text-white">
+            {item.year}
+          </div>
+        </div>
+      ) : (
+        <div className="relative">
+          <video
+            className={`w-full object-cover rounded-t-2xl ${
+              isCarousel ? "h-[300px]" : ""
+            }`}
+            style={isCarousel ? {} : { height: `${item.height}px` }}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            onLoadedData={(e) => e.target.play()}
+          >
+            <source src={item.src} type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+          <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-lg rounded-full px-3 py-1 text-xs font-bold text-white">
+            {item.year}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
 
-      {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Floating Particles */}
         {[...Array(50)].map((_, i) => (
           <div
             key={i}
@@ -48,16 +118,14 @@ const Gallery = () => {
           />
         ))}
 
-        {/* Large Gradient Orbs */}
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        {/* Hero Section */}
         <div className="text-center mb-20">
           <div
-            className="text-center mb-16 relative py-20 rounded-3xl overflow-hidden shadow-2xl"
+            className="text-center mb-16 relative py-16 sm:py-20 rounded-3xl overflow-hidden shadow-2xl"
             style={{
               backgroundImage: `url('/gallery.jpeg')`,
               backgroundSize: "cover",
@@ -65,20 +133,18 @@ const Gallery = () => {
             }}
           >
             <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-
-            <div className="relative flex items-center justify-center mb-6">
-              <h1 className="text-5xl md:text-6xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            <div className="relative">
+              <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-4">
                 Media Gallery
               </h1>
+              <p className="text-lg md:text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed px-4">
+                Relive the magic of campus life through our visual journey.
+                Every moment captured, every memory preserved.
+              </p>
             </div>
-            <p className="relative text-2xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
-              Relive the magic of campus life through our visual journey. Every
-              moment captured, every memory preserved.
-            </p>
           </div>
 
-          {/* Stats */}
-          <div className="flex justify-center gap-8 mt-8">
+          <div className="flex flex-row justify-center gap-8 mt-8 flex-wrap">
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-1">
                 {filteredMedia.length}
@@ -100,14 +166,13 @@ const Gallery = () => {
           </div>
         </div>
 
-        {/* Year Filter */}
         <div className="mb-12">
-          <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
+          <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 shadow-2xl">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold text-white mb-2">
                 Filter by Year
               </h2>
-              <p className="text-gray-400">
+              <p className="text-gray-400 text-sm sm:text-base">
                 Explore memories from different academic years
               </p>
             </div>
@@ -116,7 +181,7 @@ const Gallery = () => {
                 <button
                   key={year}
                   onClick={() => setSelectedYear(year)}
-                  className={`px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-300 ${
+                  className={`px-6 sm:px-8 py-3 sm:py-4 rounded-xl text-sm sm:text-lg font-semibold transition-all duration-300 ${
                     selectedYear === year
                       ? "bg-white text-black shadow-lg scale-105"
                       : "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white border border-white/20 hover:scale-105"
@@ -129,57 +194,52 @@ const Gallery = () => {
           </div>
         </div>
 
-        {/* Masonry Gallery */}
-        <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
-          {filteredMedia.map((item) => (
-            <div
-              key={item.id}
-              className="break-inside-avoid group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-2xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
-              style={{ marginBottom: "24px" }}
+        {isMobile ? (
+          <div className="mb-12 relative">
+            {/* Left Arrow */}
+            <button
+              onClick={() => scrollCarousel("left")}
+              className="absolute left-0 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md rounded-full p-2 text-white hover:bg-white/30 transition-all z-10 ml-2"
             >
-              {item.type === "image" ? (
-                <div className="relative overflow-hidden">
-                  <img
-                    src={item.src}
-                    alt={item.title}
-                    className="w-full object-cover group-hover:scale-110 transition-transform duration-700"
-                    style={{ height: `${item.height}px` }}
-                    onError={(e) => {
-                      // Fallback to a placeholder if image fails to load
-                      e.target.src = `https://unsplash.com/photos/a-crowd-of-people-standing-around-a-basketball-court-2qEA9np6O4E`;
-                    }}
-                  />
-                  {/* Year Badge */}
-                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-lg rounded-full px-3 py-1 text-xs font-bold text-white">
-                    {item.year}
-                  </div>
-                </div>
-              ) : (
-                <div className="relative">
-                  <video
-                    className="w-full object-cover rounded-t-2xl"
-                    style={{ height: `${item.height}px` }}
-                    autoPlay
-                    muted
-                    loop
-                    playsInline
-                    preload="auto"
-                    onLoadedData={(e) => e.target.play()}
-                  >
-                    <source src={item.src} type="video/mp4" />
-                    Your browser does not support the video tag.
-                  </video>
-                  {/* Year Badge */}
-                  <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-lg rounded-full px-3 py-1 text-xs font-bold text-white">
-                    {item.year}
-                  </div>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
+              <ChevronLeft size={24} />
+            </button>
 
-        {/* No Results */}
+            <div
+              ref={carouselRef} // Attach ref here
+              className="flex overflow-x-auto snap-x snap-mandatory space-x-4 pb-4 px-12 no-scrollbar" // Added horizontal padding for arrows
+            >
+              {filteredMedia.map((item) => (
+                <div key={item.id} className="w-4/5 flex-shrink-0 snap-center">
+                  {renderMediaItem(item, true)}
+                </div>
+              ))}
+            </div>
+
+            {/* Right Arrow */}
+            <button
+              onClick={() => scrollCarousel("right")}
+              className="absolute right-0 top-1/2 -translate-y-1/2 bg-white/20 backdrop-blur-md rounded-full p-2 text-white hover:bg-white/30 transition-all z-10 mr-2"
+            >
+              <ChevronRight size={24} />
+            </button>
+
+            {/* Scroll Indicator */}
+            <div className="absolute bottom-0 left-0 right-0 text-center text-xs text-gray-400">
+              <span className="inline-block bg-white/20 rounded-full px-3 py-1">
+                Swipe or use arrows to view more
+              </span>
+            </div>
+          </div>
+        ) : (
+          <div className="columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6">
+            {filteredMedia.map((item) => (
+              <div key={item.id} className="mb-6">
+                {renderMediaItem(item, false)}
+              </div>
+            ))}
+          </div>
+        )}
+
         {filteredMedia.length === 0 && (
           <div className="text-center py-20">
             <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl rounded-3xl p-12 max-w-lg mx-auto border border-white/20">
@@ -205,13 +265,12 @@ const Gallery = () => {
           </div>
         )}
 
-        {/* Call to Action */}
         <div className="text-center mt-20">
           <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-12 shadow-2xl">
             <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
               Want to Share Your Memories?
             </h2>
-            <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
+            <p className="text-base sm:text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
               Join our community and contribute to the visual story of campus
               life
             </p>

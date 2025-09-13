@@ -187,7 +187,7 @@ const Mission = () => {
             <Rocket className="h-5 w-5 text-yellow-400 animate-pulse" />
             <span className="text-white/80 font-medium">Our Impact</span>
           </div>
-          <h2 className="relative text-4xl md:text-4xl lg:text-6xl font-bold mb-6 mt-4">
+          <h2 className="relative text-3xl md:text-4xl lg:text-6xl font-bold mb-6 mt-4">
             <div className="text-white">
               Pioneering the Future Of{" "}
               <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">
@@ -197,14 +197,14 @@ const Mission = () => {
             </div>
           </h2>
 
-          <p className="text-xl md:text-2xl text-gray-400 leading-relaxed max-w-4xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-400 leading-relaxed max-w-4xl mx-auto">
             We are revolutionizing how to discover, participate, and create
             unforgettable experiences on campus.
           </p>
         </div>
 
         <div
-          className={`grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-20 transition-all duration-1000 delay-300 ${
+          className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 mb-20 transition-all duration-1000 delay-300 ${
             isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
           }`}
         >
@@ -223,21 +223,21 @@ const Mission = () => {
                   ></div>
 
                   <div
-                    className={`relative w-16 h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br ${stat.gradient} transform transition-all duration-500 group-hover:scale-110`}
+                    className={`relative w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center mb-6 bg-gradient-to-br ${stat.gradient} transform transition-all duration-500 group-hover:scale-110`}
                   >
-                    <IconComponent className="w-8 h-8 text-white animate-pulse-slow" />
+                    <IconComponent className="w-7 h-7 md:w-8 md:h-8 text-white animate-pulse-slow" />
                   </div>
 
-                  <div className="text-4xl md:text-5xl font-extrabold text-white mb-2 tracking-tighter">
+                  <div className="text-3xl md:text-5xl font-extrabold text-white mb-2 tracking-tighter">
                     {typeof stat.number === "string"
                       ? stat.number
                       : stat.number.toLocaleString()}
-                    <span className="text-2xl text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200 ml-1">
+                    <span className="text-xl md:text-2xl text-transparent bg-clip-text bg-gradient-to-r from-gray-400 to-gray-200 ml-1">
                       {stat.suffix}
                     </span>
                   </div>
 
-                  <div className="text-lg md:text-xl font-semibold text-gray-200 mb-1">
+                  <div className="text-base md:text-xl font-semibold text-gray-200 mb-1">
                     {stat.label}
                   </div>
                   <div className="text-sm text-gray-400">
@@ -250,7 +250,7 @@ const Mission = () => {
         </div>
 
         <div className="text-center mt-12 relative z-10">
-          <button className="relative group overflow-hidden px-10 py-5 rounded-2xl font-bold text-lg text-black ">
+          <button className="relative group overflow-hidden px-8 py-4 md:px-10 md:py-5 rounded-2xl font-bold text-base md:text-lg text-black ">
             <div
               className={`absolute inset-0 rounded-2xl bg-white opacity-80 `}
             ></div>

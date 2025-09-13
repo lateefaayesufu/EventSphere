@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "sonner";
@@ -10,6 +10,7 @@ import {
 	Navigate,
 } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
+import { useLenis } from "lenis/react";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -27,6 +28,9 @@ import EventsAdmin from "./admin/pages/Events";
 import UsersAdmin from "./admin/pages/Users";
 import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
+
+import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
+import OrganizerDashboard from "./organizers/dashboard/Dashboard";
 
 const AppLayout = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,8 +52,47 @@ const AppLayout = () => {
 
 // Admin layout wrapper (with sidebar/topbar etc.)
 const AdminLayout = () => {
+	const lenis = useLenis();
+
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
 	return (
 		<div className="admin-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
+};
+
+const ParticipationLayout = () => {
+	const lenis = useLenis();
+
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
+
+	return (
+		<div className="participation-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
+};
+const OrganizerLayout = () => {
+	const lenis = useLenis();
+
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
+	return (
+		<div className="organizer-layout">
 			{/* Add a sidebar or navbar here */}
 			<Outlet /> {/* This is where nested admin pages render */}
 		</div>
@@ -82,6 +125,25 @@ const router = createBrowserRouter([
 					{ path: "users", element: <UsersAdmin /> },
 					{ path: "reports", element: <ReportsAdmin /> },
 					{ path: "settings", element: <SettingsAdmin /> },
+				],
+			},
+			{
+				path: "participant",
+				element: <ParticipationLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
+
+					{ path: "dashboard", element: <ParticipantDashboard /> },
+				],
+			},
+
+			{
+				path: "organizer",
+				element: <OrganizerLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
+
+					{ path: "dashboard", element: <OrganizerDashboard /> },
 				],
 			},
 		],

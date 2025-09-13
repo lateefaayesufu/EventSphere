@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { loginWithEmail, signup } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
@@ -6,7 +6,6 @@ import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
 import { toast } from "sonner";
 import { useNavigate } from "react-router";
-import { useEffect } from "react";
 import ButtonLoadingSpinner from "../components/sections/ui/ButtonLoadingSpinner";
 import {
 	Mail,
@@ -31,6 +30,8 @@ const Login = () => {
 		fullName: "",
 		username: "",
 		contactNumber: "",
+		department: "",
+		enrollmentNumber: "",
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [view, setView] = useState("login"); // 'login' | 'signup'
@@ -61,8 +62,6 @@ const Login = () => {
 
 	const navigate = useNavigate();
 
-	console.log(isLoginLoading);
-
 	useEffect(() => {
 		if (isSuccess && data) {
 			toast.success("Login successful!");
@@ -74,7 +73,6 @@ const Login = () => {
 					id: data.user.id,
 				},
 			});
-			console.log("Login data:", data);
 			if (data.user.role === "ADMIN") {
 				navigate("/admin/dashboard");
 			}
@@ -84,6 +82,26 @@ const Login = () => {
 			toast.error(error.response?.data?.error || "Login failed.");
 		}
 	}, [isSuccess, isError, data, error, dispatch, navigate]);
+
+	useEffect(() => {
+		if (isSignupSuccess && signupData) {
+			toast.success("Signup successful!");
+			setView("login");
+			setFormData({
+				email: "",
+				password: "",
+				fullName: "",
+				username: "",
+				contactNumber: "",
+				department: "",
+				enrollmentNumber: "",
+			});
+		}
+
+		if (isSignupError && signupError) {
+			toast.error(signupError.response?.data?.error || "Signup failed.");
+		}
+	}, [isSignupSuccess, isSignupError, signupData, signupError]);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -105,6 +123,27 @@ const Login = () => {
 			return;
 		}
 		loginMutate(formData);
+	};
+
+	const handleSignupSubmit = (e) => {
+		e.preventDefault();
+		if (
+			!formData.email ||
+			!formData.password ||
+			!formData.fullName ||
+			!formData.contactNumber ||
+			!formData.department ||
+			!formData.enrollmentNumber
+		) {
+			toast.error("Please fill in all fields.");
+			return;
+		}
+
+		if (formData.password.length < 8) {
+			toast.error("Password must be at least 8 characters long.");
+			return;
+		}
+		signupMutate(formData);
 	};
 
 	const renderContent = () => {
@@ -222,10 +261,12 @@ const Login = () => {
 									<input
 										type="text"
 										name="fullName"
+										value={formData.fullName}
 										onChange={handleInputChange}
 										className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 										placeholder="Enter your full name"
 										required
+										disabled={isSignupLoading}
 									/>
 								</div>
 							</div>
@@ -239,10 +280,12 @@ const Login = () => {
 									<input
 										type="email"
 										name="email"
+										value={formData.email}
 										onChange={handleInputChange}
 										className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 										placeholder="Enter your email"
 										required
+										disabled={isSignupLoading}
 									/>
 								</div>
 							</div>
@@ -257,10 +300,12 @@ const Login = () => {
 								<input
 									type={showPassword ? "text" : "password"}
 									name="password"
+									value={formData.password}
 									onChange={handleInputChange}
 									className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-12 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 									placeholder="Create a password"
 									required
+									disabled={isSignupLoading}
 								/>
 								<button
 									type="button"
@@ -286,10 +331,12 @@ const Login = () => {
 									<input
 										type="tel"
 										name="contactNumber"
+										value={formData.contactNumber}
 										onChange={handleInputChange}
 										className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 										placeholder="Enter your contact number"
 										required
+										disabled={isSignupLoading}
 									/>
 								</div>
 							</div>
@@ -303,10 +350,12 @@ const Login = () => {
 									<input
 										type="text"
 										name="department"
+										value={formData.department}
 										onChange={handleInputChange}
 										className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 										placeholder="e.g., Computer Science"
 										required
+										disabled={isSignupLoading}
 									/>
 								</div>
 							</div>
@@ -321,20 +370,22 @@ const Login = () => {
 								<input
 									type="text"
 									name="enrollmentNumber"
+									value={formData.enrollmentNumber}
 									onChange={handleInputChange}
 									className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all"
 									placeholder="Enter your enrollment number"
 									required
+									disabled={isSignupLoading}
 								/>
 							</div>
 						</div>
 
 						<button
 							type="submit"
-							disabled={loading}
+							disabled={isSignupLoading}
 							className="w-full bg-gradient-to-r from-purple-500 to-cyan-500 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
 						>
-							{loading ? (
+							{isSignupLoading ? (
 								<ButtonLoadingSpinner />
 							) : (
 								<>
@@ -362,14 +413,13 @@ const Login = () => {
 	return (
 		<div className="min-h-screen flex flex-col relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
 			<Navbar />
-			<div className="flex-grow flex items-center justify-center pt-24 pb-8 relative z-10">
+			<div className="flex-grow flex items-center justify-center pt-40 pb-8 relative z-10">
 				<div className="max-w-md mx-auto px-6">
 					<div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
 						{renderContent()}
 					</div>
 				</div>
 			</div>
-
 			<Footer />
 		</div>
 	);

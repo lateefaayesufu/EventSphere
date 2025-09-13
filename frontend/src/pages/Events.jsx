@@ -9,18 +9,15 @@ import career from "/career.jpg";
 import poetry from "/poetry.jpg";
 import research from "/research.jpg";
 import donation from "/donation.jpg";
-import studentHackathon from "/student-hackathon.jpg"; // New image import
-import photographyExhibit from "/photography-exhibit.jpg"; // New image import
+import studentHackathon from "/student-hackathon.jpg";
+import photographyExhibit from "/photography-exhibit.jpg";
 import {
   Search,
-  Filter,
+  ChevronDown,
+  Star,
   Calendar,
   MapPin,
   Users,
-  Clock,
-  ChevronDown,
-  Sparkles,
-  Star,
 } from "lucide-react";
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
@@ -65,7 +62,7 @@ const Events = () => {
         "Connect with top employers, explore internship opportunities, and kickstart your professional journey.",
       image: career,
       category: "Academic",
-      date: "2025-09-11", // Ongoing event
+      date: "2025-09-11",
       time: "10:00 AM",
       venue: "Exhibition Hall",
       organizer: "Career Services Center",
@@ -218,7 +215,7 @@ const Events = () => {
         "Code, collaborate, and create groundbreaking solutions to real-world problems over 48 hours.",
       image: studentHackathon,
       category: "Academic",
-      date: "2025-09-09", // Ongoing event
+      date: "2025-09-09",
       time: "9:00 AM",
       venue: "Innovation Hub",
       organizer: "Computer Science Club",
@@ -235,7 +232,7 @@ const Events = () => {
         "A showcase of stunning photos from our members, capturing campus life and beyond.",
       image: photographyExhibit,
       category: "Cultural",
-      date: "2025-09-10", // Ongoing event
+      date: "2025-09-10",
       time: "11:00 AM",
       venue: "Campus Art Gallery",
       organizer: "Photography Club",
@@ -247,7 +244,6 @@ const Events = () => {
     },
   ];
 
-  // This function categorizes the events based on the current date
   const categorizeEvents = (events) => {
     const now = new Date();
     const upcoming = [];
@@ -314,12 +310,95 @@ const Events = () => {
     return colors[status] || "text-gray-400";
   };
 
+  const renderEventCards = (events) => {
+    return events.length > 0 ? (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+        {events.map((event) => (
+          <div
+            key={event.id}
+            className={`group bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden shadow-lg transition-transform duration-500 hover:scale-[1.02] relative ${
+              event.featured ? "ring-2 ring-purple-400/50" : ""
+            }`}
+          >
+            {event.featured && (
+              <div className="absolute -top-2 -right-2 z-20">
+                <div className="bg-white/30 backdrop-blur-md rounded-full p-2 animate-pulse">
+                  <Star className="w-5 h-5 text-yellow-400 fill-current" />
+                </div>
+              </div>
+            )}
+
+            <div className="relative overflow-hidden h-56">
+              <img
+                src={event.image}
+                alt={event.title}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+              <div
+                className={`absolute top-4 left-4 ${getCategoryColor(
+                  event.category
+                )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
+              >
+                {event.category}
+              </div>
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
+                {event.registered}/{event.capacity}
+              </div>
+            </div>
+
+            <div className="p-8">
+              <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors">
+                {event.title}
+              </h3>
+              <p className="text-gray-300 text-base mb-6 line-clamp-2 leading-relaxed">
+                {event.description}
+              </p>
+              <div className="space-y-3 mb-6">
+                <div className="flex items-center gap-3 text-gray-400 text-sm">
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <Calendar className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium">
+                    {new Date(event.date).toLocaleDateString()} at {event.time}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-400 text-sm">
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <MapPin className="w-4 h-4" />
+                  </div>
+                  <span className="font-medium">{event.venue}</span>
+                </div>
+                <div className="flex items-center gap-3 text-gray-400 text-sm">
+                  <div className="p-2 bg-white/10 rounded-lg">
+                    <Users className="w-4 h-4" />
+                  </div>
+                  <span
+                    className={`font-medium ${getStatusColor(event.status)}`}
+                  >
+                    {event.status}
+                  </span>
+                </div>
+              </div>
+              <button className="w-full bg-white text-black font-bold py-4 rounded-xl shadow-md hover:bg-gray-200 transform transition-transform duration-300 text-lg">
+                Register Now
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className="text-center py-12">
+        <p className="text-gray-400 text-lg">No events to show.</p>
+      </div>
+    );
+  };
+
   return (
     <div className="min-h-screen pt-32 pb-8 relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426]">
       <Navbar />
       {/* Animated Background Elements */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {/* Floating Particles */}
         {[...Array(50)].map((_, i) => (
           <div
             key={i}
@@ -332,454 +411,132 @@ const Events = () => {
             }}
           />
         ))}
-
-        {/* Large Gradient Orbs */}
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-400/20 rounded-full blur-3xl" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-400/20 rounded-full blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Page Header */}
-        <div className="text-center mb-16">
+        <div className="text-center mb-16 relative py-20 rounded-3xl overflow-hidden shadow-2xl">
           <div
-            className="text-center mb-16 relative py-20 rounded-3xl overflow-hidden shadow-2xl"
+            className="absolute inset-0"
             style={{
               backgroundImage: `url('/events.jpeg')`,
               backgroundSize: "cover",
               backgroundPosition: "center",
             }}
-          >
-            <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-
-            <h1 className="relative text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-              Campus Events
-            </h1>
-            <p className="relative text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
-              Immerse yourself in unforgettable experiences. From cultural
-              celebrations to academic breakthroughs.
-            </p>
-          </div>
-
-          {/* Stats */}
-          <div className="flex justify-center gap-8 mt-8">
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">
-                {sortedAndFilteredEvents.length}
-              </div>
-              <div className="text-gray-400 text-sm">Active Events</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">5K+</div>
-              <div className="text-gray-400 text-sm">Students Engaged</div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-white mb-1">15+</div>
-              <div className="text-gray-400 text-sm">Categories</div>
-            </div>
-          </div>
+          ></div>
+          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+          <h1 className="relative text-6xl md:text-8xl font-black mb-6 bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+            Campus Events
+          </h1>
+          <p className="relative text-2xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+            Immerse yourself in unforgettable experiences. From cultural
+            celebrations to academic breakthroughs.
+          </p>
         </div>
 
-        {/* Enhanced Filters */}
-        <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 mb-12 shadow-2xl">
-          <div className="flex flex-col lg:flex-row gap-8 items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <div className="absolute -inset-1 rounded-xl blur opacity-30 group-hover:opacity-100 "></div>
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
-                <input
-                  type="text"
-                  placeholder="Search for your next adventure..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all text-lg"
-                />
-              </div>
+        {/* Filters and Search Bar */}
+
+        {/* Filters and Search Bar */}
+        <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 md:p-8 mb-12 shadow-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+            {/* Search Bar */}
+            <div className="relative w-full lg:w-auto lg:flex-grow">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-6 h-6" />
+              <input
+                type="text"
+                placeholder="Search for your next adventure..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full bg-white/10 border border-white/30 rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 backdrop-blur-lg transition-all text-lg"
+              />
             </div>
 
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-3">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-6 py-3 rounded-full text-sm font-semibold hover:scale-105 ${
-                    selectedCategory === category
-                      ? "bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-lg"
-                      : "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white border border-white/20"
-                  }`}
+            {/* Category Filters and Sort Dropdown */}
+            <div className="flex flex-col md:flex-row gap-4 md:gap-6 w-full lg:w-auto">
+              {/* Category Filter Buttons */}
+
+              <div className="flex flex-wrap gap-2 justify-center">
+                {categories.map((category) => (
+                  <button
+                    key={category}
+                    onClick={() => setSelectedCategory(category)}
+                    className={`px-5 py-3 rounded-2xl text-sm font-semibold hover:scale-105 transition-transform ${
+                      selectedCategory === category
+                        ? "bg-white text-black shadow-lg"
+                        : "bg-white/10 text-gray-300 hover:bg-white/20 hover:text-white border border-white/20"
+                    }`}
+                  >
+                    {category}
+                  </button>
+                ))}
+              </div>
+
+              {/* Sort Dropdown */}
+              <div className="relative z-20 w-full md:w-auto">
+                <div
+                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                  className="group cursor-pointer flex items-center justify-between gap-4 bg-white/10 border border-white/30 rounded-xl px-6 py-4 text-white hover:bg-white/15 transition-colors duration-300 backdrop-blur-lg"
                 >
-                  {category}
-                </button>
-              ))}
-            </div>
-
-            {/* Sort Dropdown - CUSTOM COMPONENT */}
-            <div className="relative z-20">
-              <div
-                onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
-                className="group cursor-pointer flex items-center justify-between gap-4 bg-white/10 border border-white/30 rounded-xl px-6 py-4 text-white hover:bg-white/15 transition-colors duration-300 backdrop-blur-lg"
-              >
-                <span className="font-medium text-lg">{sortBy}</span>
-                <ChevronDown
-                  className={`w-6 h-6 text-gray-400 transform transition-transform duration-300 ${
-                    isSortDropdownOpen ? "rotate-180" : ""
-                  }`}
-                />
-              </div>
-              {isSortDropdownOpen && (
-                <div className="absolute top-full mt-2 w-full bg-white/10 border border-white/30 rounded-xl backdrop-blur-lg shadow-xl overflow-hidden">
-                  <div
-                    className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
-                    onClick={() => {
-                      setSortBy("Latest");
-                      setIsSortDropdownOpen(false);
-                    }}
-                  >
-                    Latest
-                  </div>
-                  <div
-                    className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
-                    onClick={() => {
-                      setSortBy("Popular");
-                      setIsSortDropdownOpen(false);
-                    }}
-                  >
-                    Popular
-                  </div>
-                  <div
-                    className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
-                    onClick={() => {
-                      setSortBy("Deadline");
-                      setIsSortDropdownOpen(false);
-                    }}
-                  >
-                    Deadline
-                  </div>
+                  <span className="font-medium text-lg">{sortBy}</span>
+                  <ChevronDown
+                    className={`w-6 h-6 text-gray-400 transform transition-transform duration-300 ${
+                      isSortDropdownOpen ? "rotate-180" : ""
+                    }`}
+                  />
                 </div>
-              )}
+                {isSortDropdownOpen && (
+                  <div className="absolute top-full mt-2 w-full bg-white/10 border border-white/30 rounded-xl backdrop-blur-lg shadow-xl overflow-hidden">
+                    <div
+                      className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
+                      onClick={() => {
+                        setSortBy("Latest");
+                        setIsSortDropdownOpen(false);
+                      }}
+                    >
+                      Latest
+                    </div>
+                    <div
+                      className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
+                      onClick={() => {
+                        setSortBy("Popular");
+                        setIsSortDropdownOpen(false);
+                      }}
+                    >
+                      Popular
+                    </div>
+                    <div
+                      className="px-6 py-4 text-white hover:bg-white/20 cursor-pointer transition-colors"
+                      onClick={() => {
+                        setSortBy("Deadline");
+                        setIsSortDropdownOpen(false);
+                      }}
+                    >
+                      Deadline
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Upcoming Events */}
+        {/* Events Sections */}
         <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
           Upcoming Events
         </h2>
-        <div className="flex flex-wrap justify-center gap-10">
-          {upcoming.length > 0 ? (
-            upcoming.map((event) => (
-              <div
-                key={event.id}
-                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
-                  event.featured ? "ring-2 ring-purple-400/50" : ""
-                }`}
-              >
-                {/* Featured Badge */}
-                {event.featured && (
-                  <div className="absolute -top-2 -right-2 z-20">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
-                      <Star className="w-5 h-5 text-white fill-current" />
-                    </div>
-                  </div>
-                )}
+        {renderEventCards(upcoming)}
 
-                {/* Event Image */}
-                <div className="relative overflow-hidden h-56">
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-
-                  {/* Category Badge */}
-                  <div
-                    className={`absolute top-4 left-4 ${getCategoryColor(
-                      event.category
-                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
-                  >
-                    {event.category}
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
-                    {event.registered}/{event.capacity}
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-
-                {/* Event Details */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
-                    {event.title}
-                  </h3>
-
-                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
-                    {event.description}
-                  </p>
-
-                  {/* Event Info */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Calendar className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">
-                        {new Date(event.date).toLocaleDateString()} at{" "}
-                        {event.time}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <MapPin className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{event.venue}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Users className="w-4 h-4" />
-                      </div>
-                      <span
-                        className={`font-medium ${getStatusColor(
-                          event.status
-                        )}`}
-                      >
-                        {event.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
-                    Register Now
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">
-                No upcoming events right now. Check back soon!
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Ongoing Events */}
         <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
           Ongoing Events
         </h2>
-        <div className="flex flex-wrap justify-center gap-10">
-          {ongoing.length > 0 ? (
-            ongoing.map((event) => (
-              <div
-                key={event.id}
-                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
-                  event.featured ? "ring-2 ring-purple-400/50" : ""
-                }`}
-              >
-                {/* Featured Badge */}
-                {event.featured && (
-                  <div className="absolute -top-2 -right-2 z-20">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
-                      <Star className="w-5 h-5 text-white fill-current" />
-                    </div>
-                  </div>
-                )}
+        {renderEventCards(ongoing)}
 
-                {/* Event Image */}
-                <div className="relative overflow-hidden h-56">
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-
-                  {/* Category Badge */}
-                  <div
-                    className={`absolute top-4 left-4 ${getCategoryColor(
-                      event.category
-                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
-                  >
-                    {event.category}
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
-                    {event.registered}/{event.capacity}
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-
-                {/* Event Details */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
-                    {event.title}
-                  </h3>
-
-                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
-                    {event.description}
-                  </p>
-
-                  {/* Event Info */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Calendar className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">
-                        {new Date(event.date).toLocaleDateString()} at{" "}
-                        {event.time}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <MapPin className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{event.venue}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Users className="w-4 h-4" />
-                      </div>
-                      <span
-                        className={`font-medium ${getStatusColor(
-                          event.status
-                        )}`}
-                      >
-                        {event.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
-                    Register Now
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">
-                No events are ongoing at the moment.
-              </p>
-            </div>
-          )}
-        </div>
-
-        {/* Past Events */}
         <h2 className="text-4xl font-bold text-white mb-8 mt-16 text-center">
           Past Events
         </h2>
-        <div className="flex flex-wrap justify-center gap-10">
-          {past.length > 0 ? (
-            past.map((event) => (
-              <div
-                key={event.id}
-                className={`group bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl overflow-hidden hover:bg-gradient-to-b hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20 max-w-sm relative ${
-                  event.featured ? "ring-2 ring-purple-400/50" : ""
-                }`}
-              >
-                {/* Featured Badge */}
-                {event.featured && (
-                  <div className="absolute -top-2 -right-2 z-20">
-                    <div className="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full p-2 animate-pulse">
-                      <Star className="w-5 h-5 text-white fill-current" />
-                    </div>
-                  </div>
-                )}
-
-                {/* Event Image */}
-                <div className="relative overflow-hidden h-56">
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/20 to-transparent z-10"></div>
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
-
-                  {/* Category Badge */}
-                  <div
-                    className={`absolute top-4 left-4 ${getCategoryColor(
-                      event.category
-                    )} backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20 shadow-lg`}
-                  >
-                    {event.category}
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-lg rounded-full px-4 py-2 text-xs font-bold text-white border border-white/20">
-                    {event.registered}/{event.capacity}
-                  </div>
-
-                  {/* Hover Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-purple-600/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                </div>
-
-                {/* Event Details */}
-                <div className="p-8">
-                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-cyan-300 group-hover:to-purple-300 group-hover:bg-clip-text transition-all duration-300">
-                    {event.title}
-                  </h3>
-
-                  <p className="text-gray-300 text-base mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors leading-relaxed">
-                    {event.description}
-                  </p>
-
-                  {/* Event Info */}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Calendar className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">
-                        {new Date(event.date).toLocaleDateString()} at{" "}
-                        {event.time}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <MapPin className="w-4 h-4" />
-                      </div>
-                      <span className="font-medium">{event.venue}</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-gray-400 text-sm">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Users className="w-4 h-4" />
-                      </div>
-                      <span
-                        className={`font-medium ${getStatusColor(
-                          event.status
-                        )}`}
-                      >
-                        {event.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Button */}
-                  <button className="w-full bg-white text-black font-bold py-4 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg border border-transparent hover:border-purple-400/50">
-                    See Details
-                  </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-12">
-              <p className="text-gray-400 text-lg">No past events to show.</p>
-            </div>
-          )}
-        </div>
+        {renderEventCards(past)}
       </div>
       <Footer />
     </div>
