@@ -1,12 +1,16 @@
 import React, { useEffect } from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./context/AuthContext";
+import { Toaster } from "sonner";
 import { useState } from "react";
 import {
-  createBrowserRouter,
-  RouterProvider,
-  Outlet,
-  Navigate,
+	createBrowserRouter,
+	RouterProvider,
+	Outlet,
+	Navigate,
 } from "react-router-dom";
 import { ReactLenis } from "lenis/react";
+import { useLenis } from "lenis/react";
 
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -29,124 +33,132 @@ import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
 import OrganizerDashboard from "./organizers/dashboard/OrganizerDashboard";
 
 const AppLayout = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
 
-  const authProps = {
-    isLoggedIn,
-    setIsLoggedIn,
-    isAdminLoggedIn,
-    setIsAdminLoggedIn,
-  };
+	const authProps = {
+		isLoggedIn,
+		setIsLoggedIn,
+		isAdminLoggedIn,
+		setIsAdminLoggedIn,
+	};
 
-  return (
-    <ReactLenis root>
-      <Outlet context={authProps} />
-    </ReactLenis>
-  );
+	return (
+		<ReactLenis root>
+			<Outlet context={authProps} />
+		</ReactLenis>
+	);
 };
 
-import { useLenis } from "lenis/react";
 // Admin layout wrapper (with sidebar/topbar etc.)
 const AdminLayout = () => {
-  const lenis = useLenis();
+	const lenis = useLenis();
 
-  useEffect(() => {
-    if (lenis) {
-      lenis.destroy();
-    }
-  }, [lenis]);
-  return (
-    <div className="admin-layout">
-      {/* Add a sidebar or navbar here */}
-      <Outlet /> {/* This is where nested admin pages render */}
-    </div>
-  );
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
+	return (
+		<div className="admin-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
 };
 
 const ParticipationLayout = () => {
-  const lenis = useLenis();
+	const lenis = useLenis();
 
-  useEffect(() => {
-    if (lenis) {
-      lenis.destroy();
-    }
-  }, [lenis]);
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
 
-  return (
-    <div className="participation-layout">
-      {/* Add a sidebar or navbar here */}
-      <Outlet /> {/* This is where nested admin pages render */}
-    </div>
-  );
+	return (
+		<div className="participation-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
 };
 const OrganizerLayout = () => {
-  const lenis = useLenis();
+	const lenis = useLenis();
 
-  useEffect(() => {
-    if (lenis) {
-      lenis.destroy();
-    }
-  }, [lenis]);
-  return (
-    <div className="organizer-layout">
-      {/* Add a sidebar or navbar here */}
-      <Outlet /> {/* This is where nested admin pages render */}
-    </div>
-  );
+	useEffect(() => {
+		if (lenis) {
+			lenis.destroy();
+		}
+	}, [lenis]);
+	return (
+		<div className="organizer-layout">
+			{/* Add a sidebar or navbar here */}
+			<Outlet /> {/* This is where nested admin pages render */}
+		</div>
+	);
 };
 
 // Define routes
 const router = createBrowserRouter([
-  {
-    element: <AppLayout />,
-    children: [
-      { path: "/", element: <Home /> },
-      { path: "events", element: <Events /> },
-      { path: "about", element: <About /> },
-      { path: "contact", element: <Contact /> },
-      { path: "gallery", element: <Gallery /> },
-      { path: "faq", element: <Faqs /> },
-      { path: "login", element: <Login /> },
+	{
+		element: <AppLayout />,
+		children: [
+			{ path: "/", element: <Home /> },
+			{ path: "events", element: <Events /> },
+			{ path: "about", element: <About /> },
+			{ path: "contact", element: <Contact /> },
+			{ path: "gallery", element: <Gallery /> },
+			{ path: "faq", element: <Faqs /> },
+			{ path: "login", element: <Login /> },
 
-      // Admin routes
-      {
-        path: "admin",
-        element: <AdminLayout />,
-        children: [
-          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+			// Admin routes
+			{
+				path: "admin",
+				element: <AdminLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
 
-          { path: "dashboard", element: <AdminDashboard /> },
-          { path: "auth", element: <AdminAuth /> },
-          { path: "events", element: <EventsAdmin /> },
-          { path: "users", element: <UsersAdmin /> },
-          { path: "reports", element: <ReportsAdmin /> },
-          { path: "settings", element: <SettingsAdmin /> },
-        ],
-      },
-      {
-        path: "participant",
-        element: <ParticipationLayout />,
-        children: [
-          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+					{ path: "dashboard", element: <AdminDashboard /> },
+					{ path: "auth", element: <AdminAuth /> },
+					{ path: "events", element: <EventsAdmin /> },
+					{ path: "users", element: <UsersAdmin /> },
+					{ path: "reports", element: <ReportsAdmin /> },
+					{ path: "settings", element: <SettingsAdmin /> },
+				],
+			},
+			{
+				path: "participant",
+				element: <ParticipationLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
 
-          { path: "dashboard", element: <ParticipantDashboard /> },
-        ],
-      },
+					{ path: "dashboard", element: <ParticipantDashboard /> },
+				],
+			},
 
-      {
-        path: "organizer",
-        element: <OrganizerLayout />,
-        children: [
-          { index: true, element: <Navigate to="dashboard" replace /> }, // default
+			{
+				path: "organizer",
+				element: <OrganizerLayout />,
+				children: [
+					{ index: true, element: <Navigate to="dashboard" replace /> }, // default
 
-          { path: "dashboard", element: <OrganizerDashboard /> },
-        ],
-      },
-    ],
-  },
+					{ path: "dashboard", element: <OrganizerDashboard /> },
+				],
+			},
+		],
+	},
 ]);
 
-const App = () => <RouterProvider router={router} />;
+const queryClient = new QueryClient();
+
+const App = () => (
+	<AuthProvider>
+		<QueryClientProvider client={queryClient}>
+			<RouterProvider router={router} />
+		</QueryClientProvider>
+		<Toaster />
+	</AuthProvider>
+);
 
 export default App;
