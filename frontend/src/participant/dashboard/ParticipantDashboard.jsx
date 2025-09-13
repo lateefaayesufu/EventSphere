@@ -352,7 +352,7 @@ const SearchAndFilter = ({
       <select
         value={filters.category}
         onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-        className="bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className=" border-white/10 rounded-xl p-3 text-white bg-blue-950 focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="">All Categories</option>
         <option value="technical">Technical</option>
@@ -362,7 +362,7 @@ const SearchAndFilter = ({
       <select
         value={filters.status}
         onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-        className="bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="bg-blue-950 border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="">All Status</option>
         <option value="confirmed">Confirmed</option>
@@ -372,7 +372,7 @@ const SearchAndFilter = ({
       <select
         value={filters.time}
         onChange={(e) => setFilters({ ...filters, time: e.target.value })}
-        className="bg-white/5 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+        className="bg-blue-950 border border-white/10 rounded-xl p-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
       >
         <option value="">All Time</option>
         <option value="upcoming">Upcoming</option>
