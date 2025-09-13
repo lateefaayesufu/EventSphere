@@ -32,14 +32,9 @@ const HeroSection = function () {
             <Button>Create your first event</Button>
           </div>
         </div>
-        {/*
-          Changes:
-          1. The video container's width is now set to `md:w-3/5` to give it a more dominant space on tablets.
-          2. The `h1` tag has been adjusted to make sure "Engage in Campus Life" fits on two lines.
-          3. This adjustment makes sure the text isn't breaking into three lines on smaller screens.
-        */}
-        <div className="w-full md:w-3/5 lg:w-1/2 flex items-center justify-center p-4">
-          <div className="w-full rounded-lg overflow-hidden shadow-lg">
+
+        <div className="w-full md:w-3/5 lg:w-1/2 flex items-center justify-center p-4 bg-transparent">
+          <div className="w-full rounded-lg overflow-hidden  bg-transparent">
             <video
               src="/landing.webm"
               className="w-full h-auto object-cover"

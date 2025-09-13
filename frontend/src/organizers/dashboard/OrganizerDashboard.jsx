@@ -57,6 +57,7 @@ const EventCard = ({
   event,
   onViewDetails,
   onEdit,
+
   onQRScan,
   onManageRegistrations,
 }) => {
@@ -90,6 +91,7 @@ const EventCard = ({
         })
         .catch(console.error);
     } else {
+      // Fallback for browsers that don't support the Web Share API
       alert(`Share this event! \n\n${shareText}\n\nLink: ${shareUrl}`);
     }
   };
@@ -356,7 +358,9 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
   const waitlist = event.waitlist || [];
 
   const handlePromoteToParticipant = (participantId) => {
+    // Logic to move participant from waitlist to registered
     console.log(`Promoting participant ${participantId} to registered list.`);
+    // In a real app, you would make an API call to update the database
   };
 
   return (
@@ -366,6 +370,7 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
           Registrations for {event.title}
         </h3>
 
+        {/* Registered Participants */}
         <div className="mb-6">
           <h4 className="text-xl font-semibold text-green-400 flex items-center mb-2">
             <UserCheck size={20} className="mr-2" />
@@ -386,6 +391,7 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
           )}
         </div>
 
+        {/* Waitlist */}
         <div>
           <h4 className="text-xl font-semibold text-yellow-400 flex items-center mb-2">
             <Clock size={20} className="mr-2" />
@@ -426,44 +432,19 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
 
 const QRScannerModal = ({ isOpen, onClose, event }) => {
   if (!isOpen || !event) return null;
-
-  const handleScan = () => {
-    alert("Scanning for a QR code...");
-    setTimeout(() => {
-      alert("QR code scanned successfully! Attendance marked.");
-      onClose();
-    }, 2000);
-  };
-
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-      <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-bold text-white">
-            Scan QR for {event.title}
-          </h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
-            <XCircle size={24} />
-          </button>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="w-full aspect-video bg-gray-900 rounded-xl flex items-center justify-center relative overflow-hidden mb-6">
-            <Camera className="w-16 h-16 text-gray-700" />
-            <div className="absolute inset-0 z-10 pointer-events-none">
-              <div className="w-full h-full border-4 border-dashed border-white/30 rounded-xl" />
-            </div>
-            <div className="absolute z-20 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 p-2 rounded-full bg-blue-500/50 animate-pulse" />
-          </div>
-
-          <button
-            onClick={handleScan}
-            className="w-full py-3 bg-purple-500 hover:bg-purple-600 rounded-lg font-bold text-white transition-colors"
-          >
-            <QrCode className="w-5 h-5 inline mr-2" />
-            Scan QR Code
-          </button>
-        </div>
+      <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl">
+        <h3 className="text-2xl font-bold text-white mb-4">
+          Scan QR for {event.title}
+        </h3>
+        <p className="text-gray-400">QR code scanner UI goes here...</p>
+        <button
+          onClick={onClose}
+          className="py-2 px-4 bg-blue-500 rounded-lg text-white mt-4"
+        >
+          Close
+        </button>
       </div>
     </div>
   );
@@ -482,7 +463,7 @@ const CommunicationModal = ({ isOpen, onClose, event }) => {
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-      <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
+      <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl">
         <h3 className="text-2xl font-bold text-white mb-4">
           Communicate with Participants
         </h3>
@@ -526,6 +507,7 @@ const OrganizerDashboard = () => {
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [eventToEdit, setEventToEdit] = useState(null);
 
+  // Mock data to simulate events with more detail for new features
   const [events, setEvents] = useState([
     {
       id: 1,
@@ -543,7 +525,6 @@ const OrganizerDashboard = () => {
       participants: [
         { id: 101, name: "John Doe" },
         { id: 102, name: "Jane Smith" },
-        { id: 103, name: "Michael Chen" },
       ],
       waitlist: [{ id: 201, name: "Sam Williams" }],
       media: [
@@ -584,8 +565,8 @@ const OrganizerDashboard = () => {
       rating: 4.5,
       certificateFee: 100,
       participants: [
-        { id: 104, name: "Alice Brown" },
-        { id: 105, name: "Bob Green" },
+        { id: 103, name: "Alice Brown" },
+        { id: 104, name: "Bob Green" },
       ],
       waitlist: [],
       media: [
@@ -967,11 +948,12 @@ const OrganizerDashboard = () => {
 
   const AttendanceContent = () => {
     const handleDownloadReport = () => {
+      // Logic to generate and download a report
       const attendanceData = events.map((e) => ({
         eventId: e.id,
         title: e.title,
         registered: e.registrations,
-        present: Math.floor(e.registrations * 0.8),
+        present: Math.floor(e.registrations * 0.8), // Mock data
         absent: e.registrations - Math.floor(e.registrations * 0.8),
       }));
       console.log("Generating attendance report:", attendanceData);
@@ -1081,6 +1063,7 @@ const OrganizerDashboard = () => {
     };
 
     const handleGenerateCertificate = (participant) => {
+      // Mock function to generate a certificate for a single participant
       alert(
         `Generating and downloading certificate for ${participant.name}...`
       );
@@ -1100,7 +1083,7 @@ const OrganizerDashboard = () => {
 
       return (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-          <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
+          <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-2xl font-bold text-white">
                 Upload Certificates for {event.title}
@@ -1226,6 +1209,7 @@ const OrganizerDashboard = () => {
 
     const handleUploadMedia = () => {
       if (selectedEventId && fileToUpload) {
+        // Simulate API call and state update for uploading media
         const newMedia = {
           id: Date.now(),
           url: URL.createObjectURL(fileToUpload),
@@ -1244,6 +1228,7 @@ const OrganizerDashboard = () => {
     };
 
     const handleDeleteMedia = (eventId, mediaId) => {
+      // Simulate API call and state update for deleting media
       setEvents((prevEvents) =>
         prevEvents.map((event) =>
           event.id === eventId
@@ -1555,7 +1540,7 @@ const OrganizerDashboard = () => {
             </h1>
           </div>
           <nav className="mt-6 md:mt-0">
-            <ul className="flex flex-nowrap overflow-x-auto justify-center space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg">
+            <ul className="flex flex-wrap justify-center space-x-2 md:space-x-4 p-2 bg-white/5 rounded-full border border-white/10 shadow-lg">
               {[
                 "overview",
                 "events",
@@ -1565,7 +1550,7 @@ const OrganizerDashboard = () => {
                 "media",
                 "analytics",
               ].map((tab) => (
-                <li key={tab} className="flex-shrink-0">
+                <li key={tab}>
                   <button
                     onClick={() => setSelectedTab(tab)}
                     className={`px-4 py-2 rounded-full font-medium capitalize transition-colors text-sm ${

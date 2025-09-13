@@ -26,7 +26,7 @@ import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
 
 import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
-import OrganizerDashboard from "./organizers/dashboard/Dashboard";
+import OrganizerDashboard from "./organizers/dashboard/OrganizerDashboard";
 
 const AppLayout = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
