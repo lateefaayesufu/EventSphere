@@ -11,6 +11,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "@/swagger.json";
 
 const app = express();
+app.set('trust proxy', 1); // Trust the first proxy
 const PgStore = connectPgSimple(session);
 
 app.use(morgan("tiny"));
