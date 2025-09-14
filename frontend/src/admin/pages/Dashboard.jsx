@@ -36,7 +36,14 @@ const StatCard = ({ title, value, icon, color }) => (
 );
 
 // Event card (combined from both versions)
-const EventCard = ({ event, onApprove, onReject, userRole, onViewDetails, onEdit }) => {
+const EventCard = ({
+  event,
+  onApprove,
+  onReject,
+  userRole,
+  onViewDetails,
+  onEdit,
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const isAdmin = userRole === "ADMIN"; // Check if user is admin
@@ -136,7 +143,8 @@ const EventCard = ({ event, onApprove, onReject, userRole, onViewDetails, onEdit
       </div>
       <p className="text-gray-400 text-sm mb-2">{event.description}</p>
       <div className="flex items-center space-x-4 text-sm text-gray-400">
-        <span>{new Date(event.date).toLocaleDateString()}</span> {/* Format date */}
+        <span>{new Date(event.date).toLocaleDateString()}</span>{" "}
+        {/* Format date */}
         <span>{event.venue}</span>
         <span>{event.participants} Participants</span>
       </div>
@@ -194,7 +202,8 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
             {event.description}
           </p>
           <p>
-            <span className="font-semibold text-white">Date:</span> {new Date(event.date).toLocaleDateString()}
+            <span className="font-semibold text-white">Date:</span>{" "}
+            {new Date(event.date).toLocaleDateString()}
           </p>
           <p>
             <span className="font-semibold text-white">Venue:</span>{" "}
@@ -461,7 +470,8 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, eventToEdit }) => {
 
   if (!isModalOpen) return null;
 
-  const isProcessing = isSubmitting || createMutation.isPending || updateMutation.isPending;
+  const isProcessing =
+    isSubmitting || createMutation.isPending || updateMutation.isPending;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
@@ -593,7 +603,11 @@ const CreateEventModal = ({ isModalOpen, setIsModalOpen, eventToEdit }) => {
               disabled={isProcessing}
               className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isProcessing ? "Processing..." : eventToEdit ? "Save Changes" : "Create Event"}
+              {isProcessing
+                ? "Processing..."
+                : eventToEdit
+                ? "Save Changes"
+                : "Create Event"}
             </button>
           </div>
         </form>
@@ -1034,7 +1048,8 @@ const Users = ({ onEditUser, onAddUser }) => {
   const users = usersData?.users || [];
 
   const createUpdateUserMutation = useMutation({
-    mutationFn: (userData) => (userData.id ? updateUser(userData) : createUser(userData)),
+    mutationFn: (userData) =>
+      userData.id ? updateUser(userData) : createUser(userData),
     onSuccess: () => {
       toast.success("User saved successfully!");
       queryClient.invalidateQueries(["allUsers"]);
@@ -1238,9 +1253,7 @@ const Users = ({ onEditUser, onAddUser }) => {
 // Reports component (from >>>>>>> main, adapted to use BarChart)
 const Reports = ({ events, users }) => {
   const approvedEvents = events.filter((e) => e.status === "APPROVED").length;
-  const pendingEvents = events.filter(
-    (e) => e.status === "PENDING"
-  ).length;
+  const pendingEvents = events.filter((e) => e.status === "PENDING").length;
   const rejectedEvents = events.filter((e) => e.status === "REJECTED").length;
 
   const eventData = [
@@ -1582,7 +1595,11 @@ const AdminDashboard = () => {
   const [eventToEdit, setEventToEdit] = useState(null);
   const [eventToView, setEventToView] = useState(null);
 
-  const { isLoading: authLoading, isError: authError, data: authData } = useAuthCheck();
+  const {
+    isLoading: authLoading,
+    isError: authError,
+    data: authData,
+  } = useAuthCheck();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -1600,7 +1617,10 @@ const AdminDashboard = () => {
     isLoading: eventsIsLoading,
     isError: eventsIsError,
     error: eventsError,
-  } = useQuery({ queryKey: ["allEvents"], queryFn: () => getAllEvents(1, 100) }); // Fetch all for dashboard stats
+  } = useQuery({
+    queryKey: ["allEvents"],
+    queryFn: () => getAllEvents(1, 100),
+  }); // Fetch all for dashboard stats
 
   const events = eventsData?.events || [];
 
@@ -1672,7 +1692,8 @@ const AdminDashboard = () => {
     if (authError || eventsIsError || usersIsError) {
       return (
         <div className="text-red-500 text-center p-8">
-          Error loading data: {authError?.message || eventsError?.message || usersError?.message}
+          Error loading data:{" "}
+          {authError?.message || eventsError?.message || usersError?.message}
         </div>
       );
     }
@@ -1823,13 +1844,13 @@ export default AdminDashboard;
     }
    }
    @media (max-width: 640px) {
-    .grid-cols-2, .grid-cols-3, .lg\:grid-cols-2, .lg\:grid-cols-3 {
+    .grid-cols-2, .grid-cols-3, .lg:grid-cols-2, .lg:grid-cols-3 {
       grid-template-columns: 1fr !important;
     }
-    .flex-row, .md\:flex-row {
+    .flex-row, .md:flex-row {
       flex-direction: column !important;
     }
-    .space-x-4, .md\:space-x-4 {
+    .space-x-4, .md:space-x-4 {
       margin-left: 0 !important;
       margin-right: 0 !important;
     }
