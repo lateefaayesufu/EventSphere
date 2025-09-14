@@ -1,3 +1,4 @@
+import Button from "../../components/sections/ui/Button";
 import React, { useState, useEffect } from "react";
 import {
   Calendar,
@@ -134,42 +135,27 @@ const EventCard = ({
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button
-          onClick={() => onViewDetails(event)}
-          className="px-3 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors"
-        >
+        <Button onClick={() => onViewDetails(event)}>
           View Details
-        </button>
+        </Button>
         {event.status !== "Completed" && event.status !== "Cancelled" && (
-          <button
-            onClick={() => onEdit(event)}
-            className="px-3 py-2 bg-purple-500/20 text-purple-300 rounded-lg text-sm font-medium hover:bg-purple-500/30 transition-colors"
-          >
+          <Button requireAuth={true} onClick={() => onEdit(event)}>
             Edit
-          </button>
+          </Button>
         )}
-        <button
-          onClick={() => onManageRegistrations(event)}
-          className="px-3 py-2 bg-green-500/20 text-green-300 rounded-lg text-sm font-medium hover:bg-green-500/30 transition-colors"
-        >
+        <Button requireAuth={true} onClick={() => onManageRegistrations(event)}>
           Registrations
-        </button>
+        </Button>
         {event.status === "Approved" && (
-          <button
-            onClick={() => onQRScan(event)}
-            className="px-3 py-2 bg-cyan-500/20 text-cyan-300 rounded-lg text-sm font-medium hover:bg-cyan-500/30 transition-colors"
-          >
+          <Button requireAuth={true} onClick={() => onQRScan(event)}>
             <QrCode className="w-4 h-4 inline mr-1" />
             Attendance
-          </button>
+          </Button>
         )}
-        <button
-          onClick={handleShare}
-          className="px-3 py-2 bg-yellow-500/20 text-yellow-300 rounded-lg text-sm font-medium hover:bg-yellow-500/30 transition-colors"
-        >
+        <Button onClick={handleShare}>
           <Share2 className="w-4 h-4 inline mr-1" />
           Share
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -236,9 +222,9 @@ const CreateEventModal = ({ isOpen, onClose, onSave, event = null }) => {
           <h3 className="text-2xl font-bold text-white">
             {event ? "Edit Event" : "Create New Event"}
           </h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-white">
+          <Button onClick={onClose}>
             <XCircle size={24} />
-          </button>
+          </Button>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
@@ -340,12 +326,9 @@ const EventDetailsModal = ({ isOpen, onClose, event }) => {
       <div className="bg-[#131414] border border-white/20 rounded-2xl p-8 max-w-xl w-full shadow-2xl overflow-y-auto max-h-[90vh]">
         <h3 className="text-2xl font-bold text-white mb-4">{event.title}</h3>
         <p className="text-gray-400 mb-4">{event.description}</p>
-        <button
-          onClick={onClose}
-          className="py-2 px-4 bg-blue-500 rounded-lg text-white"
-        >
+        <Button onClick={onClose}>
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -405,12 +388,9 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
                   className="p-2 bg-white/5 rounded-lg flex justify-between items-center"
                 >
                   <span>{p.name}</span>
-                  <button
-                    onClick={() => handlePromoteToParticipant(p.id)}
-                    className="text-blue-400 hover:underline text-sm"
-                  >
+                  <Button requireAuth={true} onClick={() => handlePromoteToParticipant(p.id)}>
                     Promote
-                  </button>
+                  </Button>
                 </li>
               ))}
             </ul>
@@ -419,12 +399,9 @@ const RegistrationModal = ({ isOpen, onClose, event }) => {
           )}
         </div>
 
-        <button
-          onClick={onClose}
-          className="py-2 px-4 bg-blue-500 rounded-lg text-white mt-4"
-        >
+        <Button onClick={onClose}>
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -439,12 +416,9 @@ const QRScannerModal = ({ isOpen, onClose, event }) => {
           Scan QR for {event.title}
         </h3>
         <p className="text-gray-400">QR code scanner UI goes here...</p>
-        <button
-          onClick={onClose}
-          className="py-2 px-4 bg-blue-500 rounded-lg text-white mt-4"
-        >
+        <Button onClick={onClose}>
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );
@@ -475,19 +449,13 @@ const CommunicationModal = ({ isOpen, onClose, event }) => {
           className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400"
         ></textarea>
         <div className="flex justify-end mt-4 space-x-2">
-          <button
-            onClick={onClose}
-            className="py-2 px-4 bg-gray-500/20 text-gray-300 rounded-lg"
-          >
+          <Button onClick={onClose}>
             Cancel
-          </button>
-          <button
-            onClick={handleSend}
-            className="py-2 px-4 bg-green-500/20 text-green-300 rounded-lg"
-          >
+          </Button>
+          <Button requireAuth={true} onClick={handleSend}>
             <Send size={16} className="inline mr-2" />
             Send Announcement
-          </button>
+          </Button>
         </div>
       </div>
     </div>
@@ -682,53 +650,38 @@ const OrganizerDashboard = () => {
         <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
           <h3 className="text-2xl font-bold text-white mb-6">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button
-              onClick={handleCreateEvent}
-              className="p-4 bg-blue-500/20 hover:bg-blue-500/30 rounded-xl border border-blue-500/30 transition-colors group"
-            >
+            <Button requireAuth={true} onClick={handleCreateEvent}>
               <Plus className="w-8 h-8 text-blue-300 mb-2 group-hover:scale-110 transition-transform" />
               <div className="text-white font-medium">Create Event</div>
               <div className="text-blue-300/70 text-sm">Add new event</div>
-            </button>
-            <button
-              onClick={() => setSelectedTab("registrations")}
-              className="p-4 bg-green-500/20 hover:bg-green-500/30 rounded-xl border border-green-500/30 transition-colors group"
-            >
+            </Button>
+            <Button requireAuth={true} onClick={() => setSelectedTab("registrations")}>
               <UserCheck className="w-8 h-8 text-green-300 mb-2 group-hover:scale-110 transition-transform" />
               <div className="text-white font-medium">Registrations</div>
               <div className="text-green-300/70 text-sm">
                 Manage participants
               </div>
-            </button>
-            <button
-              onClick={() => setSelectedTab("attendance")}
-              className="p-4 bg-purple-500/20 hover:bg-purple-500/30 rounded-xl border border-purple-500/30 transition-colors group"
-            >
+            </Button>
+            <Button requireAuth={true} onClick={() => setSelectedTab("attendance")}>
               <QrCode className="w-8 h-8 text-purple-300 mb-2 group-hover:scale-110 transition-transform" />
               <div className="text-white font-medium">QR Scanner</div>
               <div className="text-purple-300/70 text-sm">Mark attendance</div>
-            </button>
-            <button
-              onClick={() => setSelectedTab("certificates")}
-              className="p-4 bg-orange-500/20 hover:bg-orange-500/30 rounded-xl border border-orange-500/30 transition-colors group"
-            >
+            </Button>
+            <Button requireAuth={true} onClick={() => setSelectedTab("certificates")}>
               <Award className="w-8 h-8 text-orange-300 mb-2 group-hover:scale-110 transition-transform" />
               <div className="text-white font-medium">Certificates</div>
               <div className="text-orange-300/70 text-sm">
                 Manage certificates
               </div>
-            </button>
+            </Button>
           </div>
         </div>
         <div className="bg-gradient-to-b from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 shadow-2xl">
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-2xl font-bold text-white">Recent Events</h3>
-            <button
-              onClick={() => setSelectedTab("events")}
-              className="text-blue-400 hover:text-blue-300 font-medium"
-            >
+            <Button requireAuth={true} onClick={() => setSelectedTab("events")}>
               View All →
-            </button>
+            </Button>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recentEvents.map((event) => (
@@ -837,13 +790,10 @@ const OrganizerDashboard = () => {
                 Cancelled
               </option>
             </select>
-            <button
-              onClick={handleCreateEvent}
-              className="px-6 py-3 rounded-xl bg-blue-500 hover:bg-blue-600 transition-colors font-medium text-white"
-            >
+            <Button requireAuth={true} onClick={handleCreateEvent}>
               <Plus className="w-4 h-4 inline mr-2" />
               Create Event
-            </button>
+            </Button>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -924,20 +874,14 @@ const OrganizerDashboard = () => {
                   </div>
                 </div>
                 <div className="flex space-x-2">
-                  <button
-                    onClick={() => handleManageRegistrations(event)}
-                    className="flex-1 px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg text-sm font-medium hover:bg-blue-500/30 transition-colors"
-                  >
+                  <Button requireAuth={true} onClick={() => handleManageRegistrations(event)}>
                     <Users className="w-4 h-4 inline mr-1" />
                     Manage
-                  </button>
-                  <button
-                    onClick={() => handleCommunication(event)}
-                    className="flex-1 px-4 py-2 bg-green-500/20 text-green-300 rounded-lg text-sm font-medium hover:bg-green-500/30 transition-colors"
-                  >
+                  </Button>
+                  <Button requireAuth={true} onClick={() => handleCommunication(event)}>
                     <MessageSquare className="w-4 h-4 inline mr-1" />
                     Message
-                  </button>
+                  </Button>
                 </div>
               </div>
             ))}
@@ -966,13 +910,10 @@ const OrganizerDashboard = () => {
           <h3 className="text-3xl font-bold text-white">
             Attendance Management
           </h3>
-          <button
-            onClick={handleDownloadReport}
-            className="px-4 py-2 bg-blue-500/20 text-blue-300 rounded-lg font-medium hover:bg-blue-500/30 transition-colors"
-          >
+          <Button requireAuth={true} onClick={handleDownloadReport}>
             <Download className="w-4 h-4 inline mr-2" />
             Download Report
-          </button>
+          </Button>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2">
@@ -1013,13 +954,10 @@ const OrganizerDashboard = () => {
                         </span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => handleQRScan(event)}
-                      className="w-full mt-4 px-4 py-2 bg-purple-500/20 text-purple-300 rounded-lg font-medium hover:bg-purple-500/30 transition-colors"
-                    >
+                    <Button requireAuth={true} onClick={() => handleQRScan(event)}>
                       <QrCode className="w-4 h-4 inline mr-2" />
                       Scan QR Code
-                    </button>
+                    </Button>
                   </div>
                 ))}
             </div>

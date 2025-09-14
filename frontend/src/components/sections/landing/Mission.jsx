@@ -1,3 +1,4 @@
+import Button from "../ui/Button";
 import React, { useState, useEffect, useRef } from "react";
 import {
   Users,
@@ -250,17 +251,9 @@ const Mission = () => {
         </div>
 
         <div className="text-center mt-12 relative z-10">
-          <button className="relative group overflow-hidden px-8 py-4 md:px-10 md:py-5 rounded-2xl font-bold text-base md:text-lg text-black ">
-            <div
-              className={`absolute inset-0 rounded-2xl bg-white opacity-80 `}
-            ></div>
-            <div
-              className={`absolute inset-0 rounded-2xl bg-white opacity-0 group-hover:opacity-100 `}
-            ></div>
-            <span className="relative z-10">
-              Launch Your Event Now <span className="ml-2">→</span>
-            </span>
-          </button>
+          <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
+            Launch Your Event Now <span className="ml-2">→</span>
+          </Button>
         </div>
       </div>
 

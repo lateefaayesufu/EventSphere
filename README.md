@@ -1,44 +1,102 @@
-# EventSphere  
-A Full-Stack Web Application for College Event Management  
+# EventSphere
 
-> Built for *Aptech TechWiz 2025* – Category: Full-Stack Application Development  
+EventSphere is a full-stack event management platform with a React frontend and a Node.js/Express.js backend.
 
----
+## Live Version
 
-## Overview  
-EventSphere is a centralized platform for managing and participating in college events.  
-It allows students to view events, register, track attendance, and download certificates,  
-while organizers and admins can manage events, participants, and analytics.
-
----
-
-## Tech Stack  
-- *Frontend*: React + TailwindCSS + TypeScript  
-- *Backend*: Node.js + Express  
-- *Database*: MySQL  
-- *Authentication*: JWT  
-- *Other Tools*: GitHub, VS Code, Postman  
-
----
-
-## Features  
-- Role-based access: Visitor, Participant, Organizer, Admin  
-- Event registration with QR code check-in  
-- Certificate generation (mock, no payment)  
-- Media gallery (photos/videos of past events)  
-- Notifications + email reminders  
-- Calendar sync (Google/Outlook/Apple)  
-- Social media event sharing
-
----
+-   **Frontend:** [https://eventspheres.vercel.app](https://eventspheres.vercel.app)
+-   **Backend:** [https://eventsphere-txk2.onrender.com/](https://eventsphere-txk2.onrender.com/)
+-   **API Docs:** [https://eventsphere-txk2.onrender.com/api-docs](https://eventsphere-txk2.onrender.com/api-docs)
 
 ## Project Structure
-/client   → Frontend code (React)
-/server   → Backend API (Node.js + Express)
-/db       → SQL scripts
-/docs     → Documentation, diagrams, reports
 
----
+The repository is a monorepo divided into two main parts:
 
-## License
-MIT License
+-   **`backend/`**: Contains the Node.js/Express.js server, API logic, and database schema.
+-   **`frontend/`**: Contains the React application.
+
+## Prerequisites
+
+You will need Node.js and a package manager (`npm`, `yarn`, or `pnpm`) installed on your system.
+
+## Getting Started
+
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd EventSphere
+    ```
+
+2.  **Install backend dependencies:**
+    ```bash
+    cd backend
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
+
+3.  **Install frontend dependencies:**
+    ```bash
+    cd ../frontend
+    npm install
+    # or
+    yarn install
+    # or
+    pnpm install
+    ```
+
+## Development
+
+To run the development servers, you will need to run the `dev` command in both the `backend` and `frontend` directories.
+
+### Backend
+
+To start the development server with hot-reloading, run the following command in the `backend/` directory:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+### Frontend
+
+To start the development server, run the following command in the `frontend/` directory:
+
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+```
+
+## Build
+
+### Backend
+
+To compile the TypeScript code to JavaScript, run the following command in the `backend/` directory:
+
+```bash
+npm run build
+# or
+yarn build
+# or
+pnpm build
+```
+
+### Frontend
+
+To build the project for production, run the following command in the `frontend/` directory:
+
+```bash
+npm run build
+# or
+yarn build
+# or
+pnpm build
+```

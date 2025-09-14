@@ -1,3 +1,4 @@
+import Button from "../ui/Button";
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -265,14 +266,14 @@ const FeaturedEvents = () => {
 
                         {/* Action Buttons */}
                         <div className="flex flex-col sm:flex-row gap-4">
-                          <button className="group bg-white text-slate-900 px-6 py-3 md:px-8 md:py-4 rounded-full font-bold text-sm md:text-lg flex items-center justify-center space-x-2 hover:bg-white/90 transition-all transform hover:scale-105 shadow-2xl">
+                          <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
                             <span>I'm in!</span>
                             <ArrowRightIcon className="h-4 w-4 md:h-5 md:w-5 group-hover:translate-x-1 transition-transform" />
-                          </button>
+                          </Button>
 
-                          <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-6 py-3 md:px-8 md:py-4 rounded-full font-semibold text-sm md:text-lg hover:bg-white/20 transition-all">
+                          <Button onClick={() => console.log("Button clicked!")}>
                             View Details
-                          </button>
+                          </Button>
                         </div>
                       </div>
                     </div>
@@ -358,9 +359,9 @@ const FeaturedEvents = () => {
                     <span>{event.rating}</span>
                   </span>
                 </div>
-                <button className="w-full bg-white text-slate-900 py-3 rounded-xl font-bold text-sm hover:bg-white/90 transition-colors">
+                <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
                   Register Now
-                </button>
+                </Button>
               </div>
             </div>
           ))}

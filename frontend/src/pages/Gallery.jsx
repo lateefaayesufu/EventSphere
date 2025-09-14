@@ -1,3 +1,4 @@
+import Button from "../components/sections/ui/Button";
 import React, { useState, useEffect, useRef } from "react"; // Import useRef
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
@@ -275,12 +276,12 @@ const Gallery = () => {
               life
             </p>
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <button className="bg-white text-black font-bold py-4 px-8 rounded-xl hover:shadow-lg transform hover:scale-105 transition-all duration-300 text-lg">
+              <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
                 Upload Media
-              </button>
-              <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all">
+              </Button>
+              <Button onClick={() => console.log("Button clicked!")}>
                 Browse Events
-              </button>
+              </Button>
             </div>
           </div>
         </div>
