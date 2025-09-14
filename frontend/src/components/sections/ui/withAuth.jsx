@@ -4,11 +4,11 @@ import { useAuth } from '../../../context/AuthContext'; // Adjust the path as ne
 
 const withAuth = (WrappedComponent) => {
   const AuthenticatedComponent = (props) => {
-    const { user } = useAuth();
+    const { state } = useAuth();
     const navigate = useNavigate();
 
     const handleClick = (e) => {
-      if (!user) {
+      if (!state.isAuthenticated) {
         e.preventDefault();
         navigate('/login');
       } else if (props.onClick) {
