@@ -19,3 +19,8 @@ export const rejectEvent = async (eventId) => {
 	const response = await api.patch(`/events/${eventId}/reject`);
 	return response.data;
 };
+
+export const updateEvent = async (eventId, eventData) => {
+  const response = await api.patch(`/events/${eventId}`, eventData);
+  return response.data;
+};
