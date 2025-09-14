@@ -7,10 +7,10 @@ export default defineConfig({
 	plugins: [react(), tailwindcss()],
 	server: {
 		proxy: {
-			"/api": {
-				target: "https://eventsphere-txk2.onrender.com/api-docs/", // your backend
+			"/api/v1": {
+				target: "https://eventsphere-txk2.onrender.com/",
 				changeOrigin: true,
-				secure: true,
+				secure: false,
 			},
 		},
 	},
