@@ -8,9 +8,9 @@ export default defineConfig({
 	server: {
 		proxy: {
 			"/api": {
-				target: "https://eventsphere-txk2.onrender.com", // your backend
+				target: "https://eventsphere-txk2.onrender.com/api-docs/", // your backend
 				changeOrigin: true,
-				secure: false,
+				secure: true,
 			},
 		},
 	},
