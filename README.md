@@ -100,3 +100,21 @@ yarn build
 # or
 pnpm build
 ```
+
+ADMIN USER DETAILS: 
+For development and testing purposes, an administrator account is created. The details for this user are as follows:
+
+{ 
+id: 'e292f1e7-20ce-4555-828f-b011dd1c75dc', 
+fullName: 'Admin User', 
+email: 'admin@example.com', 
+contactNumber: '00000000000', 
+username: 'admin', 
+password: 'adminpassword',
+ role: 'ADMIN', 
+createdAt: 2025-09-12T10:57:50.555Z,
+ updatedAt: 2025-09-12T10:57:50.555Z 
+}
+
+Note: These details are for a pre-configured account used in the system's setup.
+
