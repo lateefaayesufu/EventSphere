@@ -33,7 +33,7 @@ const Footer = () => {
               </p>
             </div>
             {/* Change: The social icons now use less space on mobile (`space-x-4`)
-              and more space on larger screens (`md:space-x-6`). 
+             and more space on larger screens (`md:space-x-6`). 
             */}
             <div className="flex space-x-4 md:space-x-6">
               <a
@@ -67,9 +67,21 @@ const Footer = () => {
             </div>
           </div>
           <div className="h-px bg-white/20 my-6"></div>
-          <p className="text-sm text-gray-400 text-center md:text-left">
-            © 2025 EventSphere. All Rights Reserved.
-          </p>
+          {/* New addition: Sitemap Link */}
+          <div className="flex justify-center md:justify-start">
+            <a
+              href="/sitemap.xml"
+              className="text-sm text-gray-400 hover:text-white transition-colors"
+            >
+              Sitemap
+            </a>
+            <span className="text-sm text-gray-400 mx-2 hidden md:inline-block">
+              |
+            </span>
+            <p className="text-sm text-gray-400 text-center md:text-left">
+              © 2025 EventSphere. All Rights Reserved.
+            </p>
+          </div>
         </div>
       </div>
     </footer>
