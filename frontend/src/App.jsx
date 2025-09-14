@@ -19,6 +19,7 @@ import Contact from "./pages/Contact";
 import Gallery from "./pages/Gallery";
 import Faqs from "./pages/FAQs";
 import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 // Admin pages
 
@@ -146,6 +147,7 @@ const router = createBrowserRouter([
 					{ path: "dashboard", element: <OrganizerDashboard /> },
 				],
 			},
+			{ path: "*", element: <NotFound /> },
 		],
 	},
 ]);

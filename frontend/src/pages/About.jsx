@@ -1,3 +1,4 @@
+import Button from "../components/sections/ui/Button";
 import React from "react";
 import Navbar from "../components/sections/ui/Navbar";
 import Footer from "../components/sections/ui/Footer";
@@ -546,12 +547,12 @@ const About = () => {
             </p>
             {/* Buttons now stack on mobile and are side-by-side on larger screens */}
             <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
-              <button className="group bg-white text-slate-900 w-full sm:w-auto px-8 py-4 rounded-xl font-bold text-lg flex items-center justify-center space-x-2 hover:bg-white/90 transition-all transform hover:scale-105 shadow-2xl">
+              <Button onClick={() => console.log("Button clicked!")}>
                 <span>Browse Events</span>
-              </button>
-              <button className="bg-white/10 backdrop-blur-sm border border-white/20 text-white w-full sm:w-auto px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white/20 transition-all">
+              </Button>
+              <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
                 Register Now
-              </button>
+              </Button>
             </div>
           </div>
         </div>

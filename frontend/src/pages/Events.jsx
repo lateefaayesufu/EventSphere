@@ -1,3 +1,4 @@
+import Button from "../components/sections/ui/Button";
 import React, { useState } from "react";
 import {
   Search,
@@ -406,12 +407,9 @@ const Events = () => {
                   </span>
                 </div>
               </div>
-              <button
-                onClick={() => handleOpenModal(event)}
-                className="w-full bg-white text-black font-bold py-4 rounded-xl shadow-md hover:bg-gray-200 transform transition-transform duration-300 text-lg"
-              >
+              <Button onClick={() => handleOpenModal(event)}>
                 View Details
-              </button>
+              </Button>
             </div>
           </div>
         ))}
@@ -652,9 +650,9 @@ const Events = () => {
                   </div>
                 </div>
               </div>
-              <button className="w-full mt-8 bg-white text-black font-bold py-4 rounded-xl shadow-md hover:bg-gray-200 transform transition-transform duration-300 text-lg">
+              <Button requireAuth={true} onClick={() => console.log("Button clicked!")}>
                 Register for this Event
-              </button>
+              </Button>
             </div>
           </div>
         </div>

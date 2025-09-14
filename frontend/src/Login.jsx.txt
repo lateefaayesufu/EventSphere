@@ -72,8 +72,8 @@ const Login = () => {
 			if (data.user.role === "ADMIN") {
 				navigate("/admin/dashboard");
 			} else {
-				navigate("/participant/dashboard"); // Navigate to participant dashboard on login
-			}
+                navigate("/participant/dashboard"); // Navigate to participant dashboard on login
+            }
 		}
 
 		if (isError && error) {
@@ -107,14 +107,7 @@ const Login = () => {
 			toast.error(signupError.response?.data?.error || "Signup failed.");
 			setFormErrors(signupError.response?.data?.errors || {});
 		}
-	}, [
-		isSignupSuccess,
-		isSignupError,
-		signupData,
-		signupError,
-		dispatch,
-		navigate,
-	]);
+	}, [isSignupSuccess, isSignupError, signupData, signupError, dispatch, navigate]);
 
 	const handleInputChange = (e) => {
 		const { name, value } = e.target;
@@ -246,9 +239,9 @@ const Login = () => {
 						Don't have an account?{" "}
 						<button
 							onClick={() => {
-								setView("signup");
-								setFormErrors({}); // Clear errors when switching view
-							}}
+                                setView("signup");
+                                setFormErrors({}); // Clear errors when switching view
+                            }}
 							className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
 						>
 							Sign up
@@ -284,18 +277,14 @@ const Login = () => {
 										name="fullName"
 										value={formData.fullName}
 										onChange={handleInputChange}
-										className={`w-full bg-white/10 border ${
-											formErrors.fullName ? "border-red-500" : "border-white/30"
-										} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
+										className={`w-full bg-white/10 border ${formErrors.fullName ? 'border-red-500' : 'border-white/30'} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
 										placeholder="Enter your full name"
 										required
 										disabled={isSignupLoading}
 									/>
 								</div>
 								{formErrors.fullName && (
-									<p className="text-red-500 text-sm mt-1">
-										{formErrors.fullName[0]}
-									</p>
+									<p className="text-red-500 text-sm mt-1">{formErrors.fullName[0]}</p>
 								)}
 							</div>
 
@@ -310,18 +299,14 @@ const Login = () => {
 										name="username"
 										value={formData.username}
 										onChange={handleInputChange}
-										className={`w-full bg-white/10 border ${
-											formErrors.username ? "border-red-500" : "border-white/30"
-										} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
+										className={`w-full bg-white/10 border ${formErrors.username ? 'border-red-500' : 'border-white/30'} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
 										placeholder="Choose a username"
 										required
 										disabled={isSignupLoading}
 									/>
 								</div>
 								{formErrors.username && (
-									<p className="text-red-500 text-sm mt-1">
-										{formErrors.username[0]}
-									</p>
+									<p className="text-red-500 text-sm mt-1">{formErrors.username[0]}</p>
 								)}
 							</div>
 						</div>
@@ -337,18 +322,14 @@ const Login = () => {
 									name="email"
 									value={formData.email}
 									onChange={handleInputChange}
-									className={`w-full bg-white/10 border ${
-										formErrors.email ? "border-red-500" : "border-white/30"
-									} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
+									className={`w-full bg-white/10 border ${formErrors.email ? 'border-red-500' : 'border-white/30'} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
 									placeholder="Enter your email"
 									required
 									disabled={isSignupLoading}
 								/>
 							</div>
 							{formErrors.email && (
-								<p className="text-red-500 text-sm mt-1">
-									{formErrors.email[0]}
-								</p>
+								<p className="text-red-500 text-sm mt-1">{formErrors.email[0]}</p>
 							)}
 						</div>
 
@@ -363,9 +344,7 @@ const Login = () => {
 									name="password"
 									value={formData.password}
 									onChange={handleInputChange}
-									className={`w-full bg-white/10 border ${
-										formErrors.password ? "border-red-500" : "border-white/30"
-									} rounded-xl pl-12 pr-12 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
+									className={`w-full bg-white/10 border ${formErrors.password ? 'border-red-500' : 'border-white/30'} rounded-xl pl-12 pr-12 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
 									placeholder="Create a password"
 									required
 									disabled={isSignupLoading}
@@ -383,9 +362,7 @@ const Login = () => {
 								</button>
 							</div>
 							{formErrors.password && (
-								<p className="text-red-500 text-sm mt-1">
-									{formErrors.password[0]}
-								</p>
+								<p className="text-red-500 text-sm mt-1">{formErrors.password[0]}</p>
 							)}
 						</div>
 
@@ -400,20 +377,14 @@ const Login = () => {
 									name="contactNumber"
 									value={formData.contactNumber}
 									onChange={handleInputChange}
-									className={`w-full bg-white/10 border ${
-										formErrors.contactNumber
-											? "border-red-500"
-											: "border-white/30"
-									} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
+									className={`w-full bg-white/10 border ${formErrors.contactNumber ? 'border-red-500' : 'border-white/30'} rounded-xl pl-12 pr-4 py-4 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/15 backdrop-blur-lg transition-all`}
 									placeholder="Enter your contact number"
 									required
 									disabled={isSignupLoading}
 								/>
 							</div>
 							{formErrors.contactNumber && (
-								<p className="text-red-500 text-sm mt-1">
-									{formErrors.contactNumber[0]}
-								</p>
+								<p className="text-red-500 text-sm mt-1">{formErrors.contactNumber[0]}</p>
 							)}
 						</div>
 
@@ -437,9 +408,9 @@ const Login = () => {
 						Already have an account?{" "}
 						<button
 							onClick={() => {
-								setView("login");
-								setFormErrors({}); // Clear errors when switching view
-							}}
+                                setView("login");
+                                setFormErrors({}); // Clear errors when switching view
+                            }}
 							className="text-purple-400 hover:text-purple-300 font-medium transition-colors"
 						>
 							Log in

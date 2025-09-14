@@ -3,7 +3,9 @@
 		"target": "esnext",
 		"module": "node20",
 		"rootDir": "./src",
+		"outDir": "./dist",
 		"baseUrl": ".",
+		"resolveJsonModule": true,
 		"paths": {
 			"@/*": ["src/*"]
 		},

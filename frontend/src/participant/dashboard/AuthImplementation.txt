@@ -1,0 +1,132 @@
+// This file provides a conceptual implementation for authentication and the main dashboard component
+// for participants, inspired by the existing admin authentication flow and dashboard structure.
+// It should be adapted and integrated into the actual participant dashboard components.
+
+import React, { useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../../context/AuthContext'; // Adjust path as necessary
+import useAuthCheck from '../../hooks/useAuthCheck'; // Adjust path as necessary
+
+// --- ParticipantDashboardAuthWrapper Component ---
+// This component acts as a guard for participant-specific routes.
+// It checks authentication status and user role, redirecting if conditions are not met.
+const ParticipantDashboardAuthWrapper = ({ children }) => {
+  const { isAuthenticated, user, loading } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const { checkAuthStatus } = useAuthCheck();
+
+  useEffect(() => {
+    // Check authentication status on component mount
+    checkAuthStatus();
+  }, [checkAuthStatus]);
+
+  useEffect(() => {
+    if (!loading) {
+      if (!isAuthenticated) {
+        // Redirect to login page if not authenticated
+        console.log('Not authenticated, redirecting to /login');
+        navigate('/login'); // Adjust the login route as per your frontend routing
+      } else if (user && user.role !== 'PARTICIPANT') {
+        // Redirect if the user is authenticated but not a participant
+        // This assumes a 'role' field exists on the user object
+        console.log(`User role is ${user.role}, not PARTICIPANT. Redirecting.`);
+        navigate('/unauthorized'); // Or to a different dashboard based on role
+      }
+    }
+  }, [isAuthenticated, user, loading, navigate]);
+
+  if (loading) {
+    // Show a loading spinner or placeholder while checking auth status
+    return <div>Loading authentication...</div>;
+  }
+
+  // If not authenticated or not a participant, render nothing or a message
+  // The useEffect above will handle the redirection, so we return null here
+  if (!isAuthenticated || (user && user.role !== 'PARTICIPANT')) {
+    return null;
+  }
+
+  // If authenticated and is a participant, render the children (dashboard content)
+  return <>{children}</>;
+};
+
+// --- ParticipantDashboard Component ---
+// This is the main participant dashboard component.
+// It displays a welcome message and other participant-specific content.
+const ParticipantDashboard = () => {
+  const { user, logout } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login'); // Redirect to login after logout
+  };
+
+  if (!user) {
+    // This case should ideally be handled by the AuthWrapper, but good for a fallback
+    return <div>Loading user data...</div>;
+  }
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
+      <h1>Welcome {user.username}!</h1>
+      <p>This is your personalized participant dashboard.</p>
+      <p>Here you can manage your events, view your registrations, and more.</p>
+      <button
+        onClick={handleLogout}
+        style={{
+          padding: '10px 20px',
+          backgroundColor: '#dc3545',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          cursor: 'pointer',
+          marginTop: '20px',
+        }}
+      >
+        Logout
+      </button>
+      {/* Add more participant-specific content here */}
+    </div>
+  );
+};
+
+// --- Export the wrapper and the dashboard component ---
+// You would typically use the wrapper in your routing configuration
+// and the ParticipantDashboard component as the content for the protected route.
+export { ParticipantDashboardAuthWrapper, ParticipantDashboard };
+
+// --- How to integrate this into your application's routing (example) ---
+/*
+// In your main routing file (e.g., App.jsx or Router.jsx)
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext'; // Your AuthProvider
+import LoginPage from './pages/Login'; // Your Login Page
+import UnauthorizedPage from './pages/Unauthorized'; // Your Unauthorized Page
+import { ParticipantDashboardAuthWrapper, ParticipantDashboard } from './participant/dashboard/AuthImplementation'; // The components from this file
+
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+          <Route
+            path="/participant/dashboard"
+            element={
+              <ParticipantDashboardAuthWrapper>
+                <ParticipantDashboard />
+              </ParticipantDashboardAuthWrapper>
+            }
+          />
+          {/* Other routes */}
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
+}
+
+export default App;
+*/
