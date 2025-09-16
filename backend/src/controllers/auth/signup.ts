@@ -12,13 +12,13 @@ export const signup = asyncCatcher(async (req: Request, res: Response) => {
 		signupSchema.parse(req.body);
 
 	// ✅ 2. Hash password
-	const hashedPassword = await bcrypt.hash(password, 10);
+	// const hashedPassword = await bcrypt.hash(password, 10);
 
 	// ✅ 3. Insert user (unique constraints handled by Prisma + errorHandler)
 	const user = await prisma.user.create({
 		data: {
 			email,
-			password: hashedPassword,
+			password,
 			fullName,
 			username,
 			contactNumber,
