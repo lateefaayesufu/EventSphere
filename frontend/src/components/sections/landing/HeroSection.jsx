@@ -33,10 +33,10 @@ const HeroSection = function () {
 					<div className="flex justify-center md:justify-start pt-2">
 						<Button
 							onClick={() => {
-								navigate("/login");
+								navigate("/events");
 							}}
 						>
-							Create your first event
+							Browse All Events
 						</Button>
 					</div>
 				</div>

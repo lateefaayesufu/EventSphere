@@ -2,6 +2,8 @@ import React, { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext";
 import { Toaster } from "sonner";
+
+import ScrollToTop from "./components/sections/ScrollToTop";
 import { useState } from "react";
 import {
 	createBrowserRouter,
@@ -33,6 +35,8 @@ import SettingsAdmin from "./admin/pages/Settings";
 import ParticipantDashboard from "./participant/dashboard/ParticipantDashboard";
 import OrganizerDashboard from "./organizers/dashboard/OrganizerDashboard";
 
+
+
 const AppLayout = () => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
@@ -46,12 +50,12 @@ const AppLayout = () => {
 
 	return (
 		<ReactLenis root>
+		<ScrollToTop/>
 			<Outlet context={authProps} />
 		</ReactLenis>
 	);
 };
 
-// Admin layout wrapper (with sidebar/topbar etc.)
 const AdminLayout = () => {
 	const lenis = useLenis();
 
@@ -62,8 +66,8 @@ const AdminLayout = () => {
 	}, [lenis]);
 	return (
 		<div className="admin-layout">
-			{/* Add a sidebar or navbar here */}
-			<Outlet /> {/* This is where nested admin pages render */}
+	
+			<Outlet /> 
 		</div>
 	);
 };
@@ -79,8 +83,8 @@ const ParticipationLayout = () => {
 
 	return (
 		<div className="participation-layout">
-			{/* Add a sidebar or navbar here */}
-			<Outlet /> {/* This is where nested admin pages render */}
+			
+			<Outlet />
 		</div>
 	);
 };
@@ -94,8 +98,8 @@ const OrganizerLayout = () => {
 	}, [lenis]);
 	return (
 		<div className="organizer-layout">
-			{/* Add a sidebar or navbar here */}
-			<Outlet /> {/* This is where nested admin pages render */}
+		
+			<Outlet />
 		</div>
 	);
 };
