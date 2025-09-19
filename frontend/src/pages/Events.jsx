@@ -28,14 +28,7 @@ import donation from "/donation.jpg";
 import studentHackathon from "/student-hackathon.jpg";
 import photographyExhibit from "/photography-exhibit.jpg";
 
-// IMPORTANT: Make sure you have the following CSS in your global stylesheet (e.g., src/index.css)
-// .no-scrollbar::-webkit-scrollbar {
-//   display: none;
-// }
-// .no-scrollbar {
-//   -ms-overflow-style: none;
-//   scrollbar-width: none;
-// }
+
 
 const Events = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
