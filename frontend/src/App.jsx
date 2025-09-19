@@ -22,12 +22,14 @@ import Gallery from "./pages/Gallery";
 import Faqs from "./pages/FAQs";
 import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
-
+import Sitemap from "./pages/Sitemap";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms"
 // Admin pages
 
 import AdminDashboard from "./admin/pages/Dashboard";
 import AdminAuth from "./admin/pages/AdminAuth";
-import EventsAdmin from "./admin/pages/Events";
+// import EventsAdmin from "./admin/pages/EventsComponents";
 import UsersAdmin from "./admin/pages/Users";
 import ReportsAdmin from "./admin/pages/Reports";
 import SettingsAdmin from "./admin/pages/Settings";
@@ -116,6 +118,9 @@ const router = createBrowserRouter([
 			{ path: "gallery", element: <Gallery /> },
 			{ path: "faq", element: <Faqs /> },
 			{ path: "login", element: <Login /> },
+			{path: "sitemap", element: <Sitemap/>},
+			{path: "terms", element: <Terms/>},
+			{path: "privacy", element: <Privacy/>},
 
 			// Admin routes
 			{
@@ -126,7 +131,7 @@ const router = createBrowserRouter([
 
 					{ path: "dashboard", element: <AdminDashboard /> },
 					{ path: "auth", element: <AdminAuth /> },
-					{ path: "events", element: <EventsAdmin /> },
+					// { path: "events", element: <EventsAdmin /> },
 					{ path: "users", element: <UsersAdmin /> },
 					{ path: "reports", element: <ReportsAdmin /> },
 					{ path: "settings", element: <SettingsAdmin /> },

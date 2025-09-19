@@ -1,52 +1,65 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import Button from "../components/sections/ui/Button";
 
 const NotFound = () => {
-  return (
-    <div className="min-h-screen bg-[#131414] text-white font-sans antialiased flex flex-col items-center justify-center p-4 md:p-8">
-      <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body {
-          font-family: 'Inter', sans-serif;
-          background: #0d0d0d;
-        }
-      `}</style>
+    return (
+        <div className="min-h-screen relative overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] text-white flex flex-col justify-center items-center p-4 sm:p-6">
 
-      <div className="relative w-full max-w-2xl mx-auto rounded-[3rem] p-8 md:p-12 overflow-hidden bg-gradient-to-r from-[#1E1F2E] via-[#1A1B1B] to-[#2B2426] text-center shadow-2xl border border-white/10">
-        <div className="absolute inset-0 bg-white/5 opacity-50 blur-3xl rounded-[3rem] pointer-events-none"></div>
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                {/* Floating Particles */}
+                {[...Array(50)].map((_, i) => (
+                    <div
+                        key={i}
+                        className="absolute w-1 h-1 bg-white/20 rounded-full animate-pulse"
+                        style={{
+                            left: `${Math.random() * 100}%`,
+                            top: `${Math.random() * 100}%`,
+                            animationDelay: `${Math.random() * 3}s`,
+                            animationDuration: `${2 + Math.random() * 3}s`,
+                        }}
+                    />
+                ))}
+                {/* Large Gradient Orbs */}
+                <div className="absolute -top-20 -right-20 w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-gradient-to-br from-purple-400/20 to-pink-400/20 rounded-full blur-3xl" />
+                <div className="absolute -bottom-20 -left-20 w-40 h-40 sm:w-64 sm:h-64 md:w-80 md:h-80 bg-gradient-to-tr from-blue-400/20 to-cyan-400/20 rounded-full blur-3xl" />
+            </div>
 
-        <h1 className="relative z-10 text-9xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-400 via-pink-400 to-orange-400 mb-4">
-          404
-        </h1>
-        <h2 className="relative z-10 text-4xl md:text-5xl font-bold text-white mb-6">
-          Page Not Found
-        </h2>
-        <p className="relative z-10 text-lg text-gray-300 mb-8">
-          Oops! The page you're looking for doesn't exist or has been moved.
-        </p>
-        <Link
-          to="/"
-          className="relative z-10 inline-flex items-center px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 transition-colors font-medium text-white text-lg shadow-lg transform hover:scale-105"
-        >
-          Go to Homepage
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="ml-3 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M17 8l4 4m0 0l-4 4m4-4H3"
-            />
-          </svg>
-        </Link>
-      </div>
-    </div>
-  );
+            {/* Floating Error Box */}
+            <div className="relative z-10 text-center bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl max-w-md w-full transform transition-all duration-500 hover:scale-[1.02]">
+                {/* 404 Error Title */}
+                <h1 className="text-7xl sm:text-8xl font-black text-transparent bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text leading-none mb-3 animate-fade-in-up">
+                    404
+                </h1>
+
+                {/* Main Message */}
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 animate-fade-in-up delay-100">
+                    Event Not Found
+                </h2>
+
+                {/* Subtext */}
+                <p className="text-sm sm:text-base text-gray-300 mx-auto leading-relaxed mb-6 animate-fade-in-up delay-200">
+                    It seems this page has gone off the grid. The event you're looking for doesn't exist in our sphere.
+                </p>
+
+                {/* Call to Action Button */}
+                <div className="animate-fade-in-up delay-300">
+                    <Button>
+                        <a href="/" className="px-6 py-3 text-sm sm:text-base">
+                            Go Back to HomePage
+                        </a>
+                    </Button>
+                </div>
+
+                {/* Fun Fact */}
+                <div className="mt-8 text-gray-400 text-xs sm:text-sm italic animate-fade-in-up delay-400">
+                    <p>
+                         **Fun Fact:** The world's largest event, the Kumbh Mela in India, has a single-day attendance of over 30 million people!
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default NotFound;

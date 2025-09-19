@@ -1327,7 +1327,7 @@ const Settings = () => {
   const handleSave = () => {
     setSaveStatus("Saving...");
     setTimeout(() => {
-      // In a real app, this would be an API call
+   
       console.log({ siteName, contactEmail, enable2FA, forcePasswordReset });
       setSaveStatus("Changes saved successfully!");
       setIsEditing(false); // Switch to view mode after saving

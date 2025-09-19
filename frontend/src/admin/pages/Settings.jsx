@@ -10,9 +10,9 @@ const Settings = () => {
     "Welcome to our college event platform!"
   );
 
-  // Mock function to simulate saving settings to the backend
+
   const handleSaveSettings = (e) => {
-    e.preventDefault(); // Prevents the default form submission behavior
+    e.preventDefault(); 
     console.log("Saving settings:", {
       siteTitle,
       announcement,
@@ -20,8 +20,7 @@ const Settings = () => {
       defaultRole,
       welcomeMessage,
     });
-    // In a real application, you would make an API call here, e.g.,
-    // axios.put('/api/admin/settings', { siteTitle, announcement, ... });
+
     alert("Settings saved successfully! (This is a simulation)");
   };
 

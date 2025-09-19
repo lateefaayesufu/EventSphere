@@ -175,7 +175,7 @@ const Contact = () => {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Hero Section */}
         <div className="text-center mb-20">
-          <h1 className="text-4xl md:text-6xl lg:text-7xl mt-10 font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-8">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl mt-10 font-black bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
             Get in Touch
           </h1>
           <p className="text-lg md:text-xl text-gray-200 max-w-4xl mx-auto leading-relaxed">
@@ -211,105 +211,133 @@ const Contact = () => {
 
         {/* Main Content - Form and Info */}
         <div className="grid lg:grid-cols-2 gap-12 mb-20">
-          {/* Contact Form */}
-          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 lg:p-12">
-            <div className="mb-6">
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
-                Send Us a Message
-              </h2>
-              <p className="text-gray-300">
-                Fill out the form below and we'll get back to you as soon as
-                possible.
-              </p>
-            </div>
-
-            {isSubmitted && (
-              <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-6 flex items-center gap-3">
-                <CheckCircle className="w-5 h-5 text-green-400" />
-                <span className="text-green-400 font-medium text-sm">
-                  Message sent successfully! We'll be in touch soon.
-                </span>
+          {/* Contact Form & Map */}
+          <div className="bg-white/5 border border-white/10 rounded-3xl p-6 lg:p-12 space-y-12">
+            <div className="space-y-6">
+              <div className="mb-6">
+                <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                  Send Us a Message
+                </h2>
+                <p className="text-gray-300">
+                  Fill out the form below and we'll get back to you as soon as
+                  possible.
+                </p>
               </div>
-            )}
 
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-6">
+              {isSubmitted && (
+                <div className="bg-green-500/20 border border-green-500/50 rounded-xl p-4 mb-6 flex items-center gap-3">
+                  <CheckCircle className="w-5 h-5 text-green-400" />
+                  <span className="text-green-400 font-medium text-sm">
+                    Message sent successfully! We'll be in touch soon.
+                  </span>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-white font-medium mb-2">
+                      Full Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
+                      placeholder="Enter your full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-white font-medium mb-2">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
+                      placeholder="your.email@university.edu"
+                    />
+                  </div>
+                </div>
+
+                {/* Custom Dropdown Component */}
+                <CustomDropdown
+                  label="I am a *"
+                  value={formData.userType}
+                  onChange={handleInputChange}
+                  options={userTypeOptions}
+                />
+
                 <div>
                   <label className="block text-white font-medium mb-2">
-                    Full Name *
+                    Subject *
                   </label>
                   <input
                     type="text"
-                    name="name"
-                    value={formData.name}
+                    name="subject"
+                    value={formData.subject}
                     onChange={handleInputChange}
                     required
                     className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
-                    placeholder="Enter your full name"
+                    placeholder="What's this about?"
                   />
                 </div>
+
                 <div>
                   <label className="block text-white font-medium mb-2">
-                    Email Address *
+                    Message *
                   </label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
+                  <textarea
+                    name="message"
+                    value={formData.message}
                     onChange={handleInputChange}
                     required
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
-                    placeholder="your.email@university.edu"
+                    rows={6}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all resize-none"
+                    placeholder="Tell us how we can help you..."
                   />
                 </div>
+
+                <button
+                  type="submit"
+                  className="group w-full bg-white text-slate-900 font-bold py-4 px-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
+                >
+                  <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  Send Message
+                </button>
+              </form>
+            </div>
+            
+            {/* Physical Address and Map - MOVED HERE */}
+            <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <MapPin className="w-7 h-7 text-purple-400" />
+                <h3 className="text-2xl md:text-3xl font-bold text-white">
+                  Our Location
+                </h3>
               </div>
-
-              {/* Custom Dropdown Component */}
-              <CustomDropdown
-                label="I am a *"
-                value={formData.userType}
-                onChange={handleInputChange}
-                options={userTypeOptions}
-              />
-
-              <div>
-                <label className="block text-white font-medium mb-2">
-                  Subject *
-                </label>
-                <input
-                  type="text"
-                  name="subject"
-                  value={formData.subject}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all"
-                  placeholder="What's this about?"
-                />
+              <p className="text-gray-300 mb-4">
+                University Main Campus, Student Services Building, Ground Floor.
+              </p>
+              <div className="aspect-w-16 aspect-h-9 w-full rounded-2xl overflow-hidden border border-white/10">
+                <iframe
+                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3963.3934449856555!2d3.376846174987007!3d6.596009893400507!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x103b9230558b0933%3A0x673c68087950c765!2sUniversity%20of%20Lagos!5e0!3m2!1sen!2sng!4v1699974577546!5m2!1sen!2sng"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0 }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                ></iframe>
               </div>
-
-              <div>
-                <label className="block text-white font-medium mb-2">
-                  Message *
-                </label>
-                <textarea
-                  name="message"
-                  value={formData.message}
-                  onChange={handleInputChange}
-                  required
-                  rows={6}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-purple-400 focus:bg-white/10 transition-all resize-none"
-                  placeholder="Tell us how we can help you..."
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="group w-full bg-white text-slate-900 font-bold py-4 px-8 rounded-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-3"
-              >
-                <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                Send Message
-              </button>
-            </form>
+            </div>
+            {/* End of new section */}
+            
           </div>
 
           {/* Support Categories & Info */}
@@ -379,7 +407,7 @@ const Contact = () => {
                 </p>
               </div>
             </div>
-
+            
             {/* Quick Links */}
             <div className="bg-white/5 border border-white/10 rounded-3xl p-6 md:p-8">
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-6">
